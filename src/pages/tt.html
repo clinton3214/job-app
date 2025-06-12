@@ -1,0 +1,143 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <style>
+    /* style.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+body {
+  /* multi-color dark gradient background */
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* glassy semi-transparent cards */
+.card {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  overflow: hidden;
+}
+
+/* Summary Cards */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.summary-card .card-body {
+  padding: 30px;
+  text-align: center;
+}
+
+.summary-card .card-title {
+  font-size: 1rem;
+  color: #ddd;
+  margin-bottom: 8px;
+}
+
+.summary-card .card-amount {
+  font-size: 2.5rem;
+  color: #fff;
+}
+
+/* Jobs Grid */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.job-card .card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  padding: 20px;
+}
+
+.job-card .card-title {
+  font-size: 1.25rem;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.btn {
+  padding: 10px 22px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+      <div class="card summary-card">
+        <div class="card-body">
+          <div class="card-title">Your Balance</div>
+          <div class="card-amount">₦ 25,000</div>
+        </div>
+      </div>
+      <div class="card summary-card">
+        <div class="card-body">
+          <div class="card-title">Referral Bonus</div>
+          <div class="card-amount">₦ 3,500</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jobs Grid -->
+    <div class="jobs-grid">
+      <div class="card job-card">
+        <div class="card-body">
+          <div class="card-title">Software Engineer</div>
+          <a href="/jobs/software-engineer" class="btn">Apply</a>
+        </div>
+      </div>
+      <div class="card job-card">
+        <div class="card-body">
+          <div class="card-title">Product Manager</div>
+          <a href="/jobs/product-manager" class="btn">Apply</a>
+        </div>
+      </div>
+      <div class="card job-card">
+        <div class="card-body">
+          <div class="card-title">UI/UX Designer</div>
+          <a href="/jobs/ui-ux-designer" class="btn">Apply</a>
+        </div>
+      </div>
+      <!-- add more job cards as needed -->
+    </div>
+  </div>
+</body>
+</html>

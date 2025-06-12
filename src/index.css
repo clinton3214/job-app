@@ -1,0 +1,113 @@
+/* src/index.css */
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+.page-wrapper {
+  /* full-screen purple gradient background */
+  background: linear-gradient(135deg, #d8b4fe 0%, #7c3aed 100%);
+  /* your existing font and centering */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* your glassmorphism card */
+.form-container {
+  width: 100%;
+  max-width: 600px;
+
+  /* new: cap container height at 75% of viewport */
+  max-height: 95vh;
+  overflow-y: auto;
+
+  /* existing styles */
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.form-container:hover {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+}
+
+input.form-control {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  transition: all 0.2s ease-in-out;
+}
+
+input.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+  color: white;
+}
+
+input.form-control::placeholder {
+  color: #e0e0e0;
+}
+
+.form-check-input {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+a {
+  color: #38bdf8;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.btn-success {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-success:hover {
+  background-color: #22c55e;
+  transform: translateY(-2px);
+}
+
+h4 strong {
+  color: white;
+}
+
+.text-muted {
+  color: #cbd5e1 !important;
+}
+/* Multicolor dark gradient for balance card */
+.balance-card {
+  background: linear-gradient(90deg, #1f1f2e 0%, #3a3a5a 50%, #1f1f2e 100%);
+  color: #f0f0f0;
+  border: none;
+}
+
+/* Vibrant accent for referral bonus */
+.referral-bonus {
+  background: linear-gradient(90deg, #7f00ff, #e100ff);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+/* Make job cards slightly lift on hover */
+.clickable-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.clickable-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
