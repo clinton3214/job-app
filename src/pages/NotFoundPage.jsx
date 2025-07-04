@@ -9,12 +9,10 @@ export default function NotFoundPage() {
       <h1>404 – Page Not Found</h1>
       <p>Oops! The page you're looking for doesn't exist.</p>
       {/* Anchor link ensures navigation even on GitHub Pages fallback */}
-      <a
-        className="btn btn-primary"
-        href={baseUrl}
-      >
-        Go back to Login
-      </a>
+      <a className="btn btn-primary" href="/job-app/">
+  Go back to Login
+</a>
+
     </div>
   );
 }
