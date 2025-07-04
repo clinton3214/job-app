@@ -1,8 +1,13 @@
+
+// src/pages/LoginSignupPage.jsx
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Use environment variable for API base URL
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
 export default function LoginSignupPage() {
   const [isSignup, setIsSignup] = useState(true);
@@ -19,14 +24,19 @@ export default function LoginSignupPage() {
         } else {
           delete data.referredBy;
         }
-        await axios.post('/api/auth/signup', data);
+        // Sign up endpoint
+        await axios.post(`${API_BASE}/api/auth/signup`, data);
         alert('Account created! Please log in.');
         setIsSignup(false);
       } else {
-        const resp = await axios.post('/api/auth/login', {
-          email: data.email,
-          password: data.password,
-        });
+        // Login endpoint
+        const resp = await axios.post(
+          `${API_BASE}/api/auth/login`,
+          {
+            email: data.email,
+            password: data.password,
+          }
+        );
         localStorage.setItem('token', resp.data.token);
         localStorage.setItem('userEmail', data.email);
         navigate('/dashboard');
@@ -160,3 +170,4 @@ export default function LoginSignupPage() {
     </div>
   );
 }
+
