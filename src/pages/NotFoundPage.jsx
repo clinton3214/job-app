@@ -1,4 +1,3 @@
-// src/pages/NotFoundPage.jsx
 import React from 'react';
 
 export default function NotFoundPage() {
@@ -6,15 +5,13 @@ export default function NotFoundPage() {
     <div className="container text-center py-5">
       <h1>404 – Page Not Found</h1>
       <p>Oops! The page you're looking for doesn't exist.</p>
-      <button
+      {/* Use an anchor link to ensure navigation even on 404 fallback */}
+      <a
         className="btn btn-primary"
-        onClick={() => {
-          // Redirect back to the GitHub Pages root for your app
-          window.location.href = '/job-app/';
-        }}
+        href="/job-app/"
       >
         Go back to Login
-      </button>
+      </a>
     </div>
   );
 }
