@@ -1,9 +1,11 @@
+
+// index.js
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 
 // Sequelize initialization
-import  sequelize  from './models/db.js';
+import sequelize from './models/db.js';
 import './models/index.js'; // Load all models
 
 // Import your routes:
@@ -16,8 +18,17 @@ import referralRoutes   from './routes/referrals.js';
 import withdrawalRoutes from './routes/withdraw.js';
 
 const app = express();
+
+// Enable CORS for all origins
 app.use(cors());
+
+// JSON parsing
 app.use(express.json());
+
+// Health check route to verify server is running
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'API is up and running' });
+});
 
 async function startServer() {
   try {
@@ -25,11 +36,11 @@ async function startServer() {
     await sequelize.sync({ alter: true });
     console.log('✅ SQLite database synchronized');
 
-    // log every request’s method and URL
-app.use((req, res, next) => {
-  console.log(`[REQ] ${req.method} ${req.originalUrl}`);
-  next();
-});
+    // Log every request’s method and URL
+    app.use((req, res, next) => {
+      console.log(`[REQ] ${req.method} ${req.originalUrl}`);
+      next();
+    });
 
     // Mount API routes
     app.use('/api/auth',     authRoutes);
@@ -46,7 +57,8 @@ app.use((req, res, next) => {
     });
 
     const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));
+    // Bind to 0.0.0.0 so your server is reachable on your LAN IP
+    app.listen(PORT, '0.0.0.0', () => console.log(`API listening on http://0.0.0.0:${PORT}`));
   } catch (err) {
     console.error('❌ Server startup error:', err);
     process.exit(1);
