@@ -1,5 +1,6 @@
 // src/pages/PaymentMethodsPage.jsx
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 /**
@@ -7,9 +8,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
  * Links to DepositPage for Add Funds (crypto/card/cash app).
  */
 export default function PaymentMethodsPage() {
+  const location = useLocation();
+  const selectedJob = location.state?.job || 'a job position';
+
   return (
     <div className="container my-5">
-      <h2 className="mb-4">Payment Methods</h2>
+      <h2 className="mb-3">Payment Methods</h2>
+
+      {/* Job Application Message */}
+      <div className="alert alert-info">
+        <strong>You’re applying for:</strong> {selectedJob} <br />
+        To complete your application, please make a payment using one of the methods below.
+      </div>
+
       <div className="row g-4">
         {/* Crypto Card */}
         <div className="col-md-4">
@@ -26,7 +37,6 @@ export default function PaymentMethodsPage() {
             </div>
           </div>
         </div>
-
         {/* Card Payment */}
         <div className="col-md-4">
           <div className="card h-100 shadow-sm">
@@ -42,7 +52,6 @@ export default function PaymentMethodsPage() {
             </div>
           </div>
         </div>
-
         {/* Cash App */}
         <div className="col-md-4">
           <div className="card h-100 shadow-sm">

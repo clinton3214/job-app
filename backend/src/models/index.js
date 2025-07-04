@@ -1,20 +1,19 @@
 // backend/src/models/index.js
-import { Sequelize } from 'sequelize';
+import  sequelize  from './db.js';
 
-export const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: './data/database.sqlite',  // file will be created in backend/data/
-  logging: false,
-});
+// Eagerly load models (ensures they attach to the shared sequelize instance)
+import './User.js';
+import './Withdrawal.js';
+import './AdminLog.js';
+import './Payment.js';
+// add more as needed: './Referral.js', './Deposit.js', etc.
 
-// Export initialized models after calling .sync()
 export async function initDb() {
-  // Import models (so they register themselves)
-  await Promise.all([
-    import('./User.js'),
-    import('./AdminLog.js'),
-    import('./Payment.js'),
-  ]);
-  // Create tables if they don't exist
-  await sequelize.sync();
+  try {
+    await sequelize.sync({ alter: true }); // Use alter for dev flexibility
+    console.log('✅ Database synchronized');
+  } catch (err) {
+    console.error('❌ Database sync error:', err);
+    throw err;
+  }
 }

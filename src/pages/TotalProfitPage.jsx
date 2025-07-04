@@ -1,91 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
-/**
- * TotalProfitPage fetches and displays overall profit metrics.
- * Endpoint: GET /api/admin/total-profit
- */
 export default function TotalProfitPage() {
   const [profitData, setProfitData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/total-profit')
-      .then((res) => res.json())
-      .then(setProfitData)
-      .catch(console.error);
+    async function fetchProfit() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          alert('You must be logged in to view profit data.');
+          return;
+        }
+
+        const res = await axios.get('/api/user/total-profit', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setProfitData(res.data);
+      } catch (err) {
+        console.error('Failed to load profit data:', err);
+        alert(
+          err.response?.data?.error ||
+          'Could not fetch profit data. Please try again.'
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProfit();
   }, []);
 
-  if (!profitData) {
-    return (
-      <div className="container my-5 text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading…</span>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <p className="text-center mt-5">Loading profit data...</p>;
+  if (!profitData) return <p className="text-center mt-5">No profit data available.</p>;
 
   return (
-    <div className="container my-4">
-      <h2 className="mb-4">Total Profit Dashboard</h2>
-
-      <div className="row mb-4">
-        <div className="col-md-3">
-          <div className="card text-white bg-secondary mb-3">
-            <div className="card-body">
-              <h6 className="card-title">Total Deposits</h6>
-              <p className="card-text h4">{profitData.totalDeposits}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card text-white bg-danger mb-3">
-            <div className="card-body">
-              <h6 className="card-title">Total Withdrawals</h6>
-              <p className="card-text h4">{profitData.totalWithdrawals}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card text-white bg-info mb-3">
-            <div className="card-body">
-              <h6 className="card-title">Fees Collected</h6>
-              <p className="card-text h4">{profitData.totalFeesCollected}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card text-white bg-success mb-3">
-            <div className="card-body">
-              <h6 className="card-title">Net Profit</h6>
-              <p className="card-text h4">{profitData.netProfit}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="card shadow-sm">
-        <div className="card-header bg-primary text-white">
-          Profit Breakdown (Recent)
-        </div>
-        <div className="card-body p-0">
-          <table className="table mb-0">
-            <thead className="table-light">
-              <tr>
-                <th>Date</th>
-                <th>Profit</th>
-              </tr>
-            </thead>
-            <tbody>
-              {profitData.breakdown.map((entry, idx) => (
-                <tr key={idx}>
-                  <td>{entry.date}</td>
-                  <td>{entry.profit}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+    <div className="container mt-5 text-black">
+      <h2>Total Profit Summary</h2>
+      <div className="card p-4 bg-light mt-3 shadow-sm">
+        <p><strong>Total Deposits:</strong> ₦{(profitData.totalDeposits || 0).toFixed(2)}</p>
+        <p><strong>Total Withdrawals:</strong> ₦{(profitData.totalWithdrawals || 0).toFixed(2)}</p>
+        <p><strong>Total Referral Bonuses:</strong> ₦{(profitData.totalReferrals || 0).toFixed(2)}</p>
+        <hr />
+        <p><strong>Net Profit:</strong> ₦{(profitData.netProfit || 0).toFixed(2)}</p>
       </div>
     </div>
   );

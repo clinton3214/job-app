@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from './index.js';
+import  sequelize  from './db.js';
 
 export const Payment = sequelize.define('Payment', {
   userEmail: { type: DataTypes.STRING, allowNull: false },

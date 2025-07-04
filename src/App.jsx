@@ -16,13 +16,17 @@ import AdminPage           from './pages/AdminPage';
 import TotalProfitPage     from './pages/TotalProfitPage';
 import JobDetailPage       from './pages/JobDetailPage';
 import NotFoundPage        from './pages/NotFoundPage';
+import ForgotPasswordPage  from './pages/ForgotPasswordPage';
+import ResetPasswordPage   from './pages/ResetPasswordPage';
+import AdminDashboard      from './pages/AdminDashboard';
+import RequireAdmin        from './components/RequireAdmin';
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginSignupPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/"                element={<LoginSignupPage />} />
+        <Route path="/dashboard"       element={<DashboardPage />} />
 
         {/* Deposit flows */}
         <Route path="/deposit/add-funds" element={<DepositPage />} />
@@ -43,8 +47,22 @@ export default function App() {
         {/* Job detail */}
         <Route path="/jobs/:jobId"     element={<JobDetailPage />} />
 
+        {/* Password reset flows */}
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password"  element={<ResetPasswordPage />} />
+
+        {/* Protected Admin Dashboard */}
+        <Route
+          path="/admin-dashboard"
+          element={
+            <RequireAdmin>
+              <AdminDashboard />
+            </RequireAdmin>
+          }
+        />
+
         {/* 404 catch-all */}
-        <Route path="*"                element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

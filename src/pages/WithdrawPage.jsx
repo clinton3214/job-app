@@ -1,43 +1,52 @@
 // src/pages/WithdrawPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-/**
- * WithdrawPage lets the user request a withdrawal.
- * For now, form submission is a placeholder (alerts user).
- */
 export default function WithdrawPage() {
   const { register, handleSubmit, watch } = useForm({
     defaultValues: { method: 'crypto', currency: 'BTC' },
   });
   const [balance, setBalance] = useState(null);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
-  // Fetch current balance from mock profile endpoint
+  // Fetch user balance
   useEffect(() => {
-    fetch('/api/user/profile')
-      .then((res) => res.json())
-      .then((data) => {
-        setBalance(data.balance);
+    const token = localStorage.getItem('token');
+    axios
+      .get('/api/user/profile', {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .catch(console.error);
+      .then(res => setBalance(res.data.balance))
+      .catch(err => setError('Failed to fetch balance'));
   }, []);
 
-  const onSubmit = (data) => {
-    const { amount, method, currency } = data;
+  const onSubmit = async (data) => {
+    setMessage('');
+    setError('');
+    const { amount, method } = data;
+    const numericBalance = parseFloat(balance);
+
     if (!amount || amount <= 0) {
-      return alert('Enter a valid amount to withdraw.');
+      return setError('Enter a valid amount to withdraw.');
     }
-    if (balance && parseFloat(amount) > parseFloat(balance.replace(/[^0-9.]/g, ''))) {
-      return alert('Amount exceeds current balance.');
+    if (numericBalance && parseFloat(amount) > numericBalance) {
+      return setError('Amount exceeds your current balance.');
     }
 
-    if (method === 'crypto') {
-      alert(`Requesting withdraw of ₦${amount} via ${currency}. (Mock)`);
-    } else if (method === 'card') {
-      alert(`Requesting withdraw of ₦${amount} via Card. (Mock)`);
-    } else if (method === 'cashapp') {
-      alert(`Requesting withdraw of ₦${amount} via Cash App. (Mock)`);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        '/api/withdraw',
+        { amount: parseFloat(amount), method },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setMessage('Withdrawal request submitted successfully.');
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.error || 'Withdrawal request failed.');
     }
   };
 
@@ -48,8 +57,11 @@ export default function WithdrawPage() {
       <div className="form-container">
         <h4 className="mb-4 text-center">
           Withdraw Funds
-          <small className="d-block text-muted">Your current balance: {balance || 'Loading…'}</small>
+          <small className="d-block text-muted">Your current balance: ₦{balance ?? 'Loading…'}</small>
         </h4>
+
+        {message && <div className="alert alert-success">{message}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
