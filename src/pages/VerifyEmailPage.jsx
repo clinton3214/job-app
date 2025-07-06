@@ -4,6 +4,8 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -11,7 +13,13 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     const token = searchParams.get('token');
-    axios.get(`/api/auth/verify-email?token=${token}`)
+    if (!token) {
+      setStatus('❌ Invalid or missing verification token.');
+      return;
+    }
+
+    axios
+      .get(`${API_BASE}/api/auth/verify-email?token=${token}`)
       .then(() => {
         setStatus('✅ Email verified! Redirecting to login…');
         setTimeout(() => navigate('/'), 3000);

@@ -1,6 +1,9 @@
 // src/pages/AdminPage.jsx
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 /**
  * AdminPage shows:
@@ -14,16 +17,14 @@ export default function AdminPage() {
   // Fetch data on mount
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const headers = { Authorization: 'Bearer ' + token };
+    const headers = { Authorization: `Bearer ${token}` };
 
-    fetch('/api/admin/logins', { headers })
-      .then(res => res.json())
-      .then(setLogins)
+    axios.get(`${API_BASE}/api/admin/logins`, { headers })
+      .then((res) => setLogins(res.data))
       .catch(console.error);
 
-    fetch('/api/admin/payments', { headers })
-      .then(res => res.json())
-      .then(setPayments)
+    axios.get(`${API_BASE}/api/admin/payments`, { headers })
+      .then((res) => setPayments(res.data))
       .catch(console.error);
   }, []);
 

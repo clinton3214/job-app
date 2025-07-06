@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default function TotalProfitPage() {
   const [profitData, setProfitData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,7 +16,7 @@ export default function TotalProfitPage() {
           return;
         }
 
-        const res = await axios.get('/api/user/total-profit', {
+        const res = await axios.get(`${API_BASE}/api/user/total-profit`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

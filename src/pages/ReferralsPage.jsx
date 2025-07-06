@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 /**
  * ReferralsPage fetches the user’s referral code and list of referrals.
@@ -9,10 +12,19 @@ export default function ReferralsPage() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch('/api/user/referrals')
-      .then((res) => res.json())
-      .then(setData)
-      .catch(console.error);
+    async function fetchReferrals() {
+      try {
+        const token = localStorage.getItem('token');
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const res = await axios.get(`${API_BASE}/api/user/referrals`, { headers });
+        setData(res.data);
+      } catch (err) {
+        console.error('Error fetching referrals:', err);
+        alert('Failed to load referral data.');
+      }
+    }
+    fetchReferrals();
   }, []);
 
   if (!data) {

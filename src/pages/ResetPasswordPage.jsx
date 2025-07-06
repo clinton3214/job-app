@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ export default function ResetPasswordPage() {
 
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/reset-password', {
+      const res = await axios.post(`${API_BASE}/api/auth/reset-password`, {
         token,
         newPassword,
       });

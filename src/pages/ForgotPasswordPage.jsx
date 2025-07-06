@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -13,7 +15,7 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     setMessage('');
     try {
-      const res = await axios.post('/api/auth/forgot-password', { email });
+      const res = await axios.post(`${API_BASE}/api/auth/forgot-password`, { email });
       setMessage(res.data.message);
     } catch (err) {
       setMessage(err.response?.data?.error || 'Something went wrong');

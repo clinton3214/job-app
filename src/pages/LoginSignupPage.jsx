@@ -1,4 +1,3 @@
-
 // src/pages/LoginSignupPage.jsx
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -7,7 +6,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Use environment variable for API base URL
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 export default function LoginSignupPage() {
   const [isSignup, setIsSignup] = useState(true);

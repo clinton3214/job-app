@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [logs, setLogs] = useState([]);
@@ -19,9 +21,9 @@ export default function AdminDashboard() {
   const fetchAll = async () => {
     try {
       const [userRes, logRes, refRes] = await Promise.all([
-        axios.get('/api/admin/users', { headers }),
-        axios.get('/api/admin/logins', { headers }),
-        axios.get('/api/admin/referrals', { headers }),
+        axios.get(`${API_BASE}/api/admin/users`, { headers }),
+        axios.get(`${API_BASE}/api/admin/logins`, { headers }),
+        axios.get(`${API_BASE}/api/admin/referrals`, { headers }),
       ]);
       setUsers(userRes.data);
       setLogs(logRes.data);
@@ -35,7 +37,7 @@ export default function AdminDashboard() {
   const handleDelete = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
-      await axios.delete(`/api/admin/users/${userId}`, { headers });
+      await axios.delete(`${API_BASE}/api/admin/users/${userId}`, { headers });
       setUsers(users.filter((u) => u.id !== userId));
     } catch (err) {
       console.error('Delete error:', err);
@@ -44,7 +46,7 @@ export default function AdminDashboard() {
 
   const toggleDisable = async (userId, currentStatus) => {
     try {
-      await axios.put(`/api/admin/users/${userId}/disable`, { disabled: !currentStatus }, { headers });
+      await axios.put(`${API_BASE}/api/admin/users/${userId}/disable`, { disabled: !currentStatus }, { headers });
       setUsers(users.map((u) => (u.id === userId ? { ...u, disabled: !currentStatus } : u)));
     } catch (err) {
       console.error('Disable toggle error:', err);
@@ -53,7 +55,7 @@ export default function AdminDashboard() {
 
   const promoteToAdmin = async (userId) => {
     try {
-      await axios.put(`/api/admin/users/${userId}/promote`, {}, { headers });
+      await axios.put(`${API_BASE}/api/admin/users/${userId}/promote`, {}, { headers });
       setUsers(users.map((u) => (u.id === userId ? { ...u, isAdmin: true } : u)));
     } catch (err) {
       console.error('Promote error:', err);
@@ -62,7 +64,7 @@ export default function AdminDashboard() {
 
   const updateBalance = async (userId, newBalance) => {
     try {
-      await axios.put(`/api/admin/users/${userId}/balance`, { balance: newBalance }, { headers });
+      await axios.put(`${API_BASE}/api/admin/users/${userId}/balance`, { balance: newBalance }, { headers });
       setUsers(users.map((u) => (u.id === userId ? { ...u, balance: newBalance } : u)));
     } catch (err) {
       console.error('Update balance error:', err);

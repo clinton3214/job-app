@@ -2,34 +2,33 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({});
 
   useEffect(() => {
-        async function fetchProfile() {
-          try {
-            // 1) grab token from localStorage
-            const token = localStorage.getItem('token');
-    
-            // 2) send it in the Authorization header
-            const res = await axios.get('/api/user/profile', {
-              headers: {
-               Authorization: `Bearer ${token}`
-              }
-           });
-    
-            // 3) populate state
-            setProfile(res.data);
-            setForm(res.data);
-          } catch (err) {
-            console.error('Error loading profile:', err);
-            alert('Could not fetch profile data. Are you logged in?');
-          }
-        }
-        fetchProfile();
-      }, []);
+    async function fetchProfile() {
+      try {
+        // Grab token from localStorage
+        const token = localStorage.getItem('token');
+        const headers = { Authorization: `Bearer ${token}` };
+
+        // Fetch profile data
+        const res = await axios.get(`${API_BASE}/api/user/profile`, { headers });
+
+        // Populate state
+        setProfile(res.data);
+        setForm(res.data);
+      } catch (err) {
+        console.error('Error loading profile:', err);
+        alert('Could not fetch profile data. Are you logged in?');
+      }
+    }
+    fetchProfile();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,9 +37,10 @@ export default function ProfilePage() {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.put('/api/user/profile', form, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const headers = { Authorization: `Bearer ${token}` };
+
+      // Update profile data
+      const res = await axios.put(`${API_BASE}/api/user/profile`, form, { headers });
       alert('Profile updated!');
       setProfile(res.data);
       setEditing(false);

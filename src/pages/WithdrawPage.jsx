@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 export default function WithdrawPage() {
   const { register, handleSubmit, watch } = useForm({
     defaultValues: { method: 'crypto', currency: 'BTC' },
@@ -16,7 +18,7 @@ export default function WithdrawPage() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     axios
-      .get('/api/user/profile', {
+      .get(`${API_BASE}/api/user/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(res => setBalance(res.data.balance))
@@ -39,7 +41,7 @@ export default function WithdrawPage() {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        '/api/withdraw',
+        `${API_BASE}/api/withdraw`,
         { amount: parseFloat(amount), method },
         { headers: { Authorization: `Bearer ${token}` } }
       );

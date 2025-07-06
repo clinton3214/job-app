@@ -6,6 +6,8 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
 const jobCards = [
   {
     title: "Deck Officer",
@@ -72,7 +74,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchBalance = async () => {
       try {
-        const res = await axios.get('/api/user/me', {
+        const res = await axios.get(`${API_BASE}/api/user/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },

@@ -1,7 +1,9 @@
 // src/pages/DepositPage.jsx
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createCryptoCharge } from '../services/paymentService';
+import axios from 'axios';
+
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 export default function DepositPage() {
   const { register, handleSubmit } = useForm({ defaultValues: { method: 'crypto', currency: 'BTC' } });
@@ -15,22 +17,19 @@ export default function DepositPage() {
     if (method === 'crypto') {
       setLoading(true);
       try {
-        const paymentUrl = await createCryptoCharge(amount, currency);
+        const response = await axios.post(`${API_BASE}/api/payment/crypto-charge`, { amount, currency });
+        const paymentUrl = response.data?.paymentUrl;
+
         if (!paymentUrl) {
           throw new Error('No payment URL returned from server');
         }
+
         // Redirect user to the payment page
         window.location.assign(paymentUrl);
       } catch (err) {
         console.error('DepositPage error:', err);
-           // If axios error, err.response.data.error holds our gateway message
-         const msg =
-          err.response?.data?.error ||
-          err.message ||
-          'Unknown error';
+        const msg = err.response?.data?.error || err.message || 'Unknown error';
         alert(`Failed to create crypto charge: ${msg}`);
-
-
       } finally {
         setLoading(false);
       }
