@@ -20,7 +20,9 @@ import withdrawalRoutes from './routes/withdraw.js';
 const app = express();
 
 // Enable CORS for all origins
-app.use(cors());
+app.use(cors({
+  origin: 'https://job-app-frontend-3dld.onrender.com'
+}));
 
 // JSON parsing
 app.use(express.json());
