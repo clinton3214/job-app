@@ -35,7 +35,13 @@ app.get('/', (req, res) => {
 async function startServer() {
   try {
     // Synchronize Sequelize models with the database
-    await sequelize.sync({ alter: true });
+    if (process.env.NODE_ENV === 'production') {
+        // In production, avoid alter backups causing constraint errors
+         await sequelize.sync();
+       } else {
+         // In development, sync with alter for convenience
+         await sequelize.sync({ alter: true });
+       }
     console.log('✅ SQLite database synchronized');
 
     // Log every request’s method and URL
