@@ -110,4 +110,8 @@ h4 strong {
   transform: translateY(-4px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
+.container, .container-fluid {
+  width: 100%;
+  max-width: 100%;
+}
 
