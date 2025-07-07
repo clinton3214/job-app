@@ -1,6 +1,8 @@
 // src/App.jsx
 import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 import LoginSignupPage     from './pages/LoginSignupPage';
 import DashboardPage       from './pages/DashboardPage';
@@ -23,7 +25,8 @@ import RequireAdmin        from './components/RequireAdmin';
 
 export default function App() {
   return (
-    <Router>
+      <div className="container-fluid px-0">
+         <Router>
       <Routes>
         <Route path="/"                element={<LoginSignupPage />} />
         <Route path="/dashboard"       element={<DashboardPage />} />
@@ -65,5 +68,8 @@ export default function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
+
+      </div>
+   
   );
 }
