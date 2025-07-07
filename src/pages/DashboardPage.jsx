@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Offcanvas, Button, Dropdown, Nav } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
@@ -119,14 +120,26 @@ export default function DashboardPage() {
             <Offcanvas.Title>Menu</Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-            <Nav className="flex-column">
-              <Nav.Item><Nav.Link href="/total-profit">• Total Profit</Nav.Link></Nav.Item>
-              <Nav.Item><Nav.Link href="/history">• Payment History</Nav.Link></Nav.Item>
-              <Nav.Item><Nav.Link href="/withdraw">• Withdraw</Nav.Link></Nav.Item>
-              <Nav.Item><Nav.Link href="/referrals">• View Referrals</Nav.Link></Nav.Item>
-              <Nav.Item><Nav.Link href="/deposit/add-funds">• Add Funds</Nav.Link></Nav.Item>
-              <Nav.Item><Nav.Link href="/deposit/methods">• Payment Methods</Nav.Link></Nav.Item>
-            </Nav>
+          <Nav className="flex-column">
+            <Nav.Item>
+              <Nav.Link as={Link} to="/total-profit">• Total Profit</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={Link} to="/history">• Payment History</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={Link} to="/withdraw">• Withdraw</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={Link} to="/referrals">• View Referrals</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={Link} to="/deposit/add-funds">• Add Funds</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={Link} to="/deposit/methods">• Payment Methods</Nav.Link>
+            </Nav.Item>
+          </Nav>
           </Offcanvas.Body>
         </Offcanvas>
 
