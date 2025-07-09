@@ -1,6 +1,7 @@
 // backend/src/routes/payment.js
 import express from 'express';
 import axios from 'axios';
+import cors from 'cors'; // ← ADDED: import cors
 import { verifyNowPaymentsSignature, parseOrderId } from '../utils/nowpayments.js';
 import { markDepositPaid } from '../utils/database.js';
 
@@ -9,8 +10,22 @@ const API_URL = 'https://api.nowpayments.io/v1';
 const API_KEY = process.env.NOWPAYMENTS_API_KEY;
 const IPN_SECRET = process.env.NOWPAYMENTS_IPN_SECRET;
 
+// ← ADDED: allow requests from your frontend
+const allowedOrigins = ['https://job-app-frontend-3dld.onrender.com'];
+
+router.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
 // Create crypto charge (original route)
-  async function createCryptoCharge(req, res) {
+async function createCryptoCharge(req, res) {
   const { amount, currency, userEmail } = req.body;
   if (!amount || !currency) {
     return res.status(400).json({ error: 'Missing amount or currency' });
@@ -25,8 +40,8 @@ const IPN_SECRET = process.env.NOWPAYMENTS_IPN_SECRET;
         pay_currency: currency.toLowerCase(),
         order_id: userEmail || `guest-${Date.now()}`,
         ipn_callback_url: `${req.protocol}://${req.get('host')}/api/payment/ipn`,
-        success_url: `http://localhost:5173/deposit/success`,
-        cancel_url: `http://localhost:5173/deposit/cancel`,
+        success_url: `https://job-app-frontend-3dld.onrender.com/deposit/success`,
+        cancel_url: `https://job-app-frontend-3dld.onrender.com/deposit/cancel`,
       },
       {
         headers: {
@@ -38,17 +53,13 @@ const IPN_SECRET = process.env.NOWPAYMENTS_IPN_SECRET;
 
     console.log('NOWPayments response.data:', data);
 
-    // ← EDITED: extract the correct field
-    const checkoutUrl = data.invoice_url;  
+    const checkoutUrl = data.invoice_url;
     if (!checkoutUrl) {
       console.error('No checkout URL in response:', data);
       return res.status(500).json({ error: 'No checkout URL returned by gateway' });
     }
 
-    // ← EDITED: return under key `url` so frontend sees resp.data.url
     return res.json({ url: checkoutUrl, payment_url: checkoutUrl, invoice_url: checkoutUrl });
-
-
   } catch (err) {
     console.error('NOWPayments error:', {
       message: err.message,
@@ -56,17 +67,15 @@ const IPN_SECRET = process.env.NOWPAYMENTS_IPN_SECRET;
       status: err.response?.status,
       headers: err.response?.headers,
     });
-    return res.status(500).json({ error: gatewayMsg || 'Failed to create invoice' });
+    return res.status(500).json({ error: err.response?.data?.message || 'Failed to create invoice' });
   }
-};
-
+}
 
 // Create crypto charge route
 router.post('/crypto', createCryptoCharge);
 
 // Alias route to match frontend URL /api/payment/crypto-charge
 router.post('/crypto-charge', createCryptoCharge);
-
 
 // IPN handler
 router.post('/ipn', express.json(), async (req, res) => {
