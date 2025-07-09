@@ -50,10 +50,12 @@ const IPN_SECRET = process.env.NOWPAYMENTS_IPN_SECRET;
 
 
   } catch (err) {
-    console.error('NOWPayments invoice error object:', err);
-    console.error('NOWPayments response data:', err.response?.data);
-    console.error('NOWPayments error message:', err.message);
-    const gatewayMsg = err.response?.data?.message;
+    console.error('NOWPayments error:', {
+      message: err.message,
+      response: err.response?.data,
+      status: err.response?.status,
+      headers: err.response?.headers,
+    });
     return res.status(500).json({ error: gatewayMsg || 'Failed to create invoice' });
   }
 };
