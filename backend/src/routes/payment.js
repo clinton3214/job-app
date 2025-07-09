@@ -10,7 +10,7 @@ const API_KEY = process.env.NOWPAYMENTS_API_KEY;
 const IPN_SECRET = process.env.NOWPAYMENTS_IPN_SECRET;
 
 // Create crypto charge (original route)
-router.post('/crypto', async (req, res) => {
+  async function createCryptoCharge(req, res) {
   const { amount, currency, userEmail } = req.body;
   if (!amount || !currency) {
     return res.status(400).json({ error: 'Missing amount or currency' });
@@ -56,56 +56,8 @@ router.post('/crypto', async (req, res) => {
     const gatewayMsg = err.response?.data?.message;
     return res.status(500).json({ error: gatewayMsg || 'Failed to create invoice' });
   }
-});
+};
 
-// Alias route to match frontend URL /api/payment/crypto-charge
-router.post('/crypto-charge', async (req, res) => {
-  const { amount, currency, userEmail } = req.body;
-  if (!amount || !currency) {
-    return res.status(400).json({ error: 'Missing amount or currency' });
-  }
-
-  try {
-    const { data } = await axios.post(
-      `${API_URL}/invoice`,
-      {
-        price_amount: amount,
-        price_currency: 'ngn',
-        pay_currency: currency.toLowerCase(),
-        order_id: userEmail || `guest-${Date.now()}`,
-        ipn_callback_url: `${req.protocol}://${req.get('host')}/api/payment/ipn`,
-        success_url: `http://localhost:5173/deposit/success`,
-        cancel_url: `http://localhost:5173/deposit/cancel`,
-      },
-      {
-        headers: {
-          'x-api-key': API_KEY,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    console.log('NOWPayments response.data:', data);
-
-    // ← EDITED:
-    const checkoutUrl = data.invoice_url;  
-    if (!checkoutUrl) {
-      console.error('No checkout URL in response:', data);
-      return res.status(500).json({ error: 'No checkout URL returned by gateway' });
-    }
-
-    // ← EDITED:
-    return res.json({ url: checkoutUrl, payment_url: checkoutUrl, invoice_url: checkoutUrl });
- 
-
-  } catch (err) {
-    console.error('NOWPayments invoice error object:', err);
-    console.error('NOWPayments response data:', err.response?.data);
-    console.error('NOWPayments error message:', err.message);
-    const gatewayMsg = err.response?.data?.message;
-    return res.status(500).json({ error: gatewayMsg || 'Failed to create invoice' });
-  }
-});
 
 // Create crypto charge route
 router.post('/crypto', createCryptoCharge);
