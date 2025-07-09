@@ -40,7 +40,7 @@ async function startServer() {
          await sequelize.sync();
        } else {
          // In development, sync with alter for convenience
-         await sequelize.sync({ alter: true });
+         await sequelize.sync({ force: true });
        }
     console.log('✅ SQLite database synchronized');
 
