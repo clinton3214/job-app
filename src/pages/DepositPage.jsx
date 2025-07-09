@@ -18,7 +18,7 @@ export default function DepositPage() {
       setLoading(true);
       try {
         const response = await axios.post(`${API_BASE}/api/payment/crypto-charge`, { amount, currency });
-        const paymentUrl = response.data?.paymentUrl;
+        const paymentUrl = response.data?.payment_Url;
 
         if (!paymentUrl) {
           throw new Error('No payment URL returned from server');

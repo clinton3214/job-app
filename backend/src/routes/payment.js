@@ -67,7 +67,8 @@ async function createCryptoCharge(req, res) {
       status: err.response?.status,
       headers: err.response?.headers,
     });
-    return res.status(500).json({ error: err.response?.data?.message || 'Failed to create invoice' });
+    const gatewayMsg = err.response?.data?.message || 'Failed to create invoice';
+    return res.status(500).json({ error: gatewayMsg });
   }
 }
 
