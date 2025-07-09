@@ -46,7 +46,7 @@ router.post('/crypto', async (req, res) => {
     }
 
     // ← EDITED: return under key `url` so frontend sees resp.data.url
-    return res.json({ url: checkoutUrl });  
+    return res.json({ url: checkoutUrl, payment_url: checkoutUrl });
 
   } catch (err) {
     console.error('NOWPayments invoice error object:', err);
@@ -94,7 +94,7 @@ router.post('/crypto-charge', async (req, res) => {
     }
 
     // ← EDITED:
-    return res.json({ url: checkoutUrl });  
+    return res.json({ url: checkoutUrl, payment_url: checkoutUrl });  
 
   } catch (err) {
     console.error('NOWPayments invoice error object:', err);
