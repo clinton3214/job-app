@@ -107,6 +107,13 @@ router.post('/crypto-charge', async (req, res) => {
   }
 });
 
+// Create crypto charge route
+router.post('/crypto', createCryptoCharge);
+
+// Alias route to match frontend URL /api/payment/crypto-charge
+router.post('/crypto-charge', createCryptoCharge);
+
+
 // IPN handler
 router.post('/ipn', express.json(), async (req, res) => {
   const signature = req.headers['x-nowpayments-signature'];
