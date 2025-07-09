@@ -38,13 +38,16 @@ router.post('/crypto', async (req, res) => {
 
     console.log('NOWPayments response.data:', data);
 
-    const checkoutUrl = data.payment_url || data.invoice_url;
+    // ← EDITED: extract the correct field
+    const checkoutUrl = data.invoice_url;  
     if (!checkoutUrl) {
       console.error('No checkout URL in response:', data);
       return res.status(500).json({ error: 'No checkout URL returned by gateway' });
     }
 
-    return res.json({ payment_url: checkoutUrl });
+    // ← EDITED: return under key `url` so frontend sees resp.data.url
+    return res.json({ url: checkoutUrl });  
+
   } catch (err) {
     console.error('NOWPayments invoice error object:', err);
     console.error('NOWPayments response data:', err.response?.data);
@@ -56,7 +59,6 @@ router.post('/crypto', async (req, res) => {
 
 // Alias route to match frontend URL /api/payment/crypto-charge
 router.post('/crypto-charge', async (req, res) => {
-  // Reuse the same logic as /crypto
   const { amount, currency, userEmail } = req.body;
   if (!amount || !currency) {
     return res.status(400).json({ error: 'Missing amount or currency' });
@@ -84,13 +86,16 @@ router.post('/crypto-charge', async (req, res) => {
 
     console.log('NOWPayments response.data:', data);
 
-    const checkoutUrl = data.payment_url || data.invoice_url;
+    // ← EDITED:
+    const checkoutUrl = data.invoice_url;  
     if (!checkoutUrl) {
       console.error('No checkout URL in response:', data);
       return res.status(500).json({ error: 'No checkout URL returned by gateway' });
     }
 
-    return res.json({ payment_url: checkoutUrl });
+    // ← EDITED:
+    return res.json({ url: checkoutUrl });  
+
   } catch (err) {
     console.error('NOWPayments invoice error object:', err);
     console.error('NOWPayments response data:', err.response?.data);
