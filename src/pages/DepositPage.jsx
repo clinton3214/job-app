@@ -42,7 +42,7 @@ export default function DepositPage() {
   };
 
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex flex-column">
+    <div className="container-fluid bg-light min-vh-100 d-flex flex-column text-black">
       <header className="d-flex justify-content-between align-items-center border-bottom px-3 py-2 bg-white">
         <div className="d-flex align-items-center gap-2">
           <svg
