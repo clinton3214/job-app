@@ -18,7 +18,12 @@ export default function DepositPage() {
       setLoading(true);
       try {
         const response = await axios.post(`${API_BASE}/api/payment/crypto-charge`, { amount, currency });
-        const paymentUrl = response.data?.payment_Url;
+
+        // 🔥 Fix: Use correct key from backend response
+        const paymentUrl =
+          response.data?.url ||
+          response.data?.payment_url ||
+          response.data?.invoice_url;
 
         if (!paymentUrl) {
           throw new Error('No payment URL returned from server');
@@ -103,9 +108,7 @@ export default function DepositPage() {
             </div>
           </div>
 
-          {/* Conditionally render extra fields */}
           <div className="mb-3">
-            {/** Crypto selector */}
             <div className="d-flex align-items-center">
               <label className="form-label me-3">Currency</label>
               <select {...register('currency')} className="form-select w-auto">
@@ -114,7 +117,6 @@ export default function DepositPage() {
                 <option value="SOL">Solana (SOL)</option>
               </select>
             </div>
-            {/** For card you could render card fields here */}
           </div>
 
           <button type="submit" className="btn btn-success w-100" disabled={loading}>
