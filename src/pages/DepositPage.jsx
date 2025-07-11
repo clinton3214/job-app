@@ -19,6 +19,9 @@ export default function DepositPage() {
       try {
         const response = await axios.post(`${API_BASE}/api/payment/crypto-charge`, { amount, currency });
 
+        console.log("FULL RESPONSE:", response);
+
+
         // ✅ Correctly access the invoice_url returned from NOWPayments
         const paymentUrl = response.data?.invoice_url;
 
