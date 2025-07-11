@@ -19,11 +19,8 @@ export default function DepositPage() {
       try {
         const response = await axios.post(`${API_BASE}/api/payment/crypto-charge`, { amount, currency });
 
-        // 🔥 Fix: Use correct key from backend response
-        const paymentUrl =
-          response.data?.url ||
-          response.data?.payment_url ||
-          response.data?.invoice_url;
+        // ✅ Correctly access the invoice_url returned from NOWPayments
+        const paymentUrl = response.data?.invoice_url;
 
         if (!paymentUrl) {
           throw new Error('No payment URL returned from server');
