@@ -90,7 +90,7 @@ export default function DepositPage() {
                 {...register('amount', { valueAsNumber: true })}
                 type="number"
                 step="0.01"
-                className="form-control form-control-lg bg-light border-0 rounded"
+                className="form-control form-control-lg bg-light text-black border-0 rounded"
                 placeholder="Enter amount"
                 required
               />

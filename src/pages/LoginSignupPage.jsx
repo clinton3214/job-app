@@ -58,7 +58,7 @@ export default function LoginSignupPage() {
   return (
     <div className="position-relative d-flex min-vh-100 flex-column bg-light overflow-hidden" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
       <div className="container-fluid d-flex flex-column flex-grow-1">
-        <header className="d-flex align-items-center justify-content-between border-bottom px-5 py-3">
+        <header className="d-flex flex-wrap align-items-center justify-content-between border-bottom px-3 px-md-5 py-3">
           <div className="d-flex align-items-center gap-3 text-dark">
             <div style={{ width: '1.5rem', height: '1.5rem' }}>
               <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -79,14 +79,14 @@ export default function LoginSignupPage() {
           </div>
         </header>
 
-        <div className="px-5 d-flex flex-grow-1 justify-content-center py-5">
+        <div className="px-3 px-md-5 d-flex flex-grow-1 justify-content-center py-5">
           <div className="w-100" style={{ maxWidth: '512px' }}>
             <h2 className="text-dark fw-bold fs-3 text-center py-3">{isSignup ? 'Create your account' : 'Login to your account'}</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
               {isSignup && (
                 <>
                   {[['Full Name', 'fullName', 'John Doe'], ['Address', 'address', '123 Main St'], ['Email', 'email', 'you@example.com'], ['Password', 'password', '********'], ['Referral Code (Optional)', 'referredBy', 'Enter referral code'], ['Home Phone (Time to reach)', 'homePhone', '+234 1 234 5678'], ['Cell Phone (Time to reach)', 'cellPhone', '+234 80 1234 5678'], ['State', 'state', 'Lagos'], ['ZIP Code', 'zip', '100001']].map(([label, name, placeholder]) => (
-                    <div className="mb-3 px-3" key={name}>
+                    <div className="mb-3 px-2 px-md-3" key={name}>
                       <label className="form-label fw-medium text-dark">{label}</label>
                       <input
                         {...register(name, name !== 'referredBy' ? { required: true } : {})}
@@ -102,8 +102,8 @@ export default function LoginSignupPage() {
               )}
               {!isSignup && (
                 <>
-                  <div className="row mb-3">
-                    <div className="col">
+                  <div className="row mb-3 gx-3">
+                    <div className="col-12 col-md-6 mb-3 mb-md-0">
                       <label className="form-label text-dark">Email</label>
                       <input
                         {...register('email', { required: true })}
@@ -113,7 +113,7 @@ export default function LoginSignupPage() {
                       />
                       {errors.email && <span className="text-danger">Required</span>}
                     </div>
-                    <div className="col">
+                    <div className="col-12 col-md-6">
                       <label className="form-label text-dark">Password</label>
                       <input
                         {...register('password', { required: true })}
