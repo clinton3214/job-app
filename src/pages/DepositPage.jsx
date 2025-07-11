@@ -23,7 +23,8 @@ export default function DepositPage() {
 
 
         // ✅ Correctly access the invoice_url returned from NOWPayments
-        const paymentUrl = response.data?.invoice_url;
+        const paymentUrl = response.data?.paymentUrl;
+
 
         if (!paymentUrl) {
           throw new Error('No payment URL returned from server');
