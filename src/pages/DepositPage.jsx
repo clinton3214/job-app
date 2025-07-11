@@ -83,7 +83,7 @@ export default function DepositPage() {
       <main className="container d-flex flex-column align-items-center py-5">
         <div className="w-100" style={{ maxWidth: '512px' }}>
           <h3 className="fw-bold mb-4">Deposit</h3>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} className="text-black">
             <div className="mb-3">
               <label className="form-label">Amount</label>
               <input
@@ -116,7 +116,10 @@ export default function DepositPage() {
 
             <div className="mb-4">
               <label className="form-label">Currency</label>
-              <select {...register('currency')} className="form-select form-select-lg bg-light border-0 rounded">
+              <select
+                {...register('currency')}
+                className="form-select form-select-lg bg-light border-0 rounded"
+              >
                 <option value="BTC">BTC</option>
                 <option value="SOL">SOL</option>
                 <option value="BNB">BNB</option>
