@@ -6,14 +6,13 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import {
-  CurrencyDollar,
-  Clock,
-  ArrowsLeftRight,
-  People,
-  Plus,
-  CreditCard,
-} from 'react-bootstrap-icons';
+import CurrencyDollar from 'react-bootstrap-icons/dist/icons/currency-dollar';
+import Clock from 'react-bootstrap-icons/dist/icons/clock';
+import ArrowsAngleExpand from 'react-bootstrap-icons/dist/icons/arrows-angle-expand';
+import People from 'react-bootstrap-icons/dist/icons/people';
+import Plus from 'react-bootstrap-icons/dist/icons/plus';
+import CreditCard from 'react-bootstrap-icons/dist/icons/credit-card';
+
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
