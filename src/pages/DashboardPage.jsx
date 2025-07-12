@@ -9,7 +9,6 @@ import '../index.css';
 import CurrencyDollar from 'react-bootstrap-icons/dist/icons/currency-dollar';
 import Clock from 'react-bootstrap-icons/dist/icons/clock';
 import ArrowsLeftRight from 'react-bootstrap-icons/dist/icons/arrows-left-right';
-import ArrowsLeftRight from 'react-bootstrap-icons/dist/icons/arrows-left-right';
 import People from 'react-bootstrap-icons/dist/icons/people';
 import Plus from 'react-bootstrap-icons/dist/icons/plus';
 import CreditCard from 'react-bootstrap-icons/dist/icons/credit-card';
