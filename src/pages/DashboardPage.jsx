@@ -1,16 +1,23 @@
+// src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
-import { Offcanvas, Button, Nav } from 'react-bootstrap';
+import { Offcanvas, Button, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import { CurrencyDollar, Clock, ArrowsAngleExpand, People, Plus, CreditCard } from 'react-bootstrap-icons';
+import {
+  CurrencyDollar,
+  Clock,
+  ArrowsLeftRight,
+  People,
+  Plus,
+  CreditCard,
+} from 'react-bootstrap-icons';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 const jobCards = [
-  // ... Same jobCards array as before
   {
     title: "Deck Officer",
     company: "Maritime Solutions Inc.",
@@ -63,6 +70,8 @@ export default function DashboardPage() {
   const [balance, setBalance] = useState(null);
   const [referralBonus, setReferralBonus] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState({ name: 'Sophia Carter', role: 'Account Manager' });
+
   const navigate = useNavigate();
 
   const handleClose = () => setShowMenu(false);
@@ -82,8 +91,12 @@ export default function DashboardPage() {
         });
         setBalance(res.data.balance || 0);
         setReferralBonus(res.data.referralBonus || 0);
+        setUser({
+          name: res.data.name || 'Sophia Carter',
+          role: res.data.role || 'Account Manager',
+        });
       } catch (err) {
-        console.error('Failed to fetch balance', err);
+        console.error('Failed to fetch user data', err);
         setBalance('Failed');
         setReferralBonus('Failed');
       } finally {
@@ -94,111 +107,116 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="container-fluid bg-light min-vh-100 text-dark" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
-      <div className="row justify-content-center py-4">
-        <div className="col-12 col-md-6 col-lg-5">
+    <div className="min-vh-100 bg-light text-dark" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
+      {/* Top Header */}
+      <header className="d-flex justify-content-between align-items-center border-bottom px-4 py-3">
+        <div className="d-flex align-items-center gap-3">
+          <Button variant="outline-secondary" onClick={handleShow}>
+            ☰
+          </Button>
+          <h2 className="fs-5 fw-bold m-0">RemoteWork Hub</h2>
+        </div>
+        <Dropdown>
+          <Dropdown.Toggle variant="secondary" id="profile-dropdown">
+            Profile
+          </Dropdown.Toggle>
+          <Dropdown.Menu align="end">
+            <Dropdown.Item href="/profile">View Profile</Dropdown.Item>
+            <Dropdown.Item href="/referrals">View Referrals</Dropdown.Item>
+            <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </header>
+
+      {/* Sidebar Offcanvas */}
+      <Offcanvas show={showMenu} onHide={handleClose} placement="start">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Menu</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
           <div className="d-flex gap-3 align-items-center mb-4">
             <div
-              className="rounded-circle bg-cover bg-center"
+              className="rounded-circle bg-secondary"
               style={{
                 width: 40,
                 height: 40,
                 backgroundImage: 'url("")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
               }}
             ></div>
             <div>
-              <h6 className="mb-0">Sophia Carter</h6>
-              <small className="text-muted">Account Manager</small>
+              <h6 className="mb-0">{user.name}</h6>
+              <small className="text-muted">{user.role}</small>
             </div>
           </div>
           <div className="list-group">
-            <div className="list-group-item d-flex align-items-center gap-3 rounded mb-2">
-              <CurrencyDollar size={24} />
-              <span>Total Profit</span>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/total-profit')}>
+              <CurrencyDollar size={24} /> <span>Total Profit</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/history')}>
+              <Clock size={24} /> <span>Payment History</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/withdraw')}>
+              <ArrowsLeftRight size={24} /> <span>Withdrawal</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/referrals')}>
+              <People size={24} /> <span>View Referrals</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/add-funds')}>
+              <Plus size={24} /> <span>Add Funds</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/methods')}>
+              <CreditCard size={24} /> <span>Payment Methods</span>
+            </button>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
+
+      {/* Main Content */}
+      <main className="container py-4">
+        <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
+        <div className="row mb-5">
+          <div className="col-md-6 mb-3">
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Normal Balance</h6>
+              <h5>{loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}</h5>
             </div>
-            <div className="list-group-item d-flex align-items-center gap-3 rounded mb-2">
-              <Clock size={24} />
-              <span>Payment History</span>
-            </div>
-            <div className="list-group-item d-flex align-items-center gap-3 rounded mb-2">
-              <ArrowsAngleExpand size={24} />
-              <span>Withdrawal</span>
-            </div>
-            <div className="list-group-item d-flex align-items-center gap-3 rounded mb-2">
-              <People size={24} />
-              <span>View Referrals</span>
-            </div>
-            <div className="list-group-item d-flex align-items-center gap-3 rounded mb-2">
-              <Plus size={24} />
-              <span>Add Funds</span>
-            </div>
-            <div className="list-group-item d-flex align-items-center gap-3 rounded mb-2">
-              <CreditCard size={24} />
-              <span>Payment Methods</span>
+          </div>
+          <div className="col-md-6 mb-3">
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Referral Bonus</h6>
+              <h5>{loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}</h5>
             </div>
           </div>
         </div>
 
-        <div className="col-12 col-md-6 col-lg-7 mt-5 mt-md-0">
-          <div className="row mb-4">
-            <div className="col-sm-6 mb-3">
-              <div className="bg-white rounded shadow-sm p-3">
-                <h6 className="mb-1">Normal Balance</h6>
-                <h5>
-                  {loading
-                    ? '₦Loading…'
-                    : balance === 'Failed'
-                    ? 'Failed to load'
-                    : `₦${balance.toLocaleString()}`}
-                </h5>
-              </div>
-            </div>
-            <div className="col-sm-6 mb-3">
-              <div className="bg-white rounded shadow-sm p-3">
-                <h6 className="mb-1">Referral Bonus</h6>
-                <h5>
-                  {loading
-                    ? '₦Loading…'
-                    : referralBonus === 'Failed'
-                    ? 'Failed to load'
-                    : `₦${referralBonus.toLocaleString()}`}
-                </h5>
-              </div>
-            </div>
-          </div>
-
-          <h5 className="fw-bold mb-3">Remote Work Opportunities</h5>
-          {jobCards.map((job, idx) => {
-            const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
-            return (
-              <div
-                key={idx}
-                className="card mb-3 border-0 shadow-sm cursor-pointer"
-                onClick={() => navigate(path)}
-              >
-                <div className="row g-0">
-                  <div className="col-md-8 p-3">
-                    <p className="text-muted small">Remote</p>
-                    <h6 className="fw-bold m-0">{job.title}</h6>
-                    <small className="text-muted">{job.company} - Remote</small>
-                  </div>
-                  <div className="col-md-4">
-                    <div
-                      className="h-100 rounded-end"
-                      style={{
-                        backgroundImage: `url(${job.image})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
-                    ></div>
-                  </div>
+        <h2 className="fw-bold h4 mb-3">Remote Work Opportunities</h2>
+        {jobCards.map((job, idx) => {
+          const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
+          return (
+            <div key={idx} className="card mb-4 border-0 shadow-sm" style={{ cursor: 'pointer' }} onClick={() => navigate(path)}>
+              <div className="row g-0">
+                <div className="col-md-8 p-4">
+                  <p className="text-muted small">Remote</p>
+                  <h5 className="fw-bold m-0">{job.title}</h5>
+                  <p className="text-muted mb-0">{job.company} - Remote</p>
+                </div>
+                <div className="col-md-4">
+                  <div
+                    className="h-100 rounded-end"
+                    style={{
+                      backgroundImage: `url(${job.image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  ></div>
                 </div>
               </div>
-            );
-          })}
-        </div>
-      </div>
+            </div>
+          );
+        })}
+      </main>
     </div>
   );
 }
-
