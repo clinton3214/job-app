@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Offcanvas, Button, Dropdown } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Offcanvas, Button } from 'react-bootstrap';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import { BsCurrencyDollar, BsClock, BsPeople, BsPlus, BsCreditCard, BsPerson, BsBoxArrowRight } from 'react-icons/bs';
+import { BsCurrencyDollar, BsClock, BsPeople, BsPlus, BsCreditCard } from 'react-icons/bs';
 import { ArrowLeftRight } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
+const jobCards = [
+  // Add your jobCards data here
+];
 
 export default function DashboardPage() {
   const [showMenu, setShowMenu] = useState(false);
@@ -18,6 +21,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState({ name: 'Sophia Carter', role: 'Account Manager' });
 
   const navigate = useNavigate();
+
   const handleClose = () => setShowMenu(false);
   const handleShow = () => setShowMenu(true);
   const logout = () => {
@@ -50,14 +54,9 @@ export default function DashboardPage() {
     fetchBalance();
   }, []);
 
-  const [showProfile, setShowProfile] = useState(false);
-
-  const jobCards = [
-    // Job cards removed for brevity in this snippet. You can include them if needed.
-  ];
-
   return (
     <div className="min-vh-100 bg-light text-dark" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
+      {/* Top Header */}
       <header className="d-flex justify-content-between align-items-center border-bottom px-4 py-3">
         <div className="d-flex align-items-center gap-3">
           <Button variant="outline-secondary" onClick={handleShow}>
@@ -65,18 +64,37 @@ export default function DashboardPage() {
           </Button>
           <h2 className="fs-5 fw-bold m-0">RemoteWork Hub</h2>
         </div>
-        <Dropdown>
-          <Dropdown.Toggle variant="secondary" id="profile-dropdown">
-            Profile
-          </Dropdown.Toggle>
-          <Dropdown.Menu align="end">
-            <Dropdown.Item as={Link} to="#" onClick={() => setShowProfile(true)}>View Profile</Dropdown.Item>
-            <Dropdown.Item as={Link} to="/referrals">View Referrals</Dropdown.Item>
-            <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+        <div className="d-flex align-items-center gap-3">
+          <div
+            className="rounded-circle bg-secondary"
+            style={{
+              width: 40,
+              height: 40,
+              backgroundImage: 'url(https://via.placeholder.com/150)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          ></div>
+          <div className="dropdown">
+            <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              {user.name.split(' ')[0] || 'Profile'}
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              <li>
+                <Link className="dropdown-item" to="/profile">View Profile</Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/referrals">View Referrals</Link>
+              </li>
+              <li>
+                <button className="dropdown-item" onClick={logout}>Logout</button>
+              </li>
+            </ul>
+          </div>
+        </div>
       </header>
 
+      {/* Sidebar Offcanvas */}
       <Offcanvas show={showMenu} onHide={handleClose} placement="start">
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Menu</Offcanvas.Title>
@@ -88,7 +106,7 @@ export default function DashboardPage() {
               style={{
                 width: 40,
                 height: 40,
-                backgroundImage: 'url("")',
+                backgroundImage: 'url(https://via.placeholder.com/150)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
@@ -121,64 +139,50 @@ export default function DashboardPage() {
         </Offcanvas.Body>
       </Offcanvas>
 
-      {showProfile ? (
-        <div className="container py-5 text-center">
-          <div className="d-flex flex-column align-items-center">
-            <div
-              className="rounded-circle mb-3"
-              style={{
-                width: 128,
-                height: 128,
-                backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCOlL7TXThbt25VhAkaP7tIXJXXeCuLpZsiwa7Av46HTbXRJjjCLqVXHOwqccgCuGgefTMsfNhofkw8JORfk9z35Len82uJGSSmaKmEkUghAe5g878aFHmZ8nIqOtmBtKAXm6TJdHUSVSBGNtFBZb5WcWC50SVZzo8f55S4UM1CngNGUajtP84bHlSP5SzZx81HOdp1ZC1iU7ZgG6iWI0VYo_xsG_k2KOd8eS11Y729YwIjtBOzvbaa_TwuIArB0ItDld7wL0Atuw8")',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            ></div>
-            <h4 className="fw-bold">{user.name}</h4>
-            <p className="text-muted">sophia.carter@email.com</p>
+      {/* Main Content */}
+      <main className="container py-4">
+        <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
+        <div className="row mb-5">
+          <div className="col-md-6 mb-3">
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Normal Balance</h6>
+              <h5>{loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}</h5>
+            </div>
           </div>
-          <div className="mt-4">
-            <div className="d-flex align-items-center gap-3 justify-content-center mb-3">
-              <div className="bg-light rounded-circle d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
-                <BsPerson size={20} />
-              </div>
-              <span>View Profile</span>
-            </div>
-            <div className="d-flex align-items-center gap-3 justify-content-center mb-3">
-              <div className="bg-light rounded-circle d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
-                <BsPeople size={20} />
-              </div>
-              <span>View Referrals</span>
-            </div>
-            <div className="d-flex align-items-center gap-3 justify-content-center">
-              <div className="bg-light rounded-circle d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
-                <BsBoxArrowRight size={20} />
-              </div>
-              <span style={{ cursor: 'pointer' }} onClick={logout}>Logout</span>
+          <div className="col-md-6 mb-3">
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Referral Bonus</h6>
+              <h5>{loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}</h5>
             </div>
           </div>
         </div>
-      ) : (
-        <main className="container py-4">
-          <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
-          <div className="row mb-5">
-            <div className="col-md-6 mb-3">
-              <div className="bg-white rounded shadow-sm p-3">
-                <h6 className="mb-1">Normal Balance</h6>
-                <h5>{loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}</h5>
+        <h2 className="fw-bold h4 mb-3">Remote Work Opportunities</h2>
+        {jobCards.map((job, idx) => {
+          const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
+          return (
+            <div key={idx} className="card mb-4 border-0 shadow-sm" style={{ cursor: 'pointer' }} onClick={() => navigate(path)}>
+              <div className="row g-0">
+                <div className="col-md-8 p-4">
+                  <p className="text-muted small">Remote</p>
+                  <h5 className="fw-bold m-0">{job.title}</h5>
+                  <p className="text-muted mb-0">{job.company} - Remote</p>
+                </div>
+                <div className="col-md-4">
+                  <div
+                    className="h-100 rounded-end"
+                    style={{
+                      backgroundImage: `url(${job.image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  ></div>
+                </div>
               </div>
             </div>
-            <div className="col-md-6 mb-3">
-              <div className="bg-white rounded shadow-sm p-3">
-                <h6 className="mb-1">Referral Bonus</h6>
-                <h5>{loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}</h5>
-              </div>
-            </div>
-          </div>
-          <h2 className="fw-bold h4 mb-3">Remote Work Opportunities</h2>
-          {/* jobCards rendering can go here if needed */}
-        </main>
-      )}
+          );
+        })}
+      </main>
     </div>
   );
 }
+
