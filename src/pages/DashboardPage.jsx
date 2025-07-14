@@ -1,10 +1,11 @@
+// src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Offcanvas, Button } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import { BsCurrencyDollar, BsClock, BsPeople, BsPlus, BsCreditCard } from 'react-icons/bs';
+import { BsCurrencyDollar, BsClock, BsPeople, BsPlus, BsCreditCard, BsPerson, BsBoxArrowRight } from 'react-icons/bs';
 import { ArrowLeftRight } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
@@ -65,29 +66,25 @@ export default function DashboardPage() {
           <h2 className="fs-5 fw-bold m-0">RemoteWork Hub</h2>
         </div>
         <div className="d-flex align-items-center gap-3">
-          <div
-            className="rounded-circle bg-secondary"
-            style={{
-              width: 40,
-              height: 40,
-              backgroundImage: 'url(https://via.placeholder.com/150)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          ></div>
           <div className="dropdown">
             <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
               {user.name.split(' ')[0] || 'Profile'}
             </button>
             <ul className="dropdown-menu dropdown-menu-end">
               <li>
-                <Link className="dropdown-item" to="/profile">View Profile</Link>
+                <Link className="dropdown-item d-flex align-items-center gap-2" to="/profile">
+                  <BsPerson /> View Profile
+                </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="/referrals">View Referrals</Link>
+                <Link className="dropdown-item d-flex align-items-center gap-2" to="/referrals">
+                  <BsPeople /> View Referrals
+                </Link>
               </li>
               <li>
-                <button className="dropdown-item" onClick={logout}>Logout</button>
+                <button className="dropdown-item d-flex align-items-center gap-2" onClick={logout}>
+                  <BsBoxArrowRight /> Logout
+                </button>
               </li>
             </ul>
           </div>
@@ -106,7 +103,7 @@ export default function DashboardPage() {
               style={{
                 width: 40,
                 height: 40,
-                backgroundImage: 'url(https://via.placeholder.com/150)',
+                backgroundImage: 'url("")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
