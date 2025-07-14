@@ -31,9 +31,9 @@ export default function PaymentMethodsPage() {
                 Deposit using Bitcoin (BTC), Binance Coin (BNB), Tether (USDT), or Solana (SOL). 
                 Fast, secure, and blockchain-based.
               </p>
-              <a href="/deposit/add-funds" className="btn btn-primary mt-auto">
-                Deposit via Crypto
-              </a>
+              <a href="/deposit" className="btn btn-primary mt-auto">
+                    Deposit via Crypto
+                  </a>             
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function PaymentMethodsPage() {
                 Use your credit or debit card (Visa, MasterCard). 
                 Currently a placeholder (not functional).
               </p>
-              <a href="/deposit/add-funds" className="btn btn-secondary mt-auto">
+              <a href="/not-available" className="btn btn-secondary mt-auto">
                 Deposit via Card
               </a>
             </div>
@@ -61,7 +61,7 @@ export default function PaymentMethodsPage() {
                 Deposit using Cash App. Placeholder integration. 
                 Cash App username: <code>$YourCashAppID</code>
               </p>
-              <a href="/deposit/add-funds" className="btn btn-success mt-auto">
+              <a href="/not-available" className="btn btn-success mt-auto">
                 Deposit via Cash App
               </a>
             </div>

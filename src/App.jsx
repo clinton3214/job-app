@@ -8,6 +8,7 @@ import LoginSignupPage     from './pages/LoginSignupPage';
 import DashboardPage       from './pages/DashboardPage';
 import DepositPage         from './pages/DepositPage';
 import PaymentMethodsPage  from './pages/PaymentMethodsPage';
+import NotAvailablePage from './pages/NotAvailablePage';
 import DepositSuccessPage  from './pages/DepositSuccessPage';
 import DepositCancelPage   from './pages/DepositCancelPage';
 import WithdrawPage        from './pages/WithdrawPage';
@@ -34,6 +35,7 @@ export default function App() {
         {/* Deposit flows */}
         <Route path="/deposit/add-funds" element={<DepositPage />} />
         <Route path="/deposit/methods"   element={<PaymentMethodsPage />} />
+        <Route path="/not-available" element={<NotAvailablePage />} />
         <Route path="/deposit/success"   element={<DepositSuccessPage />} />
         <Route path="/deposit/cancel"    element={<DepositCancelPage />} />
 
