@@ -111,17 +111,29 @@ export default function DashboardPage() {
           </Button>
           <h2 className="fs-5 fw-bold m-0">RemoteWork Hub</h2>
         </div>
-        <Dropdown>
-          <Dropdown.Toggle variant="secondary" id="profile-dropdown">
-            Profile
-          </Dropdown.Toggle>
-          <Dropdown.Menu align="end">
-            <Dropdown.Item href="/profile">View Profile</Dropdown.Item>
-            <Dropdown.Item href="/referrals">View Referrals</Dropdown.Item>
-            <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </header>
+      
+        <Offcanvas show={showMenu} onHide={handleClose}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Menu</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+          <Nav className="flex-column">
+          <Nav.Item>
+              <Nav.Link as={Link} to="/profile">• view profile</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+            <Nav.Link as={Link} to="/referrals">• view Referrals</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+            <Nav.Link onClick={Logout} style={{ cursor: 'pointer' }}>
+        Logout
+        </Nav.Link>
+            </Nav.Item>         
+          </Nav>
+          </Offcanvas.Body>
+          </Offcanvas>
+          </header>
+      
 
       {/* Sidebar Offcanvas */}
       <Offcanvas show={showMenu} onHide={handleClose} placement="start">
@@ -167,7 +179,7 @@ export default function DashboardPage() {
           </div>
         </Offcanvas.Body>
       </Offcanvas>
-
+              
       {/* Main Content */}
       <main className="container py-4">
         <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
