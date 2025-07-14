@@ -31,7 +31,7 @@ export default function PaymentMethodsPage() {
                 Deposit using Bitcoin (BTC), Binance Coin (BNB), Tether (USDT), or Solana (SOL). 
                 Fast, secure, and blockchain-based.
               </p>
-              <a href="/deposit" className="btn btn-primary mt-auto">
+              <a href="/deposit/add-funds" className="btn btn-primary mt-auto">
                     Deposit via Crypto
                   </a>             
             </div>
