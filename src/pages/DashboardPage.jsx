@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
 import { BsCurrencyDollar, BsClock, BsPeople, BsPlus, BsCreditCard } from 'react-icons/bs';
 
-import { ArrowsLeftRight } from 'lucide-react';
+import { ArrowLeftRight } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
@@ -153,7 +153,7 @@ export default function DashboardPage() {
               <BsClock size={24} /> <span>Payment History</span>
             </button>
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/withdraw')}>
-            <ArrowsLeftRight size={24} /> <span>Withdrawal</span>
+            <ArrowLeftRight size={24} /> <span>Withdrawal</span>
             </button>
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/referrals')}>
               <BsPeople size={24} /> <span>View Referrals</span>
