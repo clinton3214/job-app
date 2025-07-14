@@ -1,6 +1,6 @@
 // src/pages/PaymentMethodsPage.jsx
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 /**
@@ -9,7 +9,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
  */
 export default function PaymentMethodsPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const selectedJob = location.state?.job || 'a job position';
+
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
 
   return (
     <div className="container my-5">
