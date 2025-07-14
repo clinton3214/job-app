@@ -6,13 +6,9 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import CurrencyDollar from 'react-bootstrap-icons/dist/icons/currency-dollar';
-import Clock from 'react-bootstrap-icons/dist/icons/clock';
-import { ArrowsLeftRight } from 'lucide-react';
-import People from 'react-bootstrap-icons/dist/icons/people';
-import Plus from 'react-bootstrap-icons/dist/icons/plus';
-import CreditCard from 'react-bootstrap-icons/dist/icons/credit-card';
+import { BsCurrencyDollar, BsClock, BsPeople, BsPlus, BsCreditCard } from 'react-icons/bs';
 
+import { ArrowsLeftRight } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
@@ -151,22 +147,22 @@ export default function DashboardPage() {
           </div>
           <div className="list-group">
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/total-profit')}>
-              <CurrencyDollar size={24} /> <span>Total Profit</span>
+              <BsCurrencyDollar size={24} /> <span>Total Profit</span>
             </button>
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/history')}>
-              <Clock size={24} /> <span>Payment History</span>
+              <BsClock size={24} /> <span>Payment History</span>
             </button>
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/withdraw')}>
             <ArrowsLeftRight size={24} /> <span>Withdrawal</span>
             </button>
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/referrals')}>
-              <People size={24} /> <span>View Referrals</span>
+              <BsPeople size={24} /> <span>View Referrals</span>
             </button>
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/add-funds')}>
-              <Plus size={24} /> <span>Add Funds</span>
+              <BsPlus size={24} /> <span>Add Funds</span>
             </button>
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/methods')}>
-              <CreditCard size={24} /> <span>Payment Methods</span>
+              <BsCreditCard size={24} /> <span>Payment Methods</span>
             </button>
           </div>
         </Offcanvas.Body>
