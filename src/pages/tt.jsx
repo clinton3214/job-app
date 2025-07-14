@@ -1,11 +1,13 @@
 // src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
-import { Offcanvas, Button, Dropdown, Nav } from 'react-bootstrap';
+import { Offcanvas, Button, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
+import { BsCurrencyDollar, BsClock, BsPeople, BsPlus, BsCreditCard, BsPerson, BsBoxArrowRight } from 'react-icons/bs';
+import { ArrowLeftRight } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
@@ -62,11 +64,12 @@ export default function DashboardPage() {
   const [balance, setBalance] = useState(null);
   const [referralBonus, setReferralBonus] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState({ name: 'Sophia Carter', role: 'Account Manager' });
+
   const navigate = useNavigate();
 
   const handleClose = () => setShowMenu(false);
   const handleShow = () => setShowMenu(true);
-
   const logout = () => {
     localStorage.removeItem('token');
     navigate('/');
@@ -82,8 +85,12 @@ export default function DashboardPage() {
         });
         setBalance(res.data.balance || 0);
         setReferralBonus(res.data.referralBonus || 0);
+        setUser({
+          name: res.data.name || 'Sophia Carter',
+          role: res.data.role || 'Account Manager',
+        });
       } catch (err) {
-        console.error('Failed to fetch balance', err);
+        console.error('Failed to fetch user data', err);
         setBalance('Failed');
         setReferralBonus('Failed');
       } finally {
@@ -93,105 +100,121 @@ export default function DashboardPage() {
     fetchBalance();
   }, []);
 
+  const [showProfile, setShowProfile] = useState(false);
+
   return (
-    <>
+    <div className="min-vh-100 bg-light text-dark" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
       {/* Top Header */}
-      <div className="min-vh-100 bg-light" style={{ fontFamily: "Inter, Noto Sans, sans-serif" }}>
-        <header className="d-flex justify-content-between align-items-center border-bottom px-4 py-3">
-          <div className="d-flex align-items-center gap-3">
-            <Button variant="outline-secondary" onClick={handleShow}>☰</Button>
-            <h2 className="fs-5 fw-bold m-0">RemoteWork Hub</h2>
-          </div>
-          <Dropdown>
-            <Dropdown.Toggle variant="secondary" id="profile-dropdown">
-              Profile
-            </Dropdown.Toggle>
-            <Dropdown.Menu align="end">
-              <Dropdown.Item href="/profile">View Profile</Dropdown.Item>
-              <Dropdown.Item href="/referrals">View Referrals</Dropdown.Item>
-              <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </header>
+      <header className="d-flex justify-content-between align-items-center border-bottom px-4 py-3">
+        <div className="d-flex align-items-center gap-3">
+          <Button variant="outline-secondary" onClick={handleShow}>
+            ☰
+          </Button>
+          <h2 className="fs-5 fw-bold m-0">RemoteWork Hub</h2>
+        </div>
+        
+        <Dropdown>
+        <Dropdown.Toggle variant="secondary" id="profile-dropdown">
+          Profile
+        </Dropdown.Toggle>
+        <Dropdown.Menu align="end">
+          <Dropdown.Item as={Link} to="#" onClick={() => setShowProfile(true)}>View Profile</Dropdown.Item>
+          <Dropdown.Item as={Link} to="/referrals">View Referrals</Dropdown.Item>
+          <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    
+      </header>
 
-        {/* Sidebar Offcanvas */}
-        <Offcanvas show={showMenu} onHide={handleClose}>
-          <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Menu</Offcanvas.Title>
-          </Offcanvas.Header>
-          <Offcanvas.Body>
-          <Nav className="flex-column">
-            <Nav.Item>
-              <Nav.Link as={Link} to="/total-profit">• Total Profit</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link as={Link} to="/history">• Payment History</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link as={Link} to="/withdraw">• Withdraw</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link as={Link} to="/referrals">• View Referrals</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link as={Link} to="/deposit/add-funds">• Add Funds</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link as={Link} to="/deposit/methods">• Payment Methods</Nav.Link>
-            </Nav.Item>
-          </Nav>
-          </Offcanvas.Body>
-        </Offcanvas>
-
-        {/* Main Section */}
-        <main className="container py-4">
-          <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
-          <div className="row mb-5">
-            <div className="col-md-6 mb-3">
-              <div className="bg-secondary rounded-4 p-4 text-dark">
-                <h5>Normal Balance</h5>
-                <h3 className="fw-bold">
-                  {loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}
-                </h3>
-              </div>
-            </div>
-            <div className="col-md-6 mb-3">
-              <div className="bg-secondary rounded-4 p-4 text-dark">
-                <h5>Referral Bonus</h5>
-                <h3 className="fw-bold">
-                  {loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}
-                </h3>
-              </div>
+      {/* Sidebar Offcanvas */}
+      <Offcanvas show={showMenu} onHide={handleClose} placement="start">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Menu</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <div className="d-flex gap-3 align-items-center mb-4">
+            <div
+              className="rounded-circle bg-secondary"
+              style={{
+                width: 40,
+                height: 40,
+                backgroundImage: 'url("")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            ></div>
+            <div>
+              <h6 className="mb-0">{user.name}</h6>
+              <small className="text-muted">{user.role}</small>
             </div>
           </div>
+          <div className="list-group">
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/total-profit')}>
+              <BsCurrencyDollar size={24} /> <span>Total Profit</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/history')}>
+              <BsClock size={24} /> <span>Payment History</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/withdraw')}>
+            <ArrowLeftRight size={24} /> <span>Withdrawal</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/referrals')}>
+              <BsPeople size={24} /> <span>View Referrals</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/add-funds')}>
+              <BsPlus size={24} /> <span>Add Funds</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/methods')}>
+              <BsCreditCard size={24} /> <span>Payment Methods</span>
+            </button>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
 
-          <h2 className="fw-bold h4 mb-3">Remote Work Opportunities</h2>
-          {jobCards.map((job, idx) => {
-            const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
-            return (
-              <div key={idx} className="card mb-4 border-0 shadow-sm" style={{ cursor: "pointer" }} onClick={() => navigate(path)}>
-                <div className="row g-0">
-                  <div className="col-md-8 p-4">
-                    <p className="text-muted small">Remote</p>
-                    <h5 className="fw-bold m-0">{job.title}</h5>
-                    <p className="text-muted mb-0">{job.company} - Remote</p>
-                  </div>
-                  <div className="col-md-4">
-                    <div
-                      className="h-100 rounded-end"
-                      style={{
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        backgroundImage: `url(${job.image})`,
-                      }}
-                    ></div>
-                  </div>
+      {/* Main Content */}
+      <main className="container py-4">
+        <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
+        <div className="row mb-5">
+          <div className="col-md-6 mb-3">
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Normal Balance</h6>
+              <h5>{loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}</h5>
+            </div>
+          </div>
+          <div className="col-md-6 mb-3">
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Referral Bonus</h6>
+              <h5>{loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}</h5>
+            </div>
+          </div>
+        </div>
+
+        <h2 className="fw-bold h4 mb-3">Remote Work Opportunities</h2>
+        {jobCards.map((job, idx) => {
+          const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
+          return (
+            <div key={idx} className="card mb-4 border-0 shadow-sm" style={{ cursor: 'pointer' }} onClick={() => navigate(path)}>
+              <div className="row g-0">
+                <div className="col-md-8 p-4">
+                  <p className="text-muted small">Remote</p>
+                  <h5 className="fw-bold m-0">{job.title}</h5>
+                  <p className="text-muted mb-0">{job.company} - Remote</p>
+                </div>
+                <div className="col-md-4">
+                  <div
+                    className="h-100 rounded-end"
+                    style={{
+                      backgroundImage: `url(${job.image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  ></div>
                 </div>
               </div>
-            );
-          })}
-        </main>
-      </div>
-    </>
+            </div>
+          );
+        })}
+      </main>
+    </div>
   );
 }
