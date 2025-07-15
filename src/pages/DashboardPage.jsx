@@ -119,6 +119,7 @@ export default function DashboardPage() {
         </Dropdown.Toggle>
         <Dropdown.Menu align="end">
           <Dropdown.Item as={Link} to="#" onClick={() => setShowProfile(true)}>View Profile</Dropdown.Item>
+          <Dropdown.Item as={Link} to="/profile">View profile</Dropdown.Item>
           <Dropdown.Item as={Link} to="/referrals">View Referrals</Dropdown.Item>
           <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
         </Dropdown.Menu>
