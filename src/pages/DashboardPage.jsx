@@ -34,6 +34,41 @@ const jobCards = [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAkKsR32m71bcrJEXBrKLWULgBJ1XFSq38MoGMCv-WeK9j5lKBmpDWwHIM2jtST0c6scl_PDlc-Flnt0sak5oYWnwY4cJ6M9RXg-KgpmB5D7cGGuDOIJdqnP5nkdWTehG96-ngz9XBNhjWrg-jJOW-j-y1DQQQVUKRKA3_mFZ3MqWmcG1HP09Z554E32KMYxwAyHVBbZKCNJGdfjkxzVLJc-2mPjfiEUkNLwn0RzZ1sJhNgNTLRWP6Om_2Ly_lEUrhlC-ASYwmb8pQ',
   },
   {
+    title: "Advertisers",
+    company: "Digital Marketing Co.",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuC4rlgSTu2bPSXWEKyNPdHZv_p3FvrHknekdXnPfX1xW_3eyjgBnc5hWvtaBdQLubeeCl_suJEtgC0Xvv9zvOy2C_iahrRiSNRhT79paHJe852d4uaFZPPjjO1P0k0T7XB9KaDNFhogpLtxmnBG6vpS_4nKmYG0AAq79RjkIH6HLlMQsKycvIHEjoD4_AkKZwx_fA-DuoUxe9wpAFm_Tb4G8Myo5q2Xaz4okjiKycJmwCjuZhO-CzmZyEuh_ztgO-Q2vkRVoYCylmc",
+  },
+  {
+    title: "Online Tutoring",
+    company: "EduConnect",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCtEaVxCGnR7PPQQM4D2rfk_ewhdxyb1tR06B4vSHNnmN8PM6YtifyTw0VWLT9wKAA-b6I-qhcxg5bQBwcpCiPgXIoCOo0CGGmo4MtsYhC5MoGRjo2iZkSbAPAgpvIo9wjDmdSgzFiaIoM8MsinbB1YTRMT38mdxa6olN1w02SuDTLJc7ebuKfP9SKjFSjEdALPg8qIYtJGXL_WpQMVPE4Yeow9rN4mj094596AI4KoTolACzQf1VnoyFUT6MiW-R9ad_D6eNRpiuA",
+  },
+  {
+    title: "Social Media Management",
+    company: "Social Media Agency",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD-mwPVTPHnO_YbKtvBVvbKgLxkQDVDLw46_nMQDg3ud5HWwJIgi77OQ4CwGNsR0dDsxpsKofqcNUgkMaWzBLHQkgOW3ECgcSMSSvMUtckGL8nsvUdCMDKsBR__O3hr4lLrqXayX1UmGhNLfYRRaOlDAdXiNiJZ0ioquPLZBwkBjfz6IT1viNKrrXly-sEhcZDYnEZo-d9a8gRH0bP3UjNHFFyjyHITU51onFMYizqqYnqn_PR-EAENEgKP3NmNjqWfLX7P4fD5kDA",
+  },
+  {
+    title: "Transcription Services",
+    company: "TranscribeIt",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDcQA0X258xN-lnXtEixX5VOT51lsFFPkz1i4zAJtxhO1rZnPrn74LLG8WYcqdl0S82xF3EFXgcy2e2DLK__BfuE8Q9hhtsTEHXFOu7G56rZDs13_9tiyxKLAig7Jx1SoYp6NMtIRulijZcusjDraxpl1bdTEg6RgZAf4lyF9bd9cGskqK8DK5-_ELF9S9Y_NcNeqLavoB_Jf0s4-gbQ4752gNJRqwCaGt_U7mJaEskpreBUA1YS_YAh0vzqhC33ylT-ypsWy2eipc",
+  },
+  {
+    title: "Online Survey Taker",
+    company: "SurveyCentral",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBfYcn2BlhgGRwCZZEUWkYWcUe9BVG_McwJFgx3-5rJ7FQxXeZV2IR_XMIM8Heeu1RZhhBnZ4V97OYcUOlV9cxMOov7T_QEzs92C-gLN63c8bw2RlqQMEpOLpYMt8Z1t5x0SByn2NhWxq58VxOk_DW29RM6qNL3DluUA7GKdeaHUUseSgv8ZVjIrCwmIjikyzq7ZzLgUJmG36Z4A2TD3tdH_Cnu_HvDer-3WKHpCqFMBzbKOm3tIanUgMHYfGwXuYoudXz0u78GZEs",
+  },
+  {
+    title: "Software Development",
+    company: "Tech Innovators",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCKcQ3VNCytGBkExQB3wBa9PeheDsutL2bIcfEt7ma7p9sQPrr9aEYMcSStdjdKqxvEENYsKePl2s4l0hZrfx4fgtFwQd6sjgYKFJqVSedCrFEo6c8JhtlSbNrzUxIhkbOaa4D63xWQ2UtVqO3JLrdDPa-R4rpB0BI3-9VoS7oYDeu9Kh9mGnpR-hnCW0kFzl1VuCI8jl1KD2nZHE9v9KuGuZt7E5GUFMk69zczj217CWLLIUwoAssqMRZph0DTTh2Tacgd1dwV0ko",
+  },
+  {
+    title: "E-commerce Selling",
+    company: "Online Retail Group",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAaEhVJm9HYgbLyWbSFF-RDJknjPn6lRkw_-h4GQqrNEAuizYTzUX0Q5tKh1mTbDrDG4naFF-VGq34MSedcMFNSQn2b-R-74lfdta5IRL9kclVKHsfBsPvYbTgSXi9osR8H3bYilUNhr0C20ulLyKRXzJGRd5e0RpY27NK20AX4D64nTEQ5NpJdecpR1nhllPPezmq0xhV3IlgpMvSCXgZZQIPvss6y62y1QV1FrAI3Hbr_dpVcqQ4hBi45ObXVHlvNx7clnxBlykA",
+  },
+  {
     title: 'Remote Customer Service Representative',
     company: 'Customer Care Solutions',
     image:

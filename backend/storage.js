@@ -26,7 +26,7 @@ router.use(cors({
 
 // Route to create a crypto charge
 async function createCryptoCharge(req, res) {
-  const { amount, currency, userEmail, price_currency } = req.body;
+  const { amount, currency, userEmail } = req.body;
 
   if (!amount || !currency) {
     return res.status(400).json({ error: 'Missing amount or currency' });
@@ -37,7 +37,7 @@ async function createCryptoCharge(req, res) {
       `${API_URL}/invoice`,
       {
         price_amount: amount,
-        price_currency: req.body.price_currency?.toLowerCase() || 'ngn',
+        price_currency: 'ngn',
         pay_currency: currency.toLowerCase(),
         order_id: userEmail || `guest-${Date.now()}`,
         ipn_callback_url: `${req.protocol}://${req.get('host')}/api/payment/ipn`,

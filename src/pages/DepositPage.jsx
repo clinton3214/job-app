@@ -7,20 +7,26 @@ const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 export default function DepositPage() {
   const { register, handleSubmit } = useForm({
-    defaultValues: { method: 'crypto', currency: 'BTC' },
+    defaultValues: {
+      method: 'crypto',
+      currency: 'BTC',
+      fiatCurrency: 'USD', // default fiat currency
+    },
   });
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async ({ amount, method, currency }) => {
+  const onSubmit = async ({ amount, method, currency, fiatCurrency }) => {
     if (!amount || amount <= 0) {
       return alert('Please enter a valid amount');
     }
+
     if (method === 'crypto') {
       setLoading(true);
       try {
         const response = await axios.post(`${API_BASE}/api/payment/crypto-charge`, {
           amount,
-          currency,
+          currency, // pay_currency
+          price_currency: fiatCurrency.toLowerCase(), // send chosen fiat currency
         });
         const paymentUrl = response.data?.paymentUrl;
         if (!paymentUrl) {
@@ -45,26 +51,14 @@ export default function DepositPage() {
     <div className="container-fluid bg-light min-vh-100 d-flex flex-column text-black">
       <header className="d-flex justify-content-between align-items-center border-bottom px-3 py-2 bg-white">
         <div className="d-flex align-items-center gap-2">
-          <svg
-            width="32"
-            height="32"
-            fill="currentColor"
-            className="bi bi-circle-fill text-primary"
-            viewBox="0 0 16 16"
-          >
+          <svg width="32" height="32" fill="currentColor" className="bi bi-circle-fill text-primary" viewBox="0 0 16 16">
             <circle cx="8" cy="8" r="8" />
           </svg>
           <h5 className="mb-0 fw-bold">Coinbase</h5>
         </div>
         <div className="d-flex align-items-center gap-3">
           <button className="btn btn-outline-secondary p-2 rounded-circle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              fill="currentColor"
-              viewBox="0 0 256 256"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
               <path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z" />
             </svg>
           </button>
@@ -79,7 +73,6 @@ export default function DepositPage() {
           ></div>
         </div>
       </header>
-
       <main className="container d-flex flex-column align-items-center py-5">
         <div className="w-100" style={{ maxWidth: '512px' }}>
           <h3 className="fw-bold mb-4">Deposit</h3>
@@ -96,7 +89,21 @@ export default function DepositPage() {
               />
             </div>
 
-            <h5 className="mt-4 mb-3">Payment method</h5>
+            {/* New FIAT currency selector */}
+            <div className="mb-4">
+              <label className="form-label">Currency to Pay In</label>
+              <select
+                {...register('fiatCurrency')}
+                className="form-select form-select-lg bg-light border-0 rounded"
+              >
+                <option value="USD">USD</option>
+                <option value="NGN">NGN</option>
+                <option value="GBP">GBP</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+
+            <h5 className="mt-4 mb-3">Payment Method</h5>
             <div className="mb-3">
               {['crypto', 'card', 'cashapp'].map((value) => (
                 <div key={value} className="form-check mb-2">
@@ -115,7 +122,7 @@ export default function DepositPage() {
             </div>
 
             <div className="mb-4">
-              <label className="form-label">Currency</label>
+              <label className="form-label">Crypto Currency</label>
               <select
                 {...register('currency')}
                 className="form-select form-select-lg bg-light border-0 rounded"
