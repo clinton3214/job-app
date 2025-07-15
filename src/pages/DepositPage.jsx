@@ -54,7 +54,7 @@ export default function DepositPage() {
           <svg width="32" height="32" fill="currentColor" className="bi bi-circle-fill text-primary" viewBox="0 0 16 16">
             <circle cx="8" cy="8" r="8" />
           </svg>
-          <h5 className="mb-0 fw-bold">Coinbase</h5>
+          <h5 className="mb-0 fw-bold">startnetnexus</h5>
         </div>
         <div className="d-flex align-items-center gap-3">
           <button className="btn btn-outline-secondary p-2 rounded-circle">
@@ -96,10 +96,10 @@ export default function DepositPage() {
                 {...register('fiatCurrency')}
                 className="form-select form-select-lg bg-light border-0 rounded"
               >
-                <option value="USD">USD</option>
-                <option value="NGN">NGN</option>
-                <option value="GBP">GBP</option>
-                <option value="EUR">EUR</option>
+                <option value="USD">USD-united states dollars</option>
+                <option value="NGN">NGN-nigeria naira</option>
+                <option value="GBP">GBP-pounds</option>
+                <option value="EUR">EUR-Euro</option>
               </select>
             </div>
 

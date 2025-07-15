@@ -128,7 +128,7 @@ export default function DashboardPage() {
           <Button variant="outline-secondary" onClick={handleShow}>
             ☰
           </Button>
-          <h2 className="fs-5 fw-bold m-0">RemoteWork Hub</h2>
+          <h2 className="fs-5 fw-bold m-0">startnetnexus</h2>
         </div>
 
         <Button variant="secondary" onClick={handleProfileToggle} className="d-flex align-items-center gap-2">

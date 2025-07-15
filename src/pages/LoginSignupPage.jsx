@@ -65,7 +65,7 @@ export default function LoginSignupPage() {
                 <path fillRule="evenodd" clipRule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor"></path>
               </svg>
             </div>
-            <h2 className="fs-5 fw-bold m-0">ConnectU</h2>
+            <h2 className="fs-5 fw-bold m-0">startnetnexus</h2>
           </div>
           <div className="d-flex flex-grow-1 justify-content-end gap-4">
             <nav className="d-flex align-items-center gap-4">
