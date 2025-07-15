@@ -83,7 +83,7 @@ export default function DepositPage() {
                 {...register('amount', { valueAsNumber: true })}
                 type="number"
                 step="0.01"
-                className="form-control form-control-lg bg-light text-black border-0 rounded"
+                 className="form-control form-control-lg bg-white text-black border border-secondary rounded shadow-sm"
                 placeholder="Enter amount"
                 required
               />
@@ -125,12 +125,12 @@ export default function DepositPage() {
               <label className="form-label">Crypto Currency</label>
               <select
                 {...register('currency')}
-                className="form-select form-select-lg bg-light border-0 rounded"
+                className="form-select form-select-lg bg-white text-black border border-secondary rounded shadow-sm"
               >
                 <option value="BTC">BTC</option>
                 <option value="SOL">SOL</option>
                 <option value="BNB">BNB</option>
-                <option value="TT">TT</option>
+                <option value="TT">to add future crypto</option>
               </select>
             </div>
 
