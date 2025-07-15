@@ -1,114 +1,149 @@
-// backend/src/routes/payment.js
+// backend/src/routes/user.js
 import express from 'express';
-import axios from 'axios';
-import cors from 'cors';
-import { verifyNowPaymentsSignature, parseOrderId } from '../utils/nowpayments.js';
-import { markDepositPaid } from '../utils/database.js';
+import auth from '../middleware/auth.js';
+import { User } from '../models/User.js';
+import { Transaction } from '../models/Transaction.js'; // ✅ Needed for profit summary
 
 const router = express.Router();
-const API_URL = 'https://api.nowpayments.io/v1';
-const API_KEY = process.env.NOWPAYMENTS_API_KEY;
-const IPN_SECRET = process.env.NOWPAYMENTS_IPN_SECRET;
 
-// Allow frontend origin
-const allowedOrigins = ['https://job-app-frontend-3dld.onrender.com'];
+// 🔒 Secure all routes below with auth middleware
+router.use(auth);
 
-router.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
-
-// Route to create a crypto charge
-async function createCryptoCharge(req, res) {
-  const { amount, currency, userEmail } = req.body;
-
-  if (!amount || !currency) {
-    return res.status(400).json({ error: 'Missing amount or currency' });
-  }
-
+// 📄 Return basic user info (used by dashboard)
+router.get('/me', async (req, res) => {
   try {
-    const { data } = await axios.post(
-      `${API_URL}/invoice`,
-      {
-        price_amount: amount,
-        price_currency: 'ngn',
-        pay_currency: currency.toLowerCase(),
-        order_id: userEmail || `guest-${Date.now()}`,
-        ipn_callback_url: `${req.protocol}://${req.get('host')}/api/payment/ipn`,
-        success_url: `https://job-app-frontend-3dld.onrender.com/deposit/success`,
-        cancel_url: `https://job-app-frontend-3dld.onrender.com/deposit/cancel`,
-      },
-      {
-        headers: {
-          'x-api-key': API_KEY,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const user = await User.findByPk(req.user.sub);
+    if (!user) return res.status(404).json({ error: 'User not found' });
 
-    console.log('NOWPayments response.data:', data);
-
-    const checkoutUrl = data.invoice_url;
-
-    if (!checkoutUrl) {
-      console.error('❌ No checkout URL in NOWPayments response:', data);
-      return res.status(500).json({ error: 'No checkout URL returned by gateway' });
-    }
-
-    // ✅ Frontend expects `paymentUrl`
-    return res.json({ paymentUrl: checkoutUrl });
-
+    res.json({
+      balance: user.balance || 0,
+      referralBonus: user.referralBonus || 0,
+    });
   } catch (err) {
-    console.error('NOWPayments error:', {
-      message: err.message,
-      response: err.response?.data,
-      status: err.response?.status,
-      headers: err.response?.headers,
+    console.error('User fetch error:', err);
+    return res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// 📄 Return detailed profile info
+router.get('/profile', async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.sub);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const profile = {
+      fullName: user.fullName || 'N/A',
+      address: user.address || 'N/A',
+      state: user.state || 'N/A',
+      zip: user.zip || 'N/A',
+      homePhone: user.homePhone || 'N/A',
+      cellPhone: user.cellPhone || 'N/A',
+      email: user.email,
+      referralBonus: `₦${user.referralBonus || 0}`,
+      balance: `₦${user.balance || 0}`,
+    };
+
+    res.json(profile);
+  } catch (err) {
+    console.error('Profile fetch error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// 📝 Update user profile
+router.put('/profile', async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.sub);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const fields = ['fullName', 'email', 'address', 'state', 'zip', 'homePhone', 'cellPhone'];
+    fields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        user[field] = req.body[field];
+      }
     });
 
-    const gatewayMsg = err.response?.data?.message || 'Failed to create invoice';
-    return res.status(500).json({ error: gatewayMsg });
+    await user.save();
+
+    res.json({
+      fullName: user.fullName,
+      email: user.email,
+      address: user.address,
+      state: user.state,
+      zip: user.zip,
+      homePhone: user.homePhone,
+      cellPhone: user.cellPhone,
+      balance: user.balance || 0,
+      referralBonus: user.referralBonus || 0,
+    });
+  } catch (err) {
+    console.error('Profile update error:', err);
+    res.status(500).json({ error: 'Server error' });
   }
-}
+});
 
-// Primary route
-router.post('/crypto', createCryptoCharge);
+// 💰 Get current user's balance (alt route)
+router.get('/balance', async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.sub);
+    if (!user) return res.status(404).json({ error: 'User not found' });
 
-// Alias to match frontend usage
-router.post('/crypto-charge', createCryptoCharge);
-
-// NOWPayments IPN Webhook
-router.post('/ipn', express.json(), async (req, res) => {
-  const signature = req.headers['x-nowpayments-signature'];
-  const body = req.body;
-
-  if (!verifyNowPaymentsSignature(body, signature, IPN_SECRET)) {
-    console.warn('❌ Invalid IPN signature:', signature);
-    return res.status(400).send('Invalid signature');
+    res.json({ balance: user.balance || 0 });
+  } catch (err) {
+    console.error('Balance fetch error:', err);
+    return res.status(500).json({ error: 'Server error' });
   }
+});
 
-  const { payment_status, price_amount, order_id, id: invoiceId } = body;
-  const userEmail = parseOrderId(order_id);
+// 🔗 Return referral info
+router.get('/referrals', async (req, res) => {
+  try {
+    const me = await User.findByPk(req.user.sub);
+    if (!me) return res.status(404).json({ error: 'User not found' });
 
-  if (payment_status === 'finished') {
-    console.log(`✅ IPN: ${userEmail || 'guest'} paid ₦${price_amount}`);
-    try {
-      await markDepositPaid(order_id, price_amount);
-      console.log(`✅ Payment recorded for ${userEmail}`);
-    } catch (err) {
-      console.error('❌ Error updating DB:', err);
-    }
-  } else {
-    console.log(`⏳ IPN: invoice ${invoiceId} status ${payment_status}`);
+    const referredUsers = await User.findAll({
+      where: { referredBy: me.referralCode },
+      attributes: ['email', 'createdAt']
+    });
+
+    const referralList = referredUsers.map(u => ({
+      email: u.email,
+      date: u.createdAt,
+      bonus: '₦1,000' // Placeholder bonus logic
+    }));
+
+    res.json({
+      code: me.referralCode,
+      totalBonus: `₦${me.referralBonus || 0}`,
+      referrals: referralList
+    });
+  } catch (err) {
+    console.error('Referral fetch error:', err);
+    res.status(500).json({ error: 'Something went wrong' });
   }
+});
 
-  res.sendStatus(200);
+// ✅ 🆕 Public Total Profit route (user-safe, non-admin)
+router.get('/total-profit', async (req, res) => {
+  try {
+    const [deposits, withdrawals, referrals] = await Promise.all([
+      Transaction.sum('amount', { where: { type: 'deposit' } }),
+      Transaction.sum('amount', { where: { type: 'withdrawal' } }),
+      Transaction.sum('amount', { where: { type: 'referral' } }),
+    ]);
+
+    const netProfit = (deposits || 0) - ((withdrawals || 0) + (referrals || 0));
+
+    res.json({
+      totalDeposits: deposits || 0,
+      totalWithdrawals: withdrawals || 0,
+      totalReferrals: referrals || 0,
+      netProfit,
+    });
+  } catch (err) {
+    console.error('Public total-profit fetch error:', err);
+    res.status(500).json({ error: 'Failed to load total profit' });
+  }
 });
 
 export default router;

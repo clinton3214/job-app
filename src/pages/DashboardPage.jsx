@@ -96,28 +96,40 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    const fetchBalance = async () => {
+    const fetchUserData = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/api/user/me`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        setBalance(res.data.balance || 0);
-        setReferralBonus(res.data.referralBonus || 0);
+        const [meRes, profileRes] = await Promise.all([
+          axios.get(`${API_BASE}/api/user/me`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }),
+          axios.get(`${API_BASE}/api/user/profile`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }),
+        ]);
+  
+        setBalance(meRes.data.balance || 0);
+        setReferralBonus(meRes.data.referralBonus || 0);
+  
+        // ✅ Update profile fields from backend
         setUser({
-          name: res.data.name || 'Sophia Carter',
-          role: res.data.role || 'Account Manager',
+          name: profileRes.data.fullName || 'N/A',
+          email: profileRes.data.email || 'N/A',
+          role: 'User', // Optional: Add role if you support roles
         });
       } catch (err) {
-        console.error('Failed to fetch user data', err);
+        console.error('Failed to fetch user profile:', err);
         setBalance('Failed');
         setReferralBonus('Failed');
       } finally {
         setLoading(false);
       }
     };
-    fetchBalance();
+  
+    fetchUserData();
   }, []);
 
   return (
