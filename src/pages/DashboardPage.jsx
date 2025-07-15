@@ -159,7 +159,7 @@ export default function DashboardPage() {
                 style={{
                   width: '128px',
                   height: '128px',
-                  backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuCOlL7TXThbt25VhAkaP7tIXJXXeCuLpZsiwa7Av46HTbXRJjjCLqVXHOwqccgCuGgefTMsfNhofkw8JORfk9z35Len82uJGSSmaKmEkUghAe5g878aFHmZ8nIqOtmBtKAXm6TJdHUSVSBGNtFBZb5WcWC50SVZzo8f55S4UM1CngNGUajtP84bHlSP5SzZx81HOdp1ZC1iU7ZgG6iWI0VYo_xsG_k2KOd8eS11Y729YwIjtBOzvbaa_TwuIArB0ItDld7wL0Atuw8")`,
+                  backgroundImage: `url("https://cdn-icons-png.flaticon.com/512/1077/1077114.png")`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
