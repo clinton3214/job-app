@@ -17,7 +17,7 @@ import adminRoutes from './routes/admin.js';
 import userRoutes from './routes/user.js';
 import referralRoutes from './routes/referrals.js';
 import withdrawalRoutes from './routes/withdraw.js';
-import messageRoutes from './routes/messages.js';
+import messageRoutes from './routes/message.js';
 
 
 
