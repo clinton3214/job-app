@@ -112,7 +112,14 @@ router.post('/login', async (req, res) => {
     // }
     await AdminLog.create({ userEmail: email, ip: req.ip });
     const token = jwt.sign({ sub: user.id, email }, JWT_SECRET, { expiresIn: '1h' });
-    return res.json({ token });
+    
+    return res.json({
+      token,
+      user: {
+        email: user.email,
+        fullName: user.fullName, // Optional: Include more if needed
+      }
+    });
   } catch (err) {
     console.error('Login error:', err);
     return res.status(500).json({ error: 'Server error' });
