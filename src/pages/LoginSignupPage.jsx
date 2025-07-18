@@ -37,7 +37,8 @@ export default function LoginSignupPage() {
           }
         );
         localStorage.setItem('token', resp.data.token);
-        localStorage.setItem('userEmail', data.email);
+        localStorage.setItem('user', JSON.stringify(resp.data.user));
+        //localStorage.setItem('userEmail', data.email);
 
         const user = resp.data.user || {};
         console.log("Logged in user:", user); // 🆕 Debug line
