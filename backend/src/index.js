@@ -64,7 +64,7 @@ async function startServer() {
     if (process.env.NODE_ENV === 'production') {
       await sequelize.sync();
     } else {
-      await sequelize.sync({ force: true });
+      await sequelize.sync({ alter: true });
     }
     console.log('✅ SQLite database synchronized');
 
