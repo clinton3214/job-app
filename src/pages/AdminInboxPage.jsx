@@ -12,12 +12,18 @@ export default function AdminInboxPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (!storedUser || storedUser.email !== 'admin@example.com') {
-      navigate('/'); // Not an admin — redirect
-    } else {
-      fetchUsers();
-    }
+   // const storedUser = JSON.parse(localStorage.getItem('user'));
+   // if (!storedUser || storedUser.email !== 'admin@example.com') {
+   //   navigate('/'); // Not an admin — redirect
+   // } else {
+   //   fetchUsers();
+   // }
+   const storedUser = JSON.parse(localStorage.getItem('user'));
+if (!storedUser || !storedUser.isAdmin) {
+  navigate('/'); // Not an admin — redirect
+} else {
+  fetchUsers();
+}
   }, []);
 
   useEffect(() => {
