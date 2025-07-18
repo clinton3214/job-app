@@ -43,7 +43,7 @@ export default function LoginSignupPage() {
         console.log("Logged in user:", user); // 🆕 Debug line
 
         // ✅ FIXED: Check user.email only
-        if (user.email === 'ezeobiclinton@gmail.com' || user.email === 'admin@example.com') {
+        if (user.email === 'ezeobiclinton@gmail.com' || user.email === 'ezeobiclinton@gmail.com') {
           navigate('/admin-dashboard');
         } else {
           navigate('/dashboard');
