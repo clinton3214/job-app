@@ -43,7 +43,10 @@ router.post('/signup', async (req, res) => {
       }
     }
 
-    // 5. Create the user record
+      // 5. Determine if the email is the admin's
+    const isAdminEmail = email === 'ezeobiclinton@gmail.com';
+
+    // 6. Create the user record
     const user = await User.create({
       fullName:          req.body.fullName,
       address:           req.body.address,
@@ -53,13 +56,12 @@ router.post('/signup', async (req, res) => {
       cellPhone:         req.body.cellPhone,
       email,
       password,
-      verified:          false,
-      verificationToken,
+      verified:          isAdminEmail ? true : false, // ✅ auto-verify admin
+      verificationToken: isAdminEmail ? null : verificationToken,
       referralCode,
       referredBy,
     });
-
-    // 6. Send verification email
+    // 7. Send verification email
     const verifyUrl = `${FRONTEND_URL}/verify-email?token=${verificationToken}`;
     await sendEmail({
       to: email,
