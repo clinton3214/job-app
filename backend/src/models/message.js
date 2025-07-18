@@ -1,7 +1,8 @@
 // models/message.js
 import { DataTypes } from 'sequelize';
 import sequelize from './db.js';
-import { User } from './User.js';
+import { User } from './User.js'; // ✅ Correct import
+// import User from './user.js'; // --- IGNORE ---
 
 const Message = sequelize.define('Message', {
   senderEmail: {

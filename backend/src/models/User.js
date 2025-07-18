@@ -43,3 +43,5 @@ export const User = sequelize.define('User', {
 User.prototype.comparePassword = function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
+
+export default User;
