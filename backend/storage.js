@@ -1,149 +1,76 @@
-// backend/src/routes/user.js
+
+// index.js
+import 'dotenv/config';
 import express from 'express';
-import auth from '../middleware/auth.js';
-import { User } from '../models/User.js';
-import { Transaction } from '../models/Transaction.js'; // ✅ Needed for profit summary
+import cors from 'cors';
 
-const router = express.Router();
+// Sequelize initialization
+import sequelize from './models/db.js';
+import './models/index.js'; // Load all models
 
-// 🔒 Secure all routes below with auth middleware
-router.use(auth);
+// Import your routes:
+import authRoutes       from './routes/auth.js';
+import paymentRoutes    from './routes/payment.js';
+import historyRoutes    from './routes/history.js';
+import adminRoutes      from './routes/admin.js';
+import userRoutes       from './routes/user.js';
+import referralRoutes   from './routes/referrals.js';
+import withdrawalRoutes from './routes/withdraw.js';
 
-// 📄 Return basic user info (used by dashboard)
-router.get('/me', async (req, res) => {
-  try {
-    const user = await User.findByPk(req.user.sub);
-    if (!user) return res.status(404).json({ error: 'User not found' });
+const app = express();
 
-    res.json({
-      balance: user.balance || 0,
-      referralBonus: user.referralBonus || 0,
-    });
-  } catch (err) {
-    console.error('User fetch error:', err);
-    return res.status(500).json({ error: 'Server error' });
-  }
+// Enable CORS for all origins
+app.use(cors({
+  origin: 'https://job-app-frontend-3dld.onrender.com'
+}));
+
+// JSON parsing
+app.use(express.json());
+
+// Health check route to verify server is running
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'API is up and running' });
 });
 
-// 📄 Return detailed profile info
-router.get('/profile', async (req, res) => {
+async function startServer() {
   try {
-    const user = await User.findByPk(req.user.sub);
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    // Synchronize Sequelize models with the database
+    if (process.env.NODE_ENV === 'production') {
+        // In production, avoid alter backups causing constraint errors
+         await sequelize.sync();
+       } else {
+         // In development, sync with alter for convenience
+         await sequelize.sync({ force: true });
+       }
+    console.log('✅ SQLite database synchronized');
 
-    const profile = {
-      fullName: user.fullName || 'N/A',
-      address: user.address || 'N/A',
-      state: user.state || 'N/A',
-      zip: user.zip || 'N/A',
-      homePhone: user.homePhone || 'N/A',
-      cellPhone: user.cellPhone || 'N/A',
-      email: user.email,
-      referralBonus: `₦${user.referralBonus || 0}`,
-      balance: `₦${user.balance || 0}`,
-    };
-
-    res.json(profile);
-  } catch (err) {
-    console.error('Profile fetch error:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// 📝 Update user profile
-router.put('/profile', async (req, res) => {
-  try {
-    const user = await User.findByPk(req.user.sub);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-
-    const fields = ['fullName', 'email', 'address', 'state', 'zip', 'homePhone', 'cellPhone'];
-    fields.forEach((field) => {
-      if (req.body[field] !== undefined) {
-        user[field] = req.body[field];
-      }
+    // Log every request’s method and URL
+    app.use((req, res, next) => {
+      console.log(`[REQ] ${req.method} ${req.originalUrl}`);
+      next();
     });
 
-    await user.save();
+    // Mount API routes
+    app.use('/api/auth',     authRoutes);
+    app.use('/api/payment',  paymentRoutes);
+    app.use('/api/history',  historyRoutes);
+    app.use('/api/admin',    adminRoutes);
+    app.use('/api/user',     userRoutes);
+    app.use('/api/referrals', referralRoutes);
+    app.use('/api/withdraw',  withdrawalRoutes);
 
-    res.json({
-      fullName: user.fullName,
-      email: user.email,
-      address: user.address,
-      state: user.state,
-      zip: user.zip,
-      homePhone: user.homePhone,
-      cellPhone: user.cellPhone,
-      balance: user.balance || 0,
-      referralBonus: user.referralBonus || 0,
-    });
-  } catch (err) {
-    console.error('Profile update error:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// 💰 Get current user's balance (alt route)
-router.get('/balance', async (req, res) => {
-  try {
-    const user = await User.findByPk(req.user.sub);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-
-    res.json({ balance: user.balance || 0 });
-  } catch (err) {
-    console.error('Balance fetch error:', err);
-    return res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// 🔗 Return referral info
-router.get('/referrals', async (req, res) => {
-  try {
-    const me = await User.findByPk(req.user.sub);
-    if (!me) return res.status(404).json({ error: 'User not found' });
-
-    const referredUsers = await User.findAll({
-      where: { referredBy: me.referralCode },
-      attributes: ['email', 'createdAt']
+    // Catch-all 404 handler for unknown routes
+    app.use((req, res) => {
+      res.status(404).json({ error: 'Not found' });
     });
 
-    const referralList = referredUsers.map(u => ({
-      email: u.email,
-      date: u.createdAt,
-      bonus: '₦1,000' // Placeholder bonus logic
-    }));
-
-    res.json({
-      code: me.referralCode,
-      totalBonus: `₦${me.referralBonus || 0}`,
-      referrals: referralList
-    });
+    const PORT = process.env.PORT || 5000;
+    // Bind to 0.0.0.0 so your server is reachable on your LAN IP
+    app.listen(PORT, '0.0.0.0', () => console.log(`API listening on http://0.0.0.0:${PORT}`));
   } catch (err) {
-    console.error('Referral fetch error:', err);
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ Server startup error:', err);
+    process.exit(1);
   }
-});
+}
 
-// ✅ 🆕 Public Total Profit route (user-safe, non-admin)
-router.get('/total-profit', async (req, res) => {
-  try {
-    const [deposits, withdrawals, referrals] = await Promise.all([
-      Transaction.sum('amount', { where: { type: 'deposit' } }),
-      Transaction.sum('amount', { where: { type: 'withdrawal' } }),
-      Transaction.sum('amount', { where: { type: 'referral' } }),
-    ]);
-
-    const netProfit = (deposits || 0) - ((withdrawals || 0) + (referrals || 0));
-
-    res.json({
-      totalDeposits: deposits || 0,
-      totalWithdrawals: withdrawals || 0,
-      totalReferrals: referrals || 0,
-      netProfit,
-    });
-  } catch (err) {
-    console.error('Public total-profit fetch error:', err);
-    res.status(500).json({ error: 'Failed to load total profit' });
-  }
-});
-
-export default router;
+startServer();

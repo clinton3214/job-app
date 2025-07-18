@@ -13,11 +13,13 @@ import DepositSuccessPage  from './pages/DepositSuccessPage';
 import DepositCancelPage   from './pages/DepositCancelPage';
 import WithdrawPage        from './pages/WithdrawPage';
 import PaymentHistoryPage  from './pages/PaymentHistoryPage';
+import InterviewPage from './pages/InterviewPage';
 import ProfilePage         from './pages/ProfilePage';
 import ReferralsPage       from './pages/ReferralsPage';
 import AdminPage           from './pages/AdminPage';
 import TotalProfitPage     from './pages/TotalProfitPage';
 import JobDetailPage       from './pages/JobDetailPage';
+import AdminInboxPage from './pages/AdminInboxPage';
 import NotFoundPage        from './pages/NotFoundPage';
 import ForgotPasswordPage  from './pages/ForgotPasswordPage';
 import ResetPasswordPage   from './pages/ResetPasswordPage';
@@ -44,6 +46,8 @@ export default function App() {
         <Route path="/history"         element={<PaymentHistoryPage />} />
         <Route path="/profile"         element={<ProfilePage />} />
         <Route path="/referrals"       element={<ReferralsPage />} />
+        <Route path="/interview" element={<InterviewPage />} />
+        <Route path="/admin-inbox" element={<AdminInboxPage />} />
 
         {/* Admin and analytics */}
         <Route path="/admin"           element={<AdminPage />} />

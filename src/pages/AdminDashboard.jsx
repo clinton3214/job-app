@@ -1,4 +1,6 @@
+// src/pages/AdminDashboard.jsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ import navigate
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,6 +13,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('users'); // tabs: users, logs, referrals
 
+  const navigate = useNavigate(); // ✅ for navigation
   const token = localStorage.getItem('token');
   const headers = { Authorization: `Bearer ${token}` };
 
@@ -77,10 +80,16 @@ export default function AdminDashboard() {
     <div className="container my-4">
       <h2 className="mb-4">Admin Dashboard</h2>
 
-      <div className="btn-group mb-3">
-        <button className="btn btn-outline-primary" onClick={() => setTab('users')}>Users</button>
-        <button className="btn btn-outline-primary" onClick={() => setTab('logs')}>Logs</button>
-        <button className="btn btn-outline-primary" onClick={() => setTab('referrals')}>Referrals</button>
+      {/* ✅ Chat Interviewers button */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="btn-group">
+          <button className="btn btn-outline-primary" onClick={() => setTab('users')}>Users</button>
+          <button className="btn btn-outline-primary" onClick={() => setTab('logs')}>Logs</button>
+          <button className="btn btn-outline-primary" onClick={() => setTab('referrals')}>Referrals</button>
+        </div>
+        <button className="btn btn-success" onClick={() => navigate('/admin/inbox')}>
+          💬 Chat Interviewers
+        </button>
       </div>
 
       {tab === 'users' && (

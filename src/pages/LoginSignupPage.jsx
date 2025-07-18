@@ -37,8 +37,13 @@ export default function LoginSignupPage() {
           }
         );
         localStorage.setItem('token', resp.data.token);
-        localStorage.setItem('userEmail', data.email);
-        navigate('/dashboard');
+          localStorage.setItem('userEmail', data.email);
+          const user = resp.data.user || {};
+          if (user.email === 'ezeobiclinton@gmail.com' || data.email === 'admin@example.com') {
+            navigate('/admin-dashboard');
+          } else {
+            navigate('/dashboard');
+          }
       }
     } catch (err) {
       console.error('Auth error:', err);

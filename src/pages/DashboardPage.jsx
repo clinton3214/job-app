@@ -256,6 +256,13 @@ export default function DashboardPage() {
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/methods')}>
               <BsCreditCard size={24} /> <span>Payment Methods</span>
             </button>
+            <button
+              className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2"
+              onClick={() => navigate('/interview')}
+            >
+              <BsCreditCard size={24} />
+              <span>Interview</span>
+            </button>
           </div>
         </Offcanvas.Body>
       </Offcanvas>
