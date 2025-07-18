@@ -57,7 +57,9 @@ router.post('/signup', async (req, res) => {
       email,
       password,
       verified:          isAdminEmail ? true : false, // ✅ auto-verify admin
-      verificationToken: isAdminEmail ? null : verificationToken,
+      verificationToken: isAdminEmail ? null :
+        verificationToken, // only set if not admin 
+      isAdmin:           isAdminEmail, // ✅ auto-set admin flag
       referralCode,
       referredBy,
     });
@@ -119,7 +121,8 @@ router.post('/login', async (req, res) => {
       token,
       user: {
         email: user.email,
-        fullName: user.fullName, // Optional: Include more if needed
+        fullName: user.fullName,
+        isAdmin: user.isAdmin, // 👈 Add this
       }
     });
   } catch (err) {
