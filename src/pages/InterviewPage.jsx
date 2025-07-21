@@ -28,6 +28,9 @@ export default function InterviewPage() {
     if (!input.trim()) return;
 
     const msg = { sender: 'user', text: input };
+
+    console.log('📨 Sending message:', msg); // <-- ADD THIS
+
     socket.emit('send_message', msg);
     setMessages((prev) => [...prev, msg]);
     setInput('');
