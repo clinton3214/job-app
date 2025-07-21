@@ -1,23 +1,32 @@
+// src/pages/InterviewPage.jsx
 import React, { useEffect, useState } from 'react';
 import { Container, Form, Button, ListGroup } from 'react-bootstrap';
 import io from 'socket.io-client';
 
-const socket = io(import.meta.env.VITE_BACKEND_URL); // Make sure your backend supports this
+// Connect to backend via socket
+const socket = io(import.meta.env.VITE_BACKEND_URL);
 
 export default function InterviewPage() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
   useEffect(() => {
-    socket.on('receive_message', (msg) => {
+    // Listen for messages from admin
+    const handleReceiveMessage = (msg) => {
       setMessages((prev) => [...prev, msg]);
-    });
+    };
 
-    return () => socket.off('receive_message');
+    socket.on('receive_message', handleReceiveMessage);
+
+    // Clean up socket listener on unmount
+    return () => {
+      socket.off('receive_message', handleReceiveMessage);
+    };
   }, []);
 
   const sendMessage = () => {
     if (!input.trim()) return;
+
     const msg = { sender: 'user', text: input };
     socket.emit('send_message', msg);
     setMessages((prev) => [...prev, msg]);
@@ -26,14 +35,20 @@ export default function InterviewPage() {
 
   return (
     <Container className="py-4">
-      <h3 className="mb-4">Live Interview</h3>
+      <h3 className="mb-4 text-center">Live Interview</h3>
+
       <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
         {messages.map((msg, idx) => (
-          <ListGroup.Item key={idx} className={msg.sender === 'user' ? 'text-end' : 'text-start'}>
+          <ListGroup.Item
+            key={idx}
+            className={`${msg.sender === 'user' ? 'text-end' : 'text-start'}`}
+            style={{ color: 'black', backgroundColor: msg.sender === 'user' ? '#e6f7ff' : '#fff' }}
+          >
             <strong>{msg.sender === 'user' ? 'You' : 'Admin'}:</strong> {msg.text}
           </ListGroup.Item>
         ))}
       </ListGroup>
+
       <Form
         onSubmit={(e) => {
           e.preventDefault();
@@ -45,6 +60,7 @@ export default function InterviewPage() {
           placeholder="Type a message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          style={{ color: 'black' }}
         />
         <Button type="submit" className="mt-2 w-100">
           Send

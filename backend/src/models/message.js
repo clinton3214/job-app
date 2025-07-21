@@ -2,7 +2,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from './db.js';
 import { User } from './User.js'; // ✅ Correct import
-// import User from './user.js'; // --- IGNORE ---
 
 const Message = sequelize.define('Message', {
   senderEmail: {
@@ -21,8 +20,13 @@ const Message = sequelize.define('Message', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
+  isAdmin: {                      // ✅ This field tracks if sender is admin
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
+// Optional relationships — only needed if you're using associations
 User.hasMany(Message, { foreignKey: 'senderEmail', sourceKey: 'email' });
 User.hasMany(Message, { foreignKey: 'receiverEmail', sourceKey: 'email' });
 
