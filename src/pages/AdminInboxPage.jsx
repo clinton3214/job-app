@@ -1,9 +1,10 @@
-// src/pages/AdminInboxPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import io from 'socket.io-client';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
+const socket = io(API_BASE);
 
 export default function AdminInboxPage() {
   const [users, setUsers] = useState([]);
@@ -15,7 +16,7 @@ export default function AdminInboxPage() {
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (!storedUser || !storedUser.isAdmin) {
-      navigate('/');
+      navigate('/'); // Not an admin — redirect
     } else {
       fetchUsers();
     }
@@ -25,6 +26,24 @@ export default function AdminInboxPage() {
     if (activeUser) {
       fetchMessages();
     }
+  }, [activeUser]);
+
+  useEffect(() => {
+    // Listen for real-time incoming messages
+    const handleReceive = (msg) => {
+      console.log('💬 Admin received message:', msg);
+      if (
+        msg.sender === activeUser ||
+        msg.receiver === activeUser ||
+        msg.senderEmail === activeUser ||
+        msg.receiverEmail === activeUser
+      ) {
+        setMessages((prev) => [...prev, msg]);
+      }
+    };
+
+    socket.on('receive_message', handleReceive);
+    return () => socket.off('receive_message', handleReceive);
   }, [activeUser]);
 
   const fetchUsers = async () => {
@@ -47,14 +66,22 @@ export default function AdminInboxPage() {
 
   const sendMessage = async () => {
     if (!newMsg.trim()) return;
+    const message = {
+      senderEmail: 'admin@example.com',
+      receiverEmail: activeUser,
+      content: newMsg,
+    };
+
     try {
-      await axios.post(`${API_BASE}/api/messages`, {
+      await axios.post(`${API_BASE}/api/messages`, message);
+      socket.emit('send_message', {
+        sender: 'admin',
+        text: newMsg,
         senderEmail: 'admin@example.com',
         receiverEmail: activeUser,
-        content: newMsg
       });
+      setMessages((prev) => [...prev, { ...message, isAdmin: true }]);
       setNewMsg('');
-      fetchMessages();
     } catch (err) {
       console.error('Error sending message:', err);
     }
@@ -62,6 +89,7 @@ export default function AdminInboxPage() {
 
   return (
     <div className="d-flex flex-column flex-md-row h-100">
+      {/* Left Sidebar */}
       <div className="border-end w-100 w-md-25" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
         <h5 className="p-3">Users</h5>
         <ul className="list-group">
@@ -78,18 +106,17 @@ export default function AdminInboxPage() {
         </ul>
       </div>
 
+      {/* Chat Area */}
       <div className="flex-grow-1 d-flex flex-column justify-content-between" style={{ maxHeight: '100vh' }}>
         <div className="p-3 flex-grow-1 overflow-auto">
           {messages.map((msg, idx) => (
             <div key={idx} className={`mb-2 ${msg.isAdmin ? 'text-end' : 'text-start'}`}>
-              <span className={`p-2 rounded ${msg.isAdmin ? 'bg-primary text-white' : 'bg-light text-dark'}`}>
-                {msg.isAdmin ? 'Admin: ' : 'User: '}
+              <span className={`p-2 rounded ${msg.isAdmin ? 'bg-primary text-white' : 'bg-light'}`}>
                 {msg.content}
               </span>
             </div>
           ))}
         </div>
-
         {activeUser && (
           <div className="p-3 border-top d-flex">
             <input
