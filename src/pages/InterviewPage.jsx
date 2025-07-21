@@ -6,6 +6,10 @@ import io from 'socket.io-client';
 // Connect to backend via socket
 const socket = io(import.meta.env.VITE_BACKEND_URL);
 
+socket.on('connect', () => {
+  console.log('✅ User socket connected:', socket.id);
+});
+
 export default function InterviewPage() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');

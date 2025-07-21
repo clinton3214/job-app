@@ -4,7 +4,17 @@ import axios from 'axios';
 import io from 'socket.io-client';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
-const socket = io(API_BASE);
+
+
+const socket = io(import.meta.env.VITE_BACKEND_URL, {
+  transports: ['websocket'],   // Force WebSocket (not polling)
+  withCredentials: true
+});
+
+// Listen for connection
+socket.on('connect', () => {
+  console.log('✅ Admin socket connected:', socket.id);
+});
 
 export default function AdminInboxPage() {
   const [users, setUsers] = useState([]);

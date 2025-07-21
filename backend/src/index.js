@@ -2,14 +2,14 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import http from 'http'; // ⬅️ Needed to create a raw server
-import { Server } from 'socket.io'; // ⬅️ Socket.IO server
+import http from 'http';
+import { Server } from 'socket.io';
 
-// Sequelize initialization
+// Sequelize DB initialization
 import sequelize from './models/db.js';
 import './models/index.js'; // Load all models
 
-// Import your routes
+// Import routes
 import authRoutes from './routes/auth.js';
 import paymentRoutes from './routes/payment.js';
 import historyRoutes from './routes/history.js';
@@ -19,33 +19,40 @@ import referralRoutes from './routes/referrals.js';
 import withdrawalRoutes from './routes/withdraw.js';
 import messageRoutes from './routes/message.js';
 
-
-
 const app = express();
-const server = http.createServer(app); // ⬅️ Create HTTP server for socket.io
-const io = new Server(server, {
-  cors: {
-    origin: 'https://job-app-frontend-3dld.onrender.com',
-    methods: ['GET', 'POST']
-  }
-});
+const server = http.createServer(app); // Create HTTP server
 
-// Enable CORS for all origins
+// ✅ CORS for REST API
 app.use(cors({
-  origin: 'https://job-app-frontend-3dld.onrender.com'
+  origin: 'https://job-app-frontend-3dld.onrender.com',
+  credentials: true
 }));
 
-// JSON parsing
+// ✅ JSON parsing
 app.use(express.json());
 
-// Health check route
+// ✅ Health check route
 app.get('/', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'API is up and running' });
 });
 
-// Real-time socket connection
+// ✅ Log all requests
+app.use((req, res, next) => {
+  console.log(`[REQ] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+// ✅ Real-time socket.io connection
+const io = new Server(server, {
+  cors: {
+    origin: 'https://job-app-frontend-3dld.onrender.com',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
+
 io.on('connection', (socket) => {
-  console.log('🟢 A user connected:', socket.id);
+  console.log('🟢 Socket connected:', socket.id);
 
   socket.on('send_message', (data) => {
     console.log('📨 Message:', data);
@@ -57,7 +64,22 @@ io.on('connection', (socket) => {
   });
 });
 
-// Main startup function
+// ✅ Mount API routes
+app.use('/api/auth', authRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/history', historyRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/referrals', referralRoutes);
+app.use('/api/withdraw', withdrawalRoutes);
+app.use('/api/messages', messageRoutes);
+
+// ✅ Handle 404s
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
+// ✅ Main server startup function
 async function startServer() {
   try {
     // Sync DB
@@ -68,32 +90,11 @@ async function startServer() {
     }
     console.log('✅ SQLite database synchronized');
 
-    // Log requests
-    app.use((req, res, next) => {
-      console.log(`[REQ] ${req.method} ${req.originalUrl}`);
-      next();
-    });
-
-    // Mount routes
-    app.use('/api/auth', authRoutes);
-    app.use('/api/payment', paymentRoutes);
-    app.use('/api/history', historyRoutes);
-    app.use('/api/admin', adminRoutes);
-    app.use('/api/user', userRoutes);
-    app.use('/api/referrals', referralRoutes);
-    app.use('/api/withdraw', withdrawalRoutes);
-    app.use('/api/messages', messageRoutes);
-
-    // 404 handler
-    app.use((req, res) => {
-      res.status(404).json({ error: 'Not found' });
-    });
-
-    // Listen
+    // Start server
     const PORT = process.env.PORT || 5000;
-    server.listen(PORT, '0.0.0.0', () =>
-      console.log(`🚀 Server + Socket.IO running at http://0.0.0.0:${PORT}`)
-    );
+    server.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 Server + Socket.IO running at http://0.0.0.0:${PORT}`);
+    });
   } catch (err) {
     console.error('❌ Server startup error:', err);
     process.exit(1);
