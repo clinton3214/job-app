@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 export default function AdminInboxPage() {
@@ -12,18 +13,12 @@ export default function AdminInboxPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-   // const storedUser = JSON.parse(localStorage.getItem('user'));
-   // if (!storedUser || storedUser.email !== 'admin@example.com') {
-   //   navigate('/'); // Not an admin — redirect
-   // } else {
-   //   fetchUsers();
-   // }
-   const storedUser = JSON.parse(localStorage.getItem('user'));
-if (!storedUser || !storedUser.isAdmin) {
-  navigate('/'); // Not an admin — redirect
-} else {
-  fetchUsers();
-}
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (!storedUser || !storedUser.isAdmin) {
+      navigate('/');
+    } else {
+      fetchUsers();
+    }
   }, []);
 
   useEffect(() => {
@@ -82,16 +77,19 @@ if (!storedUser || !storedUser.isAdmin) {
           ))}
         </ul>
       </div>
+
       <div className="flex-grow-1 d-flex flex-column justify-content-between" style={{ maxHeight: '100vh' }}>
         <div className="p-3 flex-grow-1 overflow-auto">
           {messages.map((msg, idx) => (
             <div key={idx} className={`mb-2 ${msg.isAdmin ? 'text-end' : 'text-start'}`}>
-              <span className={`p-2 rounded ${msg.isAdmin ? 'bg-primary text-white' : 'bg-light'}`}>
+              <span className={`p-2 rounded ${msg.isAdmin ? 'bg-primary text-white' : 'bg-light text-dark'}`}>
+                {msg.isAdmin ? 'Admin: ' : 'User: '}
                 {msg.content}
               </span>
             </div>
           ))}
         </div>
+
         {activeUser && (
           <div className="p-3 border-top d-flex">
             <input
