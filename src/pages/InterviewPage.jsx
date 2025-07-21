@@ -2,10 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Form, Button, ListGroup } from 'react-bootstrap';
 import io from 'socket.io-client';
+import axios from 'axios';
 
-// Connect to backend via socket
 const socket = io(import.meta.env.VITE_BACKEND_URL);
-
 socket.on('connect', () => {
   console.log('✅ User socket connected:', socket.id);
 });
@@ -13,16 +12,20 @@ socket.on('connect', () => {
 export default function InterviewPage() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Listen for messages from admin
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, { withCredentials: true })
+      .then((res) => setUser(res.data))
+      .catch((err) => console.error('❌ Failed to fetch user info:', err));
+  }, []);
+
+  useEffect(() => {
     const handleReceiveMessage = (msg) => {
       setMessages((prev) => [...prev, msg]);
     };
-
     socket.on('receive_message', handleReceiveMessage);
-
-    // Clean up socket listener on unmount
     return () => {
       socket.off('receive_message', handleReceiveMessage);
     };
@@ -31,9 +34,13 @@ export default function InterviewPage() {
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    const msg = { sender: 'user', text: input };
-
-    console.log('📨 Sending message:', msg); // <-- ADD THIS
+    const msg = {
+      sender: 'user',
+      text: input,
+      userId: user?.id,
+      userName: user?.name,
+      userEmail: user?.email,
+    };
 
     socket.emit('send_message', msg);
     setMessages((prev) => [...prev, msg]);
@@ -43,7 +50,6 @@ export default function InterviewPage() {
   return (
     <Container className="py-4">
       <h3 className="mb-4 text-center">Live Interview</h3>
-
       <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
         {messages.map((msg, idx) => (
           <ListGroup.Item
@@ -55,7 +61,6 @@ export default function InterviewPage() {
           </ListGroup.Item>
         ))}
       </ListGroup>
-
       <Form
         onSubmit={(e) => {
           e.preventDefault();
