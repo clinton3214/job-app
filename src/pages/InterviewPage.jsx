@@ -4,7 +4,12 @@ import { Container, Form, Button, ListGroup } from 'react-bootstrap';
 import io from 'socket.io-client';
 import axios from 'axios';
 
-const socket = io(import.meta.env.VITE_BACKEND_URL);
+// Connect to socket server
+const socket = io(import.meta.env.VITE_BACKEND_URL, {
+  transports: ['websocket'],
+  withCredentials: true,
+});
+
 socket.on('connect', () => {
   console.log('✅ User socket connected:', socket.id);
 });
@@ -14,33 +19,55 @@ export default function InterviewPage() {
   const [input, setInput] = useState('');
   const [user, setUser] = useState(null);
 
+  // Fetch user info with token
   useEffect(() => {
+    const token = localStorage.getItem('token'); // Adjust if you store it differently
+    if (!token) {
+      console.error('❌ No token found in localStorage');
+      return;
+    }
+
     axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, { withCredentials: true })
-      .then((res) => setUser(res.data))
-      .catch((err) => console.error('❌ Failed to fetch user info:', err));
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log('👤 User info loaded:', res.data);
+        setUser(res.data);
+      })
+      .catch((err) => {
+        console.error('❌ Failed to fetch user info:', err);
+      });
   }, []);
 
+  // Receive messages from server
   useEffect(() => {
     const handleReceiveMessage = (msg) => {
+      console.log('📩 Message received:', msg);
       setMessages((prev) => [...prev, msg]);
     };
+
     socket.on('receive_message', handleReceiveMessage);
+
     return () => {
       socket.off('receive_message', handleReceiveMessage);
     };
   }, []);
 
+  // Send message
   const sendMessage = () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !user) return;
 
     const msg = {
       sender: 'user',
-      text: input,
-      userId: user?.id,
-      userName: user?.name,
-      userEmail: user?.email,
+      text: input.trim(),
+      userId: user.id,
+      userName: user.name,
+      userEmail: user.email,
     };
+
+    console.log('📤 Sending message:', msg);
 
     socket.emit('send_message', msg);
     setMessages((prev) => [...prev, msg]);
@@ -50,17 +77,24 @@ export default function InterviewPage() {
   return (
     <Container className="py-4">
       <h3 className="mb-4 text-center">Live Interview</h3>
+
+      {/* Message display */}
       <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
         {messages.map((msg, idx) => (
           <ListGroup.Item
             key={idx}
-            className={`${msg.sender === 'user' ? 'text-end' : 'text-start'}`}
-            style={{ color: 'black', backgroundColor: msg.sender === 'user' ? '#e6f7ff' : '#fff' }}
+            className={msg.sender === 'user' ? 'text-end' : 'text-start'}
+            style={{
+              color: 'black',
+              backgroundColor: msg.sender === 'user' ? '#e6f7ff' : '#fff',
+            }}
           >
             <strong>{msg.sender === 'user' ? 'You' : 'Admin'}:</strong> {msg.text}
           </ListGroup.Item>
         ))}
       </ListGroup>
+
+      {/* Input field */}
       <Form
         onSubmit={(e) => {
           e.preventDefault();
