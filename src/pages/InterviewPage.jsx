@@ -21,7 +21,7 @@ export default function InterviewPage() {
 
   // Fetch user info with token
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Adjust if you store it differently
+    const token = localStorage.getItem('token');
     if (!token) {
       console.error('❌ No token found in localStorage');
       return;
@@ -49,7 +49,6 @@ export default function InterviewPage() {
     };
 
     socket.on('receive_message', handleReceiveMessage);
-
     return () => {
       socket.off('receive_message', handleReceiveMessage);
     };
@@ -57,7 +56,12 @@ export default function InterviewPage() {
 
   // Send message
   const sendMessage = () => {
-    if (!input.trim() || !user) return;
+    if (!input.trim()) return;
+
+    if (!user) {
+      console.warn('⚠️ User info not loaded yet. Message not sent.');
+      return;
+    }
 
     const msg = {
       sender: 'user',
@@ -68,7 +72,6 @@ export default function InterviewPage() {
     };
 
     console.log('📤 Sending message:', msg);
-
     socket.emit('send_message', msg);
     setMessages((prev) => [...prev, msg]);
     setInput('');
@@ -78,7 +81,7 @@ export default function InterviewPage() {
     <Container className="py-4">
       <h3 className="mb-4 text-center">Live Interview</h3>
 
-      {/* Message display */}
+      {/* Messages */}
       <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
         {messages.map((msg, idx) => (
           <ListGroup.Item
@@ -94,7 +97,7 @@ export default function InterviewPage() {
         ))}
       </ListGroup>
 
-      {/* Input field */}
+      {/* Input */}
       <Form
         onSubmit={(e) => {
           e.preventDefault();
