@@ -16,6 +16,9 @@ router.get('/me', async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     res.json({
+      id: user.id,
+      name: user.fullName || 'N/A',
+      email: user.email || 'N/A',
       balance: user.balance || 0,
       referralBonus: user.referralBonus || 0,
     });
