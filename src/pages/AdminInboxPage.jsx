@@ -1,3 +1,4 @@
+// AdminInboxPage.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
@@ -10,7 +11,7 @@ const ADMIN_EMAIL = 'ezeobiclinton@gmail.com';
 export default function AdminInboxPage() {
   const [users, setUsers] = useState([]);
   const [selectedUserEmail, setSelectedUserEmail] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [allMessages, setAllMessages] = useState({});
   const [input, setInput] = useState('');
   const selectedUserRef = useRef(null);
 
@@ -36,7 +37,10 @@ export default function AdminInboxPage() {
     const fetchMessages = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/messages/${selectedUserEmail}`);
-        setMessages(res.data);
+        setAllMessages((prev) => ({
+          ...prev,
+          [selectedUserEmail]: res.data,
+        }));
       } catch (err) {
         console.error('❌ Failed to fetch messages:', err);
       }
@@ -53,29 +57,31 @@ export default function AdminInboxPage() {
     socket.on('receive_message', (msg) => {
       console.log('📩 Admin received message:', msg);
 
-      const currentUser = selectedUserRef.current;
-
-      const isRelevant =
-        (msg.senderEmail === ADMIN_EMAIL && msg.receiverEmail === currentUser) ||
-        (msg.receiverEmail === ADMIN_EMAIL && msg.senderEmail === currentUser);
-
-      if (isRelevant) {
+      const relevant = msg.senderEmail !== ADMIN_EMAIL && msg.receiverEmail === ADMIN_EMAIL;
+      if (relevant) {
         console.log('✅ Message added to UI:', msg);
-        setMessages((prev) => [...prev, msg]);
+        const sender = msg.senderEmail;
+        setAllMessages((prev) => ({
+          ...prev,
+          [sender]: [...(prev[sender] || []), msg],
+        }));
+
+        if (!users.includes(sender)) {
+          setUsers((prevUsers) => [...prevUsers, sender]);
+        }
       } else {
-        console.log('🚫 Message ignored (not relevant to selected user)');
+        console.log('🚫 Message ignored (not sent to admin)');
       }
     });
 
     return () => {
       socket.off('receive_message');
     };
-  }, []);
+  }, [users]);
 
   // Send message to selected user
   const sendMessage = async () => {
     if (!input.trim() || !selectedUserEmail) return;
-
     if (selectedUserEmail === ADMIN_EMAIL) {
       console.warn('⚠️ Cannot send message to self');
       return;
@@ -89,7 +95,6 @@ export default function AdminInboxPage() {
     };
 
     console.log('💬 Admin sending message:', msg);
-
     socket.emit('send_message', msg);
 
     try {
@@ -102,9 +107,14 @@ export default function AdminInboxPage() {
       console.error('❌ Failed to save message:', err);
     }
 
-    setMessages((prev) => [...prev, msg]);
+    setAllMessages((prev) => ({
+      ...prev,
+      [selectedUserEmail]: [...(prev[selectedUserEmail] || []), msg],
+    }));
     setInput('');
   };
+
+  const currentMessages = allMessages[selectedUserEmail] || [];
 
   return (
     <Container fluid className="py-4">
@@ -136,7 +146,7 @@ export default function AdminInboxPage() {
             <>
               <h5>Chat with: {selectedUserEmail}</h5>
               <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
-                {messages.map((msg, idx) => {
+                {currentMessages.map((msg, idx) => {
                   const isFromAdmin = msg.senderEmail === ADMIN_EMAIL;
                   return (
                     <ListGroup.Item
@@ -153,7 +163,6 @@ export default function AdminInboxPage() {
                   );
                 })}
               </ListGroup>
-
               <Form
                 onSubmit={(e) => {
                   e.preventDefault();
