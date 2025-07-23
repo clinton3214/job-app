@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 import { getAdminSocket } from '../layouts/AdminLayout';
@@ -12,8 +12,9 @@ export default function AdminInboxPage() {
   const [selectedUserEmail, setSelectedUserEmail] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const selectedUserRef = useRef(null); // 🆕 Keeps track of current user reliably
 
-  // ✅ Fetch list of users
+  // 🟢 Fetch user list
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -26,9 +27,12 @@ export default function AdminInboxPage() {
     fetchUsers();
   }, []);
 
-  // ✅ Load messages when user is selected
+  // 🟢 Load messages when user selected
   useEffect(() => {
     if (!selectedUserEmail) return;
+
+    selectedUserRef.current = selectedUserEmail; // ✅ Keep ref updated
+
     const fetchMessages = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/messages/${selectedUserEmail}`);
@@ -40,7 +44,7 @@ export default function AdminInboxPage() {
     fetchMessages();
   }, [selectedUserEmail]);
 
-  // ✅ Setup socket listener
+  // 🟢 Handle real-time message reception
   useEffect(() => {
     socket.on('connect', () => {
       console.log('✅ Admin socket connected:', socket.id);
@@ -48,9 +52,10 @@ export default function AdminInboxPage() {
 
     socket.on('receive_message', (msg) => {
       console.log('📩 Admin received message:', msg);
+      const current = selectedUserRef.current;
       if (
-        msg.senderEmail === selectedUserEmail ||
-        msg.receiverEmail === selectedUserEmail
+        msg.senderEmail === current ||
+        msg.receiverEmail === current
       ) {
         setMessages((prev) => [...prev, msg]);
       }
@@ -59,20 +64,22 @@ export default function AdminInboxPage() {
     return () => {
       socket.off('receive_message');
     };
-  }, [selectedUserEmail]);
+  }, []);
 
-  // ✅ Send admin message
+  // 🟢 Send message
   const sendMessage = async () => {
     if (!input.trim() || !selectedUserEmail) return;
+
     const msg = {
       sender: 'admin',
       text: input.trim(),
       senderEmail: ADMIN_EMAIL,
       receiverEmail: selectedUserEmail,
     };
+
     console.log('💬 Admin sending message:', msg);
 
-    // Emit socket
+    // Send via socket
     socket.emit('send_message', msg);
 
     // Save to DB
@@ -94,7 +101,7 @@ export default function AdminInboxPage() {
     <Container fluid className="py-4">
       <h3 className="text-center mb-4">Admin Inbox</h3>
       <Row>
-        {/* 📇 User List */}
+        {/* 📧 User List */}
         <Col md={4}>
           <h5>Users</h5>
           <ListGroup>
@@ -102,7 +109,10 @@ export default function AdminInboxPage() {
               <ListGroup.Item
                 key={email}
                 active={email === selectedUserEmail}
-                onClick={() => setSelectedUserEmail(email)}
+                onClick={() => {
+                  setSelectedUserEmail(email);
+                  selectedUserRef.current = email;
+                }}
                 style={{ cursor: 'pointer', color: 'black' }}
               >
                 {email}
@@ -111,15 +121,12 @@ export default function AdminInboxPage() {
           </ListGroup>
         </Col>
 
-        {/* 💬 Chat Window */}
+        {/* 💬 Chat Area */}
         <Col md={8}>
           {selectedUserEmail ? (
             <>
               <h5>Chat with: {selectedUserEmail}</h5>
-              <ListGroup
-                style={{ maxHeight: '60vh', overflowY: 'auto' }}
-                className="mb-3"
-              >
+              <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
                 {messages.map((msg, idx) => {
                   const isAdmin = msg.senderEmail === ADMIN_EMAIL;
                   return (
@@ -138,7 +145,6 @@ export default function AdminInboxPage() {
                 })}
               </ListGroup>
 
-              {/* 📝 Input */}
               <Form
                 onSubmit={(e) => {
                   e.preventDefault();
