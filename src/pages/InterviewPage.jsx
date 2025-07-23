@@ -66,6 +66,9 @@ export default function InterviewPage() {
     const msg = {
       sender: 'user',
       text: input.trim(),
+      
+        senderEmail: user.email,             // ✅ must be available in state
+        receiverEmail: 'ezeobiclinton@gmail.com', 
       userId: user.id,
       userName: user.name,
       userEmail: user.email,

@@ -87,7 +87,7 @@ export default function AdminDashboard() {
           <button className="btn btn-outline-primary" onClick={() => setTab('logs')}>Logs</button>
           <button className="btn btn-outline-primary" onClick={() => setTab('referrals')}>Referrals</button>
         </div>
-        <button className="btn btn-success" onClick={() => navigate('/admin-inbox')}>
+        <button className="btn btn-success" onClick={() => navigate('/admin/inbox')}>
           💬 Chat Interviewers
         </button>
       </div>

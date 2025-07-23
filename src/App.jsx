@@ -16,7 +16,6 @@ import PaymentHistoryPage  from './pages/PaymentHistoryPage';
 import InterviewPage from './pages/InterviewPage';
 import ProfilePage         from './pages/ProfilePage';
 import ReferralsPage       from './pages/ReferralsPage';
-import AdminPage           from './pages/AdminPage';
 import TotalProfitPage     from './pages/TotalProfitPage';
 import JobDetailPage       from './pages/JobDetailPage';
 import AdminInboxPage from './pages/AdminInboxPage';
@@ -25,6 +24,7 @@ import ForgotPasswordPage  from './pages/ForgotPasswordPage';
 import ResetPasswordPage   from './pages/ResetPasswordPage';
 import AdminDashboard      from './pages/AdminDashboard';
 import RequireAdmin        from './components/RequireAdmin';
+import AdminLayout, { getAdminSocket } from './layouts/AdminLayout';
 
 export default function App() {
   return (
@@ -47,10 +47,9 @@ export default function App() {
         <Route path="/profile"         element={<ProfilePage />} />
         <Route path="/referrals"       element={<ReferralsPage />} />
         <Route path="/interview" element={<InterviewPage />} />
-        <Route path="/admin-inbox" element={<AdminInboxPage />} />
 
         {/* Admin and analytics */}
-        <Route path="/admin"           element={<AdminPage />} />
+       
         <Route path="/total-profit"    element={<TotalProfitPage />} />
 
         {/* Job detail */}
@@ -61,14 +60,18 @@ export default function App() {
         <Route path="/reset-password"  element={<ResetPasswordPage />} />
 
         {/* Protected Admin Dashboard */}
-        <Route
-          path="/admin-dashboard"
+                <Route
+          path="/admin"
           element={
             <RequireAdmin>
-              <AdminDashboard />
+              <AdminLayout />
             </RequireAdmin>
           }
-        />
+        >
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="inbox" element={<AdminInboxPage />} />
+          {/* Add more admin pages here if needed */}
+        </Route>
 
         {/* 404 catch-all */}
         <Route path="*" element={<NotFoundPage />} />

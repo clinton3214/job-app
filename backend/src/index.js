@@ -1,4 +1,3 @@
-// index.js
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
@@ -8,6 +7,7 @@ import { Server } from 'socket.io';
 // Sequelize DB initialization
 import sequelize from './models/db.js';
 import './models/index.js'; // Load all models
+import Message from './models/message.js'; // ✅ Import Message model
 
 // Import routes
 import authRoutes from './routes/auth.js';
@@ -54,13 +54,29 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   console.log('🟢 Socket connected:', socket.id);
 
-  socket.on('send_message', (data) => {
-    console.log('📨 Message:', data);
-    io.emit('receive_message', data); // Broadcast to all (admin + user)
+  socket.on('send_message', async (data) => {
+    console.log('📨 Message received from frontend:', data);
+
+    try {
+      // ✅ Save the message to the database
+      await Message.create({
+        senderEmail: data.senderEmail,
+        receiverEmail: data.receiverEmail,
+        content: data.text,
+        isAdmin: data.sender === 'admin'
+      });
+
+      console.log('✅ Message stored in database');
+    } catch (error) {
+      console.error('❌ Error saving message to DB:', error);
+    }
+
+    // ✅ Still broadcast to all connected clients
+    io.emit('receive_message', data);
   });
 
   socket.on('disconnect', () => {
-    console.log('🔴 User disconnected:', socket.id);
+    console.log('🔌 User disconnected:', socket.id);
   });
 });
 
@@ -88,6 +104,7 @@ async function startServer() {
     } else {
       await sequelize.sync({ alter: true });
     }
+
     console.log('✅ SQLite database synchronized');
 
     // Start server

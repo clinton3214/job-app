@@ -45,7 +45,7 @@ export default function LoginSignupPage() {
 
         // ✅ FIXED: Check user.email only
         if (user.isAdmin) {
-          navigate('/admin-dashboard');
+          navigate('/admin/dashboard');
         } else {
           navigate('/dashboard');
         }
