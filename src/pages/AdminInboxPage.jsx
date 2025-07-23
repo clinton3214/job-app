@@ -1,19 +1,19 @@
-// src/pages/AdminInboxPage.jsx
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
-import { getAdminSocket } from '../layouts/AdminLayout'; // ✅ shared socket
+import { getAdminSocket } from '../layouts/AdminLayout';
 
 const socket = getAdminSocket();
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
+const ADMIN_EMAIL = 'ezeobiclinton@gmail.com';
 
 export default function AdminInboxPage() {
-  const [users, setUsers] = useState([]); // ✅ left panel user list
-  const [selectedUserEmail, setSelectedUserEmail] = useState(null); // ✅ selected user
+  const [users, setUsers] = useState([]);
+  const [selectedUserEmail, setSelectedUserEmail] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
-  // ✅ Load users when page loads
+  // ✅ Fetch list of users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -29,7 +29,6 @@ export default function AdminInboxPage() {
   // ✅ Load messages when user is selected
   useEffect(() => {
     if (!selectedUserEmail) return;
-
     const fetchMessages = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/messages/${selectedUserEmail}`);
@@ -49,7 +48,6 @@ export default function AdminInboxPage() {
 
     socket.on('receive_message', (msg) => {
       console.log('📩 Admin received message:', msg);
-      // Only update chat if the message is from/to the selected user
       if (
         msg.senderEmail === selectedUserEmail ||
         msg.receiverEmail === selectedUserEmail
@@ -63,19 +61,18 @@ export default function AdminInboxPage() {
     };
   }, [selectedUserEmail]);
 
+  // ✅ Send admin message
   const sendMessage = async () => {
     if (!input.trim() || !selectedUserEmail) return;
-
     const msg = {
       sender: 'admin',
-      text: input,
-      senderEmail: 'ezeobiclinton@gmail.com',
+      text: input.trim(),
+      senderEmail: ADMIN_EMAIL,
       receiverEmail: selectedUserEmail,
     };
-
     console.log('💬 Admin sending message:', msg);
 
-    // Emit socket message
+    // Emit socket
     socket.emit('send_message', msg);
 
     // Save to DB
@@ -89,7 +86,6 @@ export default function AdminInboxPage() {
       console.error('❌ Failed to save message:', err);
     }
 
-    // Update local UI
     setMessages((prev) => [...prev, msg]);
     setInput('');
   };
@@ -98,7 +94,7 @@ export default function AdminInboxPage() {
     <Container fluid className="py-4">
       <h3 className="text-center mb-4">Admin Inbox</h3>
       <Row>
-        {/* 🟩 Left: User list */}
+        {/* 📇 User List */}
         <Col md={4}>
           <h5>Users</h5>
           <ListGroup>
@@ -115,7 +111,7 @@ export default function AdminInboxPage() {
           </ListGroup>
         </Col>
 
-        {/* 🟦 Right: Chat window */}
+        {/* 💬 Chat Window */}
         <Col md={8}>
           {selectedUserEmail ? (
             <>
@@ -124,34 +120,25 @@ export default function AdminInboxPage() {
                 style={{ maxHeight: '60vh', overflowY: 'auto' }}
                 className="mb-3"
               >
-                {messages.map((msg, idx) => (
-                  <ListGroup.Item
-                    key={idx}
-                    className={
-                      msg.senderEmail === 'ezeobiclinton@gmail.com'
-                        ? 'text-end'
-                        : 'text-start'
-                    }
-                    style={{
-                      backgroundColor:
-                        msg.senderEmail === 'ezeobiclinton@gmail.com'
-                          ? '#fff'
-                          : '#e6f7ff',
-                      color: 'black',
-                    }}
-                  >
-                    <strong>
-                      {msg.senderEmail === 'ezeobiclinton@gmail.com'
-                        ? 'Admin'
-                        : msg.senderEmail}
-                      :
-                    </strong>{' '}
-                    {msg.content || msg.text}
-                  </ListGroup.Item>
-                ))}
+                {messages.map((msg, idx) => {
+                  const isAdmin = msg.senderEmail === ADMIN_EMAIL;
+                  return (
+                    <ListGroup.Item
+                      key={idx}
+                      className={isAdmin ? 'text-end' : 'text-start'}
+                      style={{
+                        backgroundColor: isAdmin ? '#fff' : '#e6f7ff',
+                        color: 'black',
+                      }}
+                    >
+                      <strong>{isAdmin ? 'Admin' : msg.senderEmail}:</strong>{' '}
+                      {msg.content || msg.text}
+                    </ListGroup.Item>
+                  );
+                })}
               </ListGroup>
 
-              {/* 🔽 Reply input */}
+              {/* 📝 Input */}
               <Form
                 onSubmit={(e) => {
                   e.preventDefault();
