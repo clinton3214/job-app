@@ -19,7 +19,6 @@ export default function AdminInboxPage() {
     const fetchUsers = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/messages/users`);
-        // 🔒 Filter out admin email from user list
         const filtered = res.data.filter((email) => email !== ADMIN_EMAIL);
         setUsers(filtered);
       } catch (err) {
@@ -33,6 +32,7 @@ export default function AdminInboxPage() {
   useEffect(() => {
     if (!selectedUserEmail) return;
     selectedUserRef.current = selectedUserEmail;
+
     const fetchMessages = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/messages/${selectedUserEmail}`);
@@ -54,15 +54,16 @@ export default function AdminInboxPage() {
       console.log('📩 Admin received message:', msg);
 
       const currentUser = selectedUserRef.current;
-      const involvedEmails = [msg.senderEmail, msg.receiverEmail];
 
-      // ✅ Only display messages between admin and selected user, not admin↔admin
-      if (
-        involvedEmails.includes(ADMIN_EMAIL) &&
-        involvedEmails.includes(currentUser) &&
-        msg.senderEmail !== msg.receiverEmail
-      ) {
+      const isRelevant =
+        (msg.senderEmail === ADMIN_EMAIL && msg.receiverEmail === currentUser) ||
+        (msg.receiverEmail === ADMIN_EMAIL && msg.senderEmail === currentUser);
+
+      if (isRelevant) {
+        console.log('✅ Message added to UI:', msg);
         setMessages((prev) => [...prev, msg]);
+      } else {
+        console.log('🚫 Message ignored (not relevant to selected user)');
       }
     });
 
@@ -75,7 +76,6 @@ export default function AdminInboxPage() {
   const sendMessage = async () => {
     if (!input.trim() || !selectedUserEmail) return;
 
-    // 🔒 Prevent sending message to self
     if (selectedUserEmail === ADMIN_EMAIL) {
       console.warn('⚠️ Cannot send message to self');
       return;
@@ -90,10 +90,8 @@ export default function AdminInboxPage() {
 
     console.log('💬 Admin sending message:', msg);
 
-    // Emit via socket
     socket.emit('send_message', msg);
 
-    // Save to DB
     try {
       await axios.post(`${API_BASE}/api/messages`, {
         senderEmail: msg.senderEmail,
