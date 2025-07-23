@@ -12,9 +12,9 @@ export default function AdminInboxPage() {
   const [selectedUserEmail, setSelectedUserEmail] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const selectedUserRef = useRef(null); // 🆕 Keeps track of current user reliably
+  const selectedUserRef = useRef(null); // ✅ Reliable user tracking
 
-  // 🟢 Fetch user list
+  // ✅ Fetch user list on load
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -27,12 +27,10 @@ export default function AdminInboxPage() {
     fetchUsers();
   }, []);
 
-  // 🟢 Load messages when user selected
+  // ✅ Fetch message history when user is selected
   useEffect(() => {
     if (!selectedUserEmail) return;
-
-    selectedUserRef.current = selectedUserEmail; // ✅ Keep ref updated
-
+    selectedUserRef.current = selectedUserEmail;
     const fetchMessages = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/messages/${selectedUserEmail}`);
@@ -44,7 +42,7 @@ export default function AdminInboxPage() {
     fetchMessages();
   }, [selectedUserEmail]);
 
-  // 🟢 Handle real-time message reception
+  // ✅ Receive socket messages
   useEffect(() => {
     socket.on('connect', () => {
       console.log('✅ Admin socket connected:', socket.id);
@@ -52,11 +50,11 @@ export default function AdminInboxPage() {
 
     socket.on('receive_message', (msg) => {
       console.log('📩 Admin received message:', msg);
-      const current = selectedUserRef.current;
-      if (
-        msg.senderEmail === current ||
-        msg.receiverEmail === current
-      ) {
+      const currentUser = selectedUserRef.current;
+
+      // ✅ Only display if message is between admin and selected user
+      const involvedEmails = [msg.senderEmail, msg.receiverEmail];
+      if (involvedEmails.includes(ADMIN_EMAIL) && involvedEmails.includes(currentUser)) {
         setMessages((prev) => [...prev, msg]);
       }
     });
@@ -66,7 +64,7 @@ export default function AdminInboxPage() {
     };
   }, []);
 
-  // 🟢 Send message
+  // ✅ Send a message to selected user
   const sendMessage = async () => {
     if (!input.trim() || !selectedUserEmail) return;
 
@@ -79,7 +77,7 @@ export default function AdminInboxPage() {
 
     console.log('💬 Admin sending message:', msg);
 
-    // Send via socket
+    // Emit via socket
     socket.emit('send_message', msg);
 
     // Save to DB
@@ -101,7 +99,7 @@ export default function AdminInboxPage() {
     <Container fluid className="py-4">
       <h3 className="text-center mb-4">Admin Inbox</h3>
       <Row>
-        {/* 📧 User List */}
+        {/* 📬 User List */}
         <Col md={4}>
           <h5>Users</h5>
           <ListGroup>
@@ -128,17 +126,17 @@ export default function AdminInboxPage() {
               <h5>Chat with: {selectedUserEmail}</h5>
               <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
                 {messages.map((msg, idx) => {
-                  const isAdmin = msg.senderEmail === ADMIN_EMAIL;
+                  const isFromAdmin = msg.senderEmail === ADMIN_EMAIL;
                   return (
                     <ListGroup.Item
                       key={idx}
-                      className={isAdmin ? 'text-end' : 'text-start'}
+                      className={isFromAdmin ? 'text-end' : 'text-start'}
                       style={{
-                        backgroundColor: isAdmin ? '#fff' : '#e6f7ff',
+                        backgroundColor: isFromAdmin ? '#fff' : '#e6f7ff',
                         color: 'black',
                       }}
                     >
-                      <strong>{isAdmin ? 'Admin' : msg.senderEmail}:</strong>{' '}
+                      <strong>{isFromAdmin ? 'Admin' : msg.senderEmail}:</strong>{' '}
                       {msg.content || msg.text}
                     </ListGroup.Item>
                   );
