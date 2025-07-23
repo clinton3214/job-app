@@ -4,7 +4,6 @@ import { Container, Form, Button, ListGroup } from 'react-bootstrap';
 import io from 'socket.io-client';
 import axios from 'axios';
 
-// Connect to socket server
 const socket = io(import.meta.env.VITE_BACKEND_URL, {
   transports: ['websocket'],
   withCredentials: true,
@@ -19,52 +18,39 @@ export default function InterviewPage() {
   const [input, setInput] = useState('');
   const [user, setUser] = useState(null);
 
-  // Fetch user info with token
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.error('❌ No token found in localStorage');
+      console.error('❌ No token found');
       return;
     }
+
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/user/me`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       })
       .then((res) => {
-        console.log('👤 User info loaded:', res.data);
         setUser(res.data);
+        socket.emit('register_email', res.data.email);
       })
       .catch((err) => {
-        console.error('❌ Failed to fetch user info:', err);
+        console.error('❌ Failed to load user:', err);
       });
   }, []);
 
-  // Receive messages from server
   useEffect(() => {
-    const handleReceiveMessage = (msg) => {
-      console.log('📩 Message received:', msg);
-      setMessages((prev) => [...prev, msg]);
+    const handleReceive = (msg) => {
+      if (msg.receiverEmail === user?.email) {
+        setMessages((prev) => [...prev, msg]);
+      }
     };
-    socket.on('receive_message', handleReceiveMessage);
-    return () => {
-      socket.off('receive_message', handleReceiveMessage);
-    };
-  }, []);
+    socket.on('receive_message', handleReceive);
+    return () => socket.off('receive_message', handleReceive);
+  }, [user]);
 
-  // Send message
   const sendMessage = () => {
-    if (!input.trim()) return;
-    if (!user) {
-      console.warn('⚠️ User info not loaded yet. Message not sent.');
-      return;
-    }
-
-    // ⛔ Prevent sending message to self (admin)
-    if (user.email === 'ezeobiclinton@gmail.com') {
-      console.warn("⚠️ You're logged in as admin. You can't send messages to yourself.");
-      return;
-    }
+    if (!input.trim() || !user) return;
 
     const msg = {
       sender: 'user',
@@ -76,7 +62,6 @@ export default function InterviewPage() {
       userEmail: user.email,
     };
 
-    console.log('📤 Sending message:', msg);
     socket.emit('send_message', msg);
     setMessages((prev) => [...prev, msg]);
     setInput('');
@@ -85,7 +70,6 @@ export default function InterviewPage() {
   return (
     <Container className="py-4">
       <h3 className="mb-4 text-center">Live Interview</h3>
-      {/* Messages */}
       <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
         {messages.map((msg, idx) => (
           <ListGroup.Item
@@ -100,7 +84,6 @@ export default function InterviewPage() {
           </ListGroup.Item>
         ))}
       </ListGroup>
-      {/* Input */}
       <Form
         onSubmit={(e) => {
           e.preventDefault();
