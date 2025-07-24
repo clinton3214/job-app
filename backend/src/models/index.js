@@ -1,17 +1,18 @@
 // backend/src/models/index.js
-import  sequelize  from './db.js';
+import sequelize from './db.js';
 
-// Eagerly load models (ensures they attach to the shared sequelize instance)
-import './User.js';
-import './Withdrawal.js';
-import './AdminLog.js';
-import './Payment.js';
-import './message.js'; // ✅ Import Message model
-// add more as needed: './Referral.js', './Deposit.js', etc.
+import { User } from './User.js';
+import { Withdrawal } from './Withdrawal.js';
+import { AdminLog } from './AdminLog.js';
+import { Payment } from './Payment.js';
+import { Transaction } from './Transaction.js';
+import Message from './message.js'; // ✅ correct import
+
+export { sequelize, User, Withdrawal, AdminLog, Payment, Message };
 
 export async function initDb() {
   try {
-    await sequelize.sync({ alter: true }); // Use alter for dev flexibility
+    await sequelize.sync({ alter: true }); // use 'alter' for dev
     console.log('✅ Database synchronized');
   } catch (err) {
     console.error('❌ Database sync error:', err);
