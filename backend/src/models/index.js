@@ -6,6 +6,7 @@ import './User.js';
 import './Withdrawal.js';
 import './AdminLog.js';
 import './Payment.js';
+import './message.js'; // ✅ Import Message model
 // add more as needed: './Referral.js', './Deposit.js', etc.
 
 export async function initDb() {

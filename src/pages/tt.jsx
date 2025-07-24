@@ -180,10 +180,10 @@ import { Container, Form, Button, ListGroup } from 'react-bootstrap';
 import io from 'socket.io-client';
 import axios from 'axios';
 
-const socket = io(import.meta.env.VITE_BACKEND_URL, {
-  transports: ['websocket'],
+// const socket = io(import.meta.env.VITE_BACKEND_URL, {
+ // transports: ['websocket'],
   withCredentials: true,
-});
+//});
 
 socket.on('connect', () => {
   console.log('✅ User socket connected:', socket.id);
