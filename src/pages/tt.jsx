@@ -1,10 +1,10 @@
-// AdminInboxPage.jsx
+// src/pages/AdminInboxPage.jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 import { getAdminSocket } from '../layouts/AdminLayout';
 
-// const// socket = getAdminSocket();
+const socket = getAdminSocket();
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 const ADMIN_EMAIL = 'ezeobiclinton@gmail.com';
 
@@ -15,7 +15,12 @@ export default function AdminInboxPage() {
   const [input, setInput] = useState('');
   const selectedUserRef = useRef(null);
 
-  // Fetch list of users who have chatted with admin
+  // Register admin email with socket
+  useEffect(() => {
+    socket.emit('register_email', ADMIN_EMAIL);
+  }, []);
+
+  // Fetch all users who messaged admin
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -29,11 +34,10 @@ export default function AdminInboxPage() {
     fetchUsers();
   }, []);
 
-  // Fetch chat history when a user is selected
+  // Load chat history for selected user
   useEffect(() => {
     if (!selectedUserEmail) return;
     selectedUserRef.current = selectedUserEmail;
-
     const fetchMessages = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/messages/${selectedUserEmail}`);
@@ -48,44 +52,27 @@ export default function AdminInboxPage() {
     fetchMessages();
   }, [selectedUserEmail]);
 
-  // Listen for incoming socket messages
+  // Listen for new incoming messages
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('✅ Admin socket connected:', socket.id);
-    });
-
     socket.on('receive_message', (msg) => {
-      console.log('📩 Admin received message:', msg);
-
-      const relevant = msg.senderEmail !== ADMIN_EMAIL && msg.receiverEmail === ADMIN_EMAIL;
-      if (relevant) {
-        console.log('✅ Message added to UI:', msg);
+      if (msg.receiverEmail === ADMIN_EMAIL) {
         const sender = msg.senderEmail;
         setAllMessages((prev) => ({
           ...prev,
           [sender]: [...(prev[sender] || []), msg],
         }));
-
         if (!users.includes(sender)) {
           setUsers((prevUsers) => [...prevUsers, sender]);
         }
-      } else {
-        console.log('🚫 Message ignored (not sent to admin)');
       }
     });
-
     return () => {
       socket.off('receive_message');
     };
   }, [users]);
 
-  // Send message to selected user
   const sendMessage = async () => {
     if (!input.trim() || !selectedUserEmail) return;
-    if (selectedUserEmail === ADMIN_EMAIL) {
-      console.warn('⚠️ Cannot send message to self');
-      return;
-    }
 
     const msg = {
       sender: 'admin',
@@ -94,9 +81,7 @@ export default function AdminInboxPage() {
       receiverEmail: selectedUserEmail,
     };
 
-    console.log('💬 Admin sending message:', msg);
     socket.emit('send_message', msg);
-
     try {
       await axios.post(`${API_BASE}/api/messages`, {
         senderEmail: msg.senderEmail,
@@ -111,6 +96,7 @@ export default function AdminInboxPage() {
       ...prev,
       [selectedUserEmail]: [...(prev[selectedUserEmail] || []), msg],
     }));
+
     setInput('');
   };
 
@@ -120,7 +106,6 @@ export default function AdminInboxPage() {
     <Container fluid className="py-4">
       <h3 className="text-center mb-4">Admin Inbox</h3>
       <Row>
-        {/* 📧 User List */}
         <Col md={4}>
           <h5>Users</h5>
           <ListGroup>
@@ -128,10 +113,7 @@ export default function AdminInboxPage() {
               <ListGroup.Item
                 key={email}
                 active={email === selectedUserEmail}
-                onClick={() => {
-                  setSelectedUserEmail(email);
-                  selectedUserRef.current = email;
-                }}
+                onClick={() => setSelectedUserEmail(email)}
                 style={{ cursor: 'pointer', color: 'black' }}
               >
                 {email}
@@ -139,8 +121,6 @@ export default function AdminInboxPage() {
             ))}
           </ListGroup>
         </Col>
-
-        {/* 💬 Chat Area */}
         <Col md={8}>
           {selectedUserEmail ? (
             <>
@@ -189,7 +169,6 @@ export default function AdminInboxPage() {
     </Container>
   );
 }
-
 
 
 

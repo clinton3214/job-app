@@ -1,6 +1,6 @@
 // src/pages/AdminInboxPage.jsx
 import React, { useEffect, useRef, useState } from 'react';
-import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, ListGroup, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import { getAdminSocket } from '../layouts/AdminLayout';
 
@@ -13,14 +13,15 @@ export default function AdminInboxPage() {
   const [selectedUserEmail, setSelectedUserEmail] = useState(null);
   const [allMessages, setAllMessages] = useState({});
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const selectedUserRef = useRef(null);
 
-  // Register admin email with socket
+  // Register admin on socket
   useEffect(() => {
     socket.emit('register_email', ADMIN_EMAIL);
   }, []);
 
-  // Fetch all users who messaged admin
+  // Fetch users who chatted with admin
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -34,11 +35,13 @@ export default function AdminInboxPage() {
     fetchUsers();
   }, []);
 
-  // Load chat history for selected user
+  // Fetch messages for selected user
   useEffect(() => {
     if (!selectedUserEmail) return;
     selectedUserRef.current = selectedUserEmail;
+
     const fetchMessages = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(`${API_BASE}/api/messages/${selectedUserEmail}`);
         setAllMessages((prev) => ({
@@ -47,30 +50,35 @@ export default function AdminInboxPage() {
         }));
       } catch (err) {
         console.error('❌ Failed to fetch messages:', err);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchMessages();
   }, [selectedUserEmail]);
 
-  // Listen for new incoming messages
+  // Handle new incoming messages
   useEffect(() => {
-    socket.on('receive_message', (msg) => {
-      if (msg.receiverEmail === ADMIN_EMAIL) {
-        const sender = msg.senderEmail;
-        setAllMessages((prev) => ({
-          ...prev,
-          [sender]: [...(prev[sender] || []), msg],
-        }));
-        if (!users.includes(sender)) {
-          setUsers((prevUsers) => [...prevUsers, sender]);
-        }
+    const handleReceive = (msg) => {
+      const userEmail = msg.senderEmail === ADMIN_EMAIL ? msg.receiverEmail : msg.senderEmail;
+      setAllMessages((prev) => ({
+        ...prev,
+        [userEmail]: [...(prev[userEmail] || []), msg],
+      }));
+      if (!users.includes(userEmail)) {
+        setUsers((prev) => [...prev, userEmail]);
       }
-    });
+    };
+
+    socket.on('receive_message', handleReceive);
+
     return () => {
-      socket.off('receive_message');
+      socket.off('receive_message', handleReceive);
     };
   }, [users]);
 
+  // Send admin reply
   const sendMessage = async () => {
     if (!input.trim() || !selectedUserEmail) return;
 
@@ -81,7 +89,10 @@ export default function AdminInboxPage() {
       receiverEmail: selectedUserEmail,
     };
 
+    // Emit to socket
     socket.emit('send_message', msg);
+
+    // Save to DB
     try {
       await axios.post(`${API_BASE}/api/messages`, {
         senderEmail: msg.senderEmail,
@@ -92,6 +103,7 @@ export default function AdminInboxPage() {
       console.error('❌ Failed to save message:', err);
     }
 
+    // Update UI
     setAllMessages((prev) => ({
       ...prev,
       [selectedUserEmail]: [...(prev[selectedUserEmail] || []), msg],
@@ -106,6 +118,7 @@ export default function AdminInboxPage() {
     <Container fluid className="py-4">
       <h3 className="text-center mb-4">Admin Inbox</h3>
       <Row>
+        {/* Left: User List */}
         <Col md={4}>
           <h5>Users</h5>
           <ListGroup>
@@ -121,45 +134,57 @@ export default function AdminInboxPage() {
             ))}
           </ListGroup>
         </Col>
+
+        {/* Right: Chat Box */}
         <Col md={8}>
           {selectedUserEmail ? (
             <>
               <h5>Chat with: {selectedUserEmail}</h5>
-              <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
-                {currentMessages.map((msg, idx) => {
-                  const isFromAdmin = msg.senderEmail === ADMIN_EMAIL;
-                  return (
-                    <ListGroup.Item
-                      key={idx}
-                      className={isFromAdmin ? 'text-end' : 'text-start'}
-                      style={{
-                        backgroundColor: isFromAdmin ? '#fff' : '#e6f7ff',
-                        color: 'black',
-                      }}
-                    >
-                      <strong>{isFromAdmin ? 'Admin' : msg.senderEmail}:</strong>{' '}
-                      {msg.content || msg.text}
-                    </ListGroup.Item>
-                  );
-                })}
-              </ListGroup>
-              <Form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  sendMessage();
-                }}
-              >
-                <Form.Control
-                  type="text"
-                  placeholder="Reply to user..."
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  style={{ color: 'black' }}
-                />
-                <Button type="submit" className="mt-2 w-100">
-                  Send
-                </Button>
-              </Form>
+
+              {loading ? (
+                <div className="text-center py-4">
+                  <Spinner animation="border" />
+                </div>
+              ) : (
+                <>
+                  <ListGroup style={{ maxHeight: '60vh', overflowY: 'auto' }} className="mb-3">
+                    {currentMessages.map((msg, idx) => {
+                      const isFromAdmin = msg.senderEmail === ADMIN_EMAIL;
+                      return (
+                        <ListGroup.Item
+                          key={idx}
+                          className={isFromAdmin ? 'text-end' : 'text-start'}
+                          style={{
+                            backgroundColor: isFromAdmin ? '#fff' : '#e6f7ff',
+                            color: 'black',
+                          }}
+                        >
+                          <strong>{isFromAdmin ? 'Admin' : msg.senderEmail}:</strong>{' '}
+                          {msg.content || msg.text}
+                        </ListGroup.Item>
+                      );
+                    })}
+                  </ListGroup>
+
+                  <Form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      sendMessage();
+                    }}
+                  >
+                    <Form.Control
+                      type="text"
+                      placeholder="Reply to user..."
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      style={{ color: 'black' }}
+                    />
+                    <Button type="submit" className="mt-2 w-100">
+                      Send
+                    </Button>
+                  </Form>
+                </>
+              )}
             </>
           ) : (
             <p>Select a user to start chatting</p>
