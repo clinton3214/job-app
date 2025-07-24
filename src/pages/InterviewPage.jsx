@@ -78,7 +78,7 @@ export default function InterviewPage() {
       style={{ fontFamily: "Inter, 'Noto Sans', sans-serif" }}
     >
       {/* Header */}
-      <header className="d-flex justify-content-between align-items-center border-bottom px-4 py-3 bg-white">
+      <header className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 border-bottom px-4 py-3 bg-white">
         <div className="d-flex align-items-center gap-2 text-dark">
           <div style={{ width: '24px' }}>
             <svg
@@ -93,9 +93,9 @@ export default function InterviewPage() {
               />
             </svg>
           </div>
-          <h2 className="h5 fw-bold m-0">Acme Co</h2>
+          <h2 className="h5 fw-bold m-0">startnetnexus</h2>
         </div>
-        <div className="d-flex align-items-center gap-4">
+        <div className="d-flex flex-column flex-md-row align-items-center gap-3 w-100 justify-content-between justify-content-md-end">
           <nav className="d-flex gap-3">
             <a className="text-dark text-decoration-none fw-medium" href="#">
               Dashboard
@@ -126,7 +126,7 @@ export default function InterviewPage() {
 
       {/* Main Content */}
       <Container className="flex-grow-1 py-4">
-        <h3 className="fw-bold mb-4">Interview with {user?.name || '...'}</h3>
+        <h3 className="fw-bold mb-4">Interviewer {user?.name || '...'}</h3>
 
         {/* Messages */}
         {messages.map((msg, idx) => (
@@ -183,9 +183,10 @@ export default function InterviewPage() {
           }}
         >
           <InputGroup className="mb-3">
-            <Form.Control
+          <Form.Control
               placeholder="Type a message"
-              className="bg-secondary-subtle border-0"
+              className="bg-secondary-subtle border-0 text-black"
+              style={{ color: 'black' }}
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />
