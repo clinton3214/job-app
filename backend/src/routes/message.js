@@ -11,7 +11,7 @@ router.get('/users', async (req, res) => {
     const users = await Message.findAll({
       attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('senderEmail')), 'senderEmail']],
       where: {
-        receiverEmail: 'admin@example.com'
+        receiverEmail: 'ezeobiclinton@gmail.com'
       }
     });
     const emails = users.map(u => u.senderEmail);
@@ -29,8 +29,8 @@ router.get('/:userEmail', async (req, res) => {
     const messages = await Message.findAll({
       where: {
         [Sequelize.Op.or]: [
-          { senderEmail: userEmail, receiverEmail: 'admin@example.com' },
-          { senderEmail: 'admin@example.com', receiverEmail: userEmail }
+          { senderEmail: userEmail, receiverEmail: 'ezeobiclinton@gmail.com' },
+          { senderEmail: 'ezeobiclinton@gmail.com', receiverEmail: userEmail }
         ]
       },
       order: [['createdAt', 'ASC']]
