@@ -1,6 +1,7 @@
 // backend/src/sync.js
 import { sequelize } from './models/index.js';
 import { User }      from './models/User.js';
+import Message from './models/message.js';
 
 (async () => {
   try {
