@@ -101,7 +101,7 @@ export default function AdminDashboard() {
               Users
             </button>
             <button
-              className={`list-group-item list-group-item-action mb-2 ${
+              className={`list-group-item list-group-item-action rounded-pill mb-2 ${
                 tab === 'logs' ? 'active bg-secondary text-white' : ''
               }`}
               onClick={() => setTab('logs')}
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
               Logs
             </button>
             <button
-              className={`list-group-item list-group-item-action ${
+              className={`list-group-item list-group-item-action rounded-pill mb-2 ${
                 tab === 'referrals' ? 'active bg-secondary text-white' : ''
               }`}
               onClick={() => setTab('referrals')}
