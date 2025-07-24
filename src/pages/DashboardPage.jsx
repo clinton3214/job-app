@@ -21,6 +21,7 @@ import {
   BsCreditCard,
   BsPerson,
   BsBoxArrowRight,
+  BsChatQuote,
 } from 'react-icons/bs';
 import { ArrowLeftRight } from 'lucide-react';
 
@@ -260,7 +261,7 @@ export default function DashboardPage() {
               className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2"
               onClick={() => navigate('/interview')}
             >
-              <BsCreditCard size={24} />
+              < BsChatQuote  size={24} />
               <span>Interview</span>
             </button>
           </div>
