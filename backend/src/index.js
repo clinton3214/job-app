@@ -84,7 +84,7 @@ io.on('connection', (socket) => {
       await Message.create({
         senderEmail: data.senderEmail,
         receiverEmail: data.receiverEmail,
-        content: data.text,
+        content: data.content,
         isAdmin: data.sender === 'admin'
       });
       console.log('✅ Message saved to DB');
