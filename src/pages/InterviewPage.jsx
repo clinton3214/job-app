@@ -59,7 +59,7 @@ export default function InterviewPage() {
 
     const msg = {
       sender: 'user',
-      text: input.trim(),
+      content: input.trim(),
       senderEmail: user.email,
       receiverEmail: 'ezeobiclinton@gmail.com',
       userId: user.id,
