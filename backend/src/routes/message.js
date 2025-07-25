@@ -9,7 +9,7 @@ router.get('/users', async (req, res) => {
   try {
     const users = await Message.findAll({
       attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('senderEmail')), 'senderEmail']],
-      where: { receiverEmail: 'ezeobiclinton@gmail.com' }
+      where: { receiverEmail: 'startnetnexus@gmail.com' }
     });
     const emails = users.map(u => u.senderEmail);
     res.json(emails);
@@ -24,7 +24,7 @@ router.get('/unread-count', async (req, res) => {
   try {
     const unreadMessages = await Message.findAll({
       where: {
-        receiverEmail: 'ezeobiclinton@gmail.com',
+        receiverEmail: 'startnetnexus@gmail.com',
         read: false
       }
     });
@@ -44,7 +44,7 @@ router.patch('/mark-read/:userEmail', async (req, res) => {
       {
         where: {
           senderEmail: userEmail,
-          receiverEmail: 'ezeobiclinton@gmail.com',
+          receiverEmail: 'startnetnexus@gmail.com',
           read: false
         }
       }
@@ -63,8 +63,8 @@ router.get('/:userEmail', async (req, res) => {
     const messages = await Message.findAll({
       where: {
         [Sequelize.Op.or]: [
-          { senderEmail: userEmail, receiverEmail: 'ezeobiclinton@gmail.com' },
-          { senderEmail: 'ezeobiclinton@gmail.com', receiverEmail: userEmail }
+          { senderEmail: userEmail, receiverEmail: 'startnetnexus@gmail.com' },
+          { senderEmail: 'startnetnexus@gmail.com', receiverEmail: userEmail }
         ]
       },
       order: [['createdAt', 'ASC']]
@@ -84,7 +84,7 @@ router.post('/', async (req, res) => {
       senderEmail,
       receiverEmail,
       content,
-      isAdmin: senderEmail === 'ezeobiclinton@gmail.com',
+      isAdmin: senderEmail === 'startnetnexus@gmail.com',
       read: false
     });
     res.json(msg);

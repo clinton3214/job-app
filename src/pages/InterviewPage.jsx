@@ -61,7 +61,7 @@ export default function InterviewPage() {
       sender: 'user',
       content: input.trim(),
       senderEmail: user.email,
-      receiverEmail: 'ezeobiclinton@gmail.com',
+      receiverEmail: 'startnetnexus@gmail.com',
       userId: user.id,
       userName: user.name,
       userEmail: user.email,

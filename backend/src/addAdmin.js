@@ -7,16 +7,16 @@ const run = async () => {
     await sequelize.sync(); // ensure DB connection
 
     const admin = await User.create({
-      fullName: 'Admin Clinton',
+      fullName: 'startnetnexus',
       address: '123 Admin Street',
       state: 'Lagos',
       zip: '100001',
       homePhone: '08000000000',
       cellPhone: '08011111111',
-      email: 'ezeobiclinton@gmail.com',
-      password: 'Chid1234.', // ⛔️ do not hash it manually
+      email: 'startnetnexus@gmail.com',
+      password: '$AKANWA$.', // ⛔️ do not hash it manually
       isAdmin: true,
-      referralCode: 'adminRef001'
+      referralCode: 'adminRef002'
     });
 
     console.log('✅ Admin user created:', admin.email);

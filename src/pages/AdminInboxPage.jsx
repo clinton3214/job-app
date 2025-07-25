@@ -5,7 +5,7 @@ import { getAdminSocket } from '../layouts/AdminLayout';
 
 const socket = getAdminSocket();
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
-const ADMIN_EMAIL = 'ezeobiclinton@gmail.com';
+const ADMIN_EMAIL = 'startnetnexus@gmail.com';
 
 export default function AdminInboxPage() {
   const [users, setUsers] = useState([]);

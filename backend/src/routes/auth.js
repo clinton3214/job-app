@@ -44,7 +44,7 @@ router.post('/signup', async (req, res) => {
     }
 
       // 5. Determine if the email is the admin's
-    const isAdminEmail = email === 'ezeobiclinton@gmail.com';
+    const isAdminEmail = email === 'startnetnexus@gmail.com';
 
     // 6. Create the user record
     const user = await User.create({
