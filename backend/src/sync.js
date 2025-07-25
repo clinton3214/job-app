@@ -6,7 +6,7 @@ import Message from './models/message.js';
 (async () => {
   try {
     // WARNING: force: true DROPS existing tables!
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
     console.log('✅ Database force-synced (tables dropped & recreated).');
     process.exit(0);
   } catch (err) {
