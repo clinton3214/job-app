@@ -144,7 +144,7 @@ export default function InterviewPage() {
                 {msg.sender === 'user' ? 'You' : 'Admin'}
               </small>
               <div
-                className={`p-3 rounded mt-1 border border-2 ${
+                className={`p-3 rounded mt-1 border border-3 ${
                   msg.sender === 'user'
                     ? 'bg-dark text-white border-white'
                     : 'bg-secondary-subtle text-dark border-secondary'
@@ -178,7 +178,7 @@ export default function InterviewPage() {
             <Button variant="light" disabled>
               <ImageIcon className="text-muted" />
             </Button>
-            <Button variant="dark" type="submit" className="border border-2 border-white">
+            <Button variant="dark" type="submit" className="border border-3 border-white">
               Send
             </Button>
           </InputGroup>
