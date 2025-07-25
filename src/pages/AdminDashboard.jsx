@@ -118,6 +118,7 @@ export default function AdminDashboard() {
         <div className="col-md-9 p-4">
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
             <h2 className="fw-bold text-dark mb-0">Users</h2>
+            <div className="mb-3">
             <button
               className="btn btn-dark rounded-pill position-relative"
               onClick={() => navigate('/admin/inbox')}
@@ -129,6 +130,9 @@ export default function AdminDashboard() {
                 </span>
               )}
             </button>
+
+            </div>
+            
               {/* Users Tab */}
           {tab === 'users' && (
             <div className="table-responsive" style={{ overflowX: 'auto' }}>
