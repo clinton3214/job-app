@@ -24,6 +24,10 @@ const Message = sequelize.define('Message', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  read: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
 });
 
 // Optional relationships — only needed if you're using associations

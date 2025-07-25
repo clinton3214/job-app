@@ -1,121 +1,62 @@
-import 'dotenv/config';
+// routes/messages.js
+import Sequelize from 'sequelize';
 import express from 'express';
-import cors from 'cors';
-import http from 'http';
-import { Server } from 'socket.io';
+import Message from '../models/message.js';
 
-// Sequelize DB initialization
-import sequelize from './models/db.js';
-import './models/index.js'; // Load all models
-import Message from './models/message.js'; // ✅ Import Message model
+const router = express.Router();
 
-// Import routes
-import authRoutes from './routes/auth.js';
-import paymentRoutes from './routes/payment.js';
-import historyRoutes from './routes/history.js';
-import adminRoutes from './routes/admin.js';
-import userRoutes from './routes/user.js';
-import referralRoutes from './routes/referrals.js';
-import withdrawalRoutes from './routes/withdraw.js';
-import messageRoutes from './routes/message.js';
-
-const app = express();
-const server = http.createServer(app); // Create HTTP server
-
-// ✅ CORS for REST API
-app.use(cors({
-  origin: 'https://job-app-frontend-3dld.onrender.com',
-  credentials: true
-}));
-
-// ✅ JSON parsing
-app.use(express.json());
-
-// ✅ Health check route
-app.get('/', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'API is up and running' });
-});
-
-// ✅ Log all requests
-app.use((req, res, next) => {
-  console.log(`[REQ] ${req.method} ${req.originalUrl}`);
-  next();
-});
-
-// ✅ Real-time socket.io connection
-const io = new Server(server, {
-  cors: {
-    origin: 'https://job-app-frontend-3dld.onrender.com',
-    methods: ['GET', 'POST'],
-    credentials: true
-  }
-});
-
-io.on('connection', (socket) => {
-  console.log('🟢 Socket connected:', socket.id);
-
-  socket.on('send_message', async (data) => {
-    console.log('📨 Message received from frontend:', data);
-
-    try {
-      // ✅ Save the message to the database
-      await Message.create({
-        senderEmail: data.senderEmail,
-        receiverEmail: data.receiverEmail,
-        content: data.text,
-        isAdmin: data.sender === 'admin'
-      });
-
-      console.log('✅ Message stored in database');
-    } catch (error) {
-      console.error('❌ Error saving message to DB:', error);
-    }
-
-    // ✅ Still broadcast to all connected clients
-    io.emit('receive_message', data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('🔌 User disconnected:', socket.id);
-  });
-});
-
-// ✅ Mount API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/payment', paymentRoutes);
-app.use('/api/history', historyRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/referrals', referralRoutes);
-app.use('/api/withdraw', withdrawalRoutes);
-app.use('/api/messages', messageRoutes);
-
-// ✅ Handle 404s
-app.use((req, res) => {
-  res.status(404).json({ error: 'Not found' });
-});
-
-// ✅ Main server startup function
-async function startServer() {
+// ✅ Get all users who have chatted with the admin
+router.get('/users', async (req, res) => {
   try {
-    // Sync DB
-    if (process.env.NODE_ENV === 'production') {
-      await sequelize.sync();
-    } else {
-      await sequelize.sync({ alter: true });
-    }
-
-    console.log('✅ SQLite database synchronized');
-
-    // Start server
-    const PORT = process.env.PORT || 5000;
-    server.listen(PORT, '0.0.0.0', () => {
-      console.log(`🚀 Server + Socket.IO running at http://0.0.0.0:${PORT}`);
+    const users = await Message.findAll({
+      attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('senderEmail')), 'senderEmail']],
+      where: {
+        receiverEmail: 'ezeobiclinton@gmail.com'
+      }
     });
-  } catch (err) {
-    console.error('❌ Server startup error:', err);
-    process.exit(1);
+    const emails = users.map(u => u.senderEmail);
+    res.json(emails);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
   }
-}
+});
 
-startServer();
+// ✅ Get full conversation between admin and a specific user
+router.get('/:userEmail', async (req, res) => {
+  const { userEmail } = req.params;
+  try {
+    const messages = await Message.findAll({
+      where: {
+        [Sequelize.Op.or]: [
+          { senderEmail: userEmail, receiverEmail: 'ezeobiclinton@gmail.com' },
+          { senderEmail: 'ezeobiclinton@gmail.com', receiverEmail: userEmail }
+        ]
+      },
+      order: [['createdAt', 'ASC']]
+    });
+    res.json(messages);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).json({ error: 'Failed to fetch messages' });
+  }
+});
+
+// ✅ Send message from admin to user
+router.post('/', async (req, res) => {
+  const { senderEmail, receiverEmail, content } = req.body;
+  try {
+    const msg = await Message.create({
+      senderEmail,
+      receiverEmail,
+      content,
+      isAdmin: senderEmail === 'admin@example.com' // ✅ Ensure isAdmin is stored
+    });
+    res.json(msg);
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({ error: 'Failed to send message' });
+  }
+});
+
+export default router;

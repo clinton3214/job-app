@@ -1,8 +1,6 @@
-// routes/messages.js
 import Sequelize from 'sequelize';
 import express from 'express';
 import Message from '../models/message.js';
-
 const router = express.Router();
 
 // ✅ Get all users who have chatted with the admin
@@ -50,7 +48,8 @@ router.post('/', async (req, res) => {
       senderEmail,
       receiverEmail,
       content,
-      isAdmin: senderEmail === 'admin@example.com' // ✅ Ensure isAdmin is stored
+      isAdmin: senderEmail === 'ezeobiclinton@gmail.com', // ✅ Ensure isAdmin is stored
+      read: false
     });
     res.json(msg);
   } catch (error) {
@@ -59,4 +58,41 @@ router.post('/', async (req, res) => {
   }
 });
 
+// ✅ NEW: Get count of unread messages sent to admin
+router.get('/unread-count', async (req, res) => {
+  try {
+    const unreadMessages = await Message.findAll({
+      where: {
+        receiverEmail: 'ezeobiclinton@gmail.com',
+        read: false
+      }
+    });
+
+    res.json({ total: unreadMessages.length });
+  } catch (err) {
+    console.error('Error fetching unread count:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ✅ Mark messages from a specific user as read
+router.patch('/mark-read/:userEmail', async (req, res) => {
+  const { userEmail } = req.params;
+  try {
+    await Message.update(
+      { read: true },
+      {
+        where: {
+          senderEmail: userEmail,
+          receiverEmail: 'ezeobiclinton@gmail.com',
+          read: false
+        }
+      }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Failed to mark messages as read:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 export default router;
