@@ -133,8 +133,8 @@ export default function AdminDashboard() {
 
           {/* Users Tab */}
           {tab === 'users' && (
-            <div className="table-responsive">
-              <table className="table table-bordered table-hover">
+            <div className="table-responsive" style={{ overflowX: 'auto' }}>
+    <table className="table table-bordered table-striped mb-0" style={{ minWidth: '600px' }}>
                 <thead className="table-dark">
                   <tr>
                     <th>Email</th>
@@ -242,4 +242,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
