@@ -49,6 +49,10 @@ app.use('/api/referrals', referralRoutes);
 app.use('/api/withdraw', withdrawalRoutes);
 app.use('/api/messages', messageRoutes);
 
+app.get('/api/admin/connected-users', (req, res) => {
+  res.json(Object.keys(connectedUsers)); // returns emails of connected users
+});
+
 // 404
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found' });

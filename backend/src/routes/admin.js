@@ -173,4 +173,15 @@ router.put('/users/:id/balance', async (req, res) => {
   }
 });
 
+// GET /api/admin/connected-users
+router.get('/connected-users', async (req, res) => {
+  try {
+    const onlineUsers = global.onlineUsers || []; // assume you store emails of online users globally
+    res.json(onlineUsers);
+  } catch (err) {
+    console.error('Error fetching online users:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 export default router;

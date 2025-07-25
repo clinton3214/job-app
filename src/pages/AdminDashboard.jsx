@@ -12,6 +12,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('users');
   const [unreadTotal, setUnreadTotal] = useState(0);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -20,6 +21,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchAll();
     fetchUnread();
+    fetchOnlineUsers();
   }, []);
 
   const fetchUnread = async () => {
@@ -47,6 +49,16 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchOnlineUsers = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/admin/connected-users`, { headers });
+      setOnlineUsers(res.data);
+    } catch (err) {
+      console.error('Failed to fetch online users:', err);
+    }
+  };
+
+
   const handleDelete = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
@@ -68,7 +80,7 @@ export default function AdminDashboard() {
 
   const promoteToAdmin = async (userId) => {
     try {
-      await axios.put(`${API_BASE}/api/admin/users/${userId}/promote`, {}, { headers });
+      await axios.put(`${API_BASE}/api/admin/users/${userId}/admin`, {}, { headers });
       setUsers(users.map((u) => (u.id === userId ? { ...u, isAdmin: true } : u)));
     } catch (err) {
       console.error('Promote error:', err);
@@ -117,6 +129,123 @@ export default function AdminDashboard() {
                 </span>
               )}
             </button>
+              {/* Users Tab */}
+          {tab === 'users' && (
+            <div className="table-responsive" style={{ overflowX: 'auto' }}>
+    <table className="table table-bordered table-striped mb-0" style={{ minWidth: '600px' }}>
+                <thead className="table-dark">
+                  <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Admin</th>
+                    <th>Balance</th>
+                    <th>Disabled</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((u) => (
+                    <tr key={u.id}>
+                      <td>{u.email}</td>
+                      <td>{u.fullName}</td>
+                      <td>{u.isAdmin ? 'Yes' : 'No'}</td>
+                      <td>
+                        <input
+                          type="number"
+                          value={u.balance}
+                          onChange={(e) => updateBalance(u.id, parseFloat(e.target.value))}
+                          className="form-control"
+                          style={{ width: '100px' }}
+                        />
+                      </td>
+                      <td>{u.disabled ? 'Yes' : 'No'}</td>
+                      <td>
+                        <button
+                          className="btn btn-sm btn-danger me-1"
+                          onClick={() => handleDelete(u.id)}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          className="btn btn-sm btn-warning me-1"
+                          onClick={() => toggleDisable(u.id, u.disabled)}
+                        >
+                          {u.disabled ? 'Enable' : 'Disable'}
+                        </button>
+                        {!u.isAdmin && (
+                          <button
+                            className="btn btn-sm btn-success"
+                            onClick={() => promoteToAdmin(u.id)}
+                          >
+                            Make Admin
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Logs Tab */}
+          {tab === 'logs' && (
+            <div className="table-responsive">
+              <table className="table table-bordered">
+                <thead className="table-dark">
+                  <tr>
+                    <th>Email</th>
+                    <th>IP Address</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {logs.map((log, index) => (
+                    <tr key={index}>
+                      <td>{log.userEmail}</td>
+                      <td>{log.ip}</td>
+                      <td>{new Date(log.time).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Referrals Tab */}
+          {tab === 'referrals' && (
+            <div className="table-responsive">
+              <table className="table table-bordered">
+                <thead className="table-dark">
+                  <tr>
+                    <th>User</th>
+                    <th>Referral Code</th>
+                    <th>Referred By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {referrals.map((r, index) => (
+                    <tr key={index}>
+                      <td>{r.email}</td>
+                      <td>{r.referralCode}</td>
+                      <td>{r.referredBy || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+            <div className="mb-4">
+            <h5 className="fw-bold">🟢 Online Users ({onlineUsers.length})</h5>
+            <ul className="list-group">
+              {onlineUsers.map(email => (
+                <li key={email} className="list-group-item d-flex justify-content-between align-items-center">
+                  {email}
+                  <span className="badge bg-success">Online</span>
+                </li>
+    ))}
+  </ul>
+</div>
           </div>
         </div>
       </div>
