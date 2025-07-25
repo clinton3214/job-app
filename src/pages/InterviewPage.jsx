@@ -159,7 +159,7 @@ export default function InterviewPage() {
                     : 'bg-secondary-subtle text-dark'
                 }`}
               >
-                {msg.text}
+                {msg.content}
               </div>
             </div>
             {msg.sender === 'user' && (
@@ -168,7 +168,7 @@ export default function InterviewPage() {
                 style={{
                   width: '40px',
                   height: '40px',
-                  backgroundImage: 'url(https://via.placeholder.com/40)',
+                  backgroundImage: 'url(https://cdn-icons-png.flaticon.com/512/1077/1077114.png)',
                 }}
               ></div>
             )}
