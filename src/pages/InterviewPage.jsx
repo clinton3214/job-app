@@ -149,6 +149,9 @@ export default function InterviewPage() {
                     ? 'bg-dark text-white border-white'
                     : 'bg-secondary-subtle text-dark border-secondary'
                 }`}
+                style={{
+                  borderColor: msg.sender === 'user' ? '#ffffff' : '#6c757d', // white or Bootstrap's secondary
+                }}
               >
                 {msg.content}
               </div>
@@ -184,4 +187,3 @@ export default function InterviewPage() {
     </div>
   );
 }
-
