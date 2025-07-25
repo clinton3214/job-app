@@ -138,40 +138,22 @@ export default function InterviewPage() {
                 : 'text-start'
             }`}
           >
-            {msg.sender !== 'user' && (
-              <div
-                className="rounded-circle bg-cover bg-center flex-shrink-0"
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  backgroundImage: 'url(https://via.placeholder.com/40)',
-                }}
-              ></div>
-            )}
+            
             <div>
               <small className="text-muted">
                 {msg.sender === 'user' ? 'You' : 'Admin'}
               </small>
               <div
-                className={`p-3 rounded mt-1 ${
+                className={`p-3 rounded mt-1 border border-2 ${
                   msg.sender === 'user'
-                    ? 'bg-dark text-white'
-                    : 'bg-secondary-subtle text-dark'
+                    ? 'bg-dark text-white border-white'
+                    : 'bg-secondary-subtle text-dark border-secondary'
                 }`}
               >
                 {msg.content}
               </div>
             </div>
-            {msg.sender === 'user' && (
-              <div
-                className="rounded-circle bg-cover bg-center flex-shrink-0"
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  backgroundImage: 'url(https://cdn-icons-png.flaticon.com/512/1077/1077114.png)',
-                }}
-              ></div>
-            )}
+            
           </div>
         ))}
 
@@ -193,7 +175,7 @@ export default function InterviewPage() {
             <Button variant="light" disabled>
               <ImageIcon className="text-muted" />
             </Button>
-            <Button variant="dark" type="submit">
+            <Button variant="dark" type="submit" className="border border-2 border-white">
               Send
             </Button>
           </InputGroup>
