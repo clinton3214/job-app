@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const API_BASE = import.meta.env.VITE_BACKEND_URL;
+//const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
