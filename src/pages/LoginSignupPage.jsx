@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import logoImg from '../assets/logo.jpg'; // adjust the path as needed
 
 // Use environment variable for API base URL
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
@@ -69,14 +70,11 @@ export default function LoginSignupPage() {
     <div className="position-relative d-flex min-vh-100 flex-column bg-light overflow-hidden" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
       <div className="container-fluid d-flex flex-column flex-grow-1">
         <header className="d-flex flex-wrap align-items-center justify-content-between border-bottom px-3 px-md-5 py-3">
-          <div className="d-flex align-items-center gap-3 text-dark">
-            <div style={{ width: '1.5rem', height: '1.5rem' }}>
-              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fillRule="evenodd" clipRule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor"></path>
-              </svg>
-            </div>
-            <h2 className="fs-5 fw-bold m-0">startnetnexus</h2>
-          </div>
+        <div className="d-flex align-items-center gap-3">
+       
+        <img src={logoImg} alt="Startnet Nexus Logo" style={{ height: '40px', objectFit: 'contain' }} />
+      </div>
+      
           <div className="d-flex flex-grow-1 justify-content-end gap-4">
             <nav className="d-flex align-items-center gap-4">
               <a className="text-dark fw-medium text-decoration-none" href="#">About</a>
