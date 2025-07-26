@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logoImg from '../assets/logo.jpg'; // adjust the path as needed
+import logoImg from '../assets/logo.png'; // adjust the path as needed
 
 // Use environment variable for API base URL
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
@@ -72,9 +72,9 @@ export default function LoginSignupPage() {
         <header className="d-flex flex-wrap align-items-center justify-content-between border-bottom px-3 px-md-5 py-3">
         <div className="d-flex align-items-center gap-3">
        
-        <img src={logoImg} alt="Startnet Nexus Logo" style={{ height: '40px', objectFit: 'contain' }} />
+        <img src={logoImg} alt="Startnet Nexus Logo" style={{ height: '50px', objectFit: 'contain' }} />
       </div>
-      
+
           <div className="d-flex flex-grow-1 justify-content-end gap-4">
             <nav className="d-flex align-items-center gap-4">
               <a className="text-dark fw-medium text-decoration-none" href="#">About</a>
