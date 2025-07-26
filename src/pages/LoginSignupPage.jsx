@@ -70,9 +70,9 @@ export default function LoginSignupPage() {
     <div className="position-relative d-flex min-vh-100 flex-column bg-light overflow-hidden" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
       <div className="container-fluid d-flex flex-column flex-grow-1">
         <header className="d-flex flex-wrap align-items-center justify-content-between border-bottom px-3 px-md-5 py-3">
-        <div className="d-flex align-items-center gap-3">
-       
-        <img src={logoImg} alt="Startnet Nexus Logo" style={{ height: '65px', objectFit: 'contain' }} />
+
+        <div className="d-flex align-items-center gap-3">      
+        <img src={logoImg} alt="Startnet Nexus Logo" style={{ height: '90px', width:'auto', objectFit: 'contain' }} />
       </div>
 
           <div className="d-flex flex-grow-1 justify-content-end gap-4">
