@@ -1,12 +1,14 @@
-// src/pages/ForgotPasswordPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
+  const [searchParams] = useSearchParams();
+  const initialEmail = searchParams.get('email') || '';
+  const [email, setEmail] = useState(initialEmail);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 

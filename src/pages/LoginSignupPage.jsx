@@ -133,7 +133,11 @@ export default function LoginSignupPage() {
                     </div>
                   </div>
                   <div className="text-end mb-3">
-                    <Link to="/forgot-password" className="text-dark text-decoration-underline">
+                    <Link
+                      to="/forgot-password"
+                      state={{ email: watch('email') }}
+                      className="text-dark text-decoration-underline"
+                    >
                       Forgot Password?
                     </Link>
                   </div>
