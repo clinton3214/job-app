@@ -146,27 +146,41 @@ router.post('/forgot-password', async (req, res) => {
     user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
     await user.save();
 
+    // Send reset email
     const resetUrl = `${FRONTEND_URL}/#/reset-password?token=${resetToken}`;
-    await sendEmail({
-      to: email,
-      subject: 'Reset Your Password',
-      html: `<p>
-      We received a request to reset your password for your account with [StartNetNexus]. If you didn't make this request, please ignore this email. Otherwise, you can reset your password using the link below:</p>
-<p>
-
-*Reset Password Link*
-Click <a href="${resetUrl}">here</a> to reset your password. This link expires in 1 hour.</p>
-<p>
-
-This link will take you to a page where you can enter a new password. Please make sure to choose a strong and unique password to secure your account.
-</p>
-<p>
-If you're having trouble clicking the link, you can copy and paste the following URL into your browser: [Insert Password Reset Link URL]</p>
-<p>
-Best regards,
-[StartNetNexus] Team
-</p>`,
-    });
+await sendEmail({
+  to: email,
+  subject: 'Reset Your Password',
+  html: `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f9f9f9;">
+    <div style="text-align: center; margin-bottom: 20px;">
+      <h2 style="color: #333;">StartNetNexus</h2>
+    </div>
+    <p style="font-size: 16px; color: #444;">
+      We received a request to reset your password for your StartNetNexus account.
+      If you didn’t request this, you can safely ignore this email.
+    </p>
+    <p style="font-size: 16px; color: #444;">
+      Otherwise, click the button below to reset your password. This link expires in <strong>1 hour</strong>.
+    </p>
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="${resetUrl}" style="background-color: #1a73e8; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+        Reset Password
+      </a>
+    </div>
+    <p style="font-size: 14px; color: #666;">
+      If the button above doesn't work, copy and paste the following URL into your browser:
+    </p>
+    <p style="font-size: 14px; color: #0066cc; word-break: break-all;">
+      ${resetUrl}
+    </p>
+    <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;" />
+    <p style="font-size: 14px; color: #999; text-align: center;">
+      &copy; ${new Date().getFullYear()} StartNetNexus. All rights reserved.
+    </p>
+  </div>
+  `,
+});
 
     return res.status(200).json({ message: 'If the email exists, a reset link will be sent.' });
   } catch (err) {
