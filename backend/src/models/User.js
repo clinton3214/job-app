@@ -26,17 +26,29 @@ export const User = sequelize.define('User', {
   isAdmin:          { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }, // ✅ Added
 
 }, {
-  hooks: {
-    beforeCreate: async (user) => {
+  //hooks: {
+   // beforeCreate: async (user) => {
       // Hash the password before saving
-      user.password = await bcrypt.hash(user.password, 12);
+    //  user.password = await bcrypt.hash(user.password, 12);
 
       // Auto-generate referral code if not provided
-      if (!user.referralCode) {
+     // if (!user.referralCode) {
+      //  user.referralCode = Math.random().toString(36).slice(2, 8).toUpperCase();
+     // }
+   // },
+  //},
+
+  hooks: {
+    beforeSave: async (user) => {
+      if (user.changed('password')) {
+        user.password = await bcrypt.hash(user.password, 12);
+      }
+      if (!user.referralCode && user.isNewRecord) {
         user.referralCode = Math.random().toString(36).slice(2, 8).toUpperCase();
       }
     },
   },
+
 });
 
 // Instance method to compare passwords
