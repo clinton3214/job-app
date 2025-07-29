@@ -67,8 +67,47 @@ router.post('/signup', async (req, res) => {
     const verifyUrl = `${FRONTEND_URL}/#/verify-email?token=${verificationToken}`;
     await sendEmail({
       to: email,
-      subject: 'Verify your email',
-      html: `<p>Click <a href="${verifyUrl}">here</a> to verify your email.</p>`,
+      subject: 'Verify Your Email',
+      html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px; background-color: #f9f9f9;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="https://drive.google.com/file/d/1UgVwlE961_yex_QrUxYY9svTpHt6jaUC/view?usp=sharing" alt="StartNetNexus Logo" style="max-width: 150px; height: auto; margin-bottom: 10px;" />
+          <h2 style="color: #333;">Verify Your Email</h2>
+        </div>
+    
+        <p style="font-size: 16px; color: #444;">
+          Hi there,
+        </p>
+    
+        <p style="font-size: 16px; color: #444;">
+          Thanks for signing up with <strong>StartNetNexus</strong>! To complete your registration, please verify your email address by clicking the button below.
+        </p>
+    
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${verifyUrl}" style="background-color: #1a73e8; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+            Verify Email
+          </a>
+        </div>
+    
+        <p style="font-size: 14px; color: #666;">
+          If the button above doesn't work, copy and paste this URL into your browser:
+        </p>
+    
+        <p style="font-size: 14px; color: #0066cc; word-break: break-all;">
+          ${verifyUrl}
+        </p>
+    
+        <p style="font-size: 14px; color: #666;">
+          If you did not create an account, you can safely ignore this email.
+        </p>
+    
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;" />
+    
+        <p style="font-size: 14px; color: #999; text-align: center;">
+          &copy; ${new Date().getFullYear()} StartNetNexus. All rights reserved.
+        </p>
+      </div>
+      `,
     });
 
     return res
