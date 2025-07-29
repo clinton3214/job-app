@@ -150,7 +150,19 @@ router.post('/forgot-password', async (req, res) => {
     await sendEmail({
       to: email,
       subject: 'Reset Your Password',
-      html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link expires in 1 hour.</p>`,
+      html: `<p>
+      We received a request to reset your password for your account with [StartNetNexus]. If you didn't make this request, please ignore this email. Otherwise, you can reset your password using the link below:
+
+*Reset Password Link*
+Click <a href="${resetUrl}">here</a> to reset your password. This link expires in 1 hour.
+
+This link will take you to a page where you can enter a new password. Please make sure to choose a strong and unique password to secure your account.
+
+If you're having trouble clicking the link, you can copy and paste the following URL into your browser: [Insert Password Reset Link URL]
+
+Best regards,
+[StartNetNexus] Team
+</p>`,
     });
 
     return res.status(200).json({ message: 'If the email exists, a reset link will be sent.' });
