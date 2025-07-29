@@ -19,6 +19,7 @@ import ReferralsPage       from './pages/ReferralsPage';
 import TotalProfitPage     from './pages/TotalProfitPage';
 import JobDetailPage       from './pages/JobDetailPage';
 import AdminInboxPage from './pages/AdminInboxPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 import NotFoundPage        from './pages/NotFoundPage';
 import ForgotPasswordPage  from './pages/ForgotPasswordPage';
 import ResetPasswordPage   from './pages/ResetPasswordPage';
@@ -47,6 +48,7 @@ export default function App() {
         <Route path="/profile"         element={<ProfilePage />} />
         <Route path="/referrals"       element={<ReferralsPage />} />
         <Route path="/interview" element={<InterviewPage />} />
+        <Route path="/verify-email"   element={<VerifyEmailPage />} />
 
         {/* Admin and analytics */}
        
