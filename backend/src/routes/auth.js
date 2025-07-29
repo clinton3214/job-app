@@ -132,7 +132,7 @@ router.get('/verify-email', async (req, res) => {
     user.verified = true;
     user.verificationToken = null;
     await user.save();
-    return res.redirect(`${FRONTEND_URL}/?verified=1`);
+    return res.redirect(`${FRONTEND_URL}/#/verify-email?verified=1`);
   } catch (err) {
     console.error('Email verification error:', err);
     return res.status(500).send('Server error during email verification.');
