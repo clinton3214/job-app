@@ -64,7 +64,7 @@ router.post('/signup', async (req, res) => {
       referredBy,
     });
     // 7. Send verification email
-    const verifyUrl = `${FRONTEND_URL}/verify-email?token=${verificationToken}`;
+    const verifyUrl = `${FRONTEND_URL}/#/verify-email?token=${verificationToken}`;
     await sendEmail({
       to: email,
       subject: 'Verify your email',
@@ -146,7 +146,7 @@ router.post('/forgot-password', async (req, res) => {
     user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    const resetUrl = `${FRONTEND_URL}/reset-password?token=${resetToken}`;
+    const resetUrl = `${FRONTEND_URL}/#/reset-password?token=${resetToken}`;
     await sendEmail({
       to: email,
       subject: 'Reset Your Password',
