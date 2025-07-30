@@ -1,7 +1,6 @@
-// src/pages/VerifyEmailPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
@@ -10,11 +9,26 @@ export default function VerifyEmailPage() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
-    const verifiedParam = searchParams.get('verified');
-    if (verifiedParam === '1') {
+    const verified = searchParams.get('verified');
+    const token = searchParams.get('token');
+
+    if (verified === '1') {
       setStatus('✅ Email verified! Redirecting to login…');
       setIsSuccess(true);
       setTimeout(() => navigate('/'), 3000);
+    } else if (token) {
+      // If token is present but no verified param, verify now
+      axios
+        .get(`/api/auth/verify-email?token=${token}`)
+        .then(() => {
+          setStatus('✅ Email verified! Redirecting to login…');
+          setIsSuccess(true);
+          setTimeout(() => navigate('/'), 3000);
+        })
+        .catch(() => {
+          setStatus('❌ Verification failed or link expired.');
+          setIsSuccess(false);
+        });
     } else {
       setStatus('❌ Verification failed or link expired.');
     }

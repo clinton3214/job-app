@@ -132,7 +132,8 @@ router.get('/verify-email', async (req, res) => {
     user.verified = true;
     user.verificationToken = null;
     await user.save();
-    return res.redirect(`${FRONTEND_URL}/#/verify-email?verified=1`);
+    /*return res.redirect(`${FRONTEND_URL}/#/verify-email?verified=1`);*/
+    return res.redirect(`${FRONTEND_URL}/#/verify-email?verified=1&token=${token}`);
   } catch (err) {
     console.error('Email verification error:', err);
     return res.status(500).send('Server error during email verification.');
@@ -151,7 +152,7 @@ router.post('/login', async (req, res) => {
     }
     //verify email first before login
      if (!user.isAdmin && !user.verified) {
-       return res.status(403).json({ error: 'Please verify your email first.' });
+       return res.status(403).json({ error: 'An email has been sent to your mail,Please verify your email first.' });
      }
     await AdminLog.create({ userEmail: email, ip: req.ip });
     const token = jwt.sign({ sub: user.id, email }, JWT_SECRET, { expiresIn: '1h' });
