@@ -149,10 +149,10 @@ router.post('/login', async (req, res) => {
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    // temporarily disabled:
-    // if (!user.verified) {
-    //   return res.status(403).json({ error: 'Please verify your email first.' });
-    // }
+    //verify email first before login
+     if (!user.isAdmin && !user.verified) {
+       return res.status(403).json({ error: 'Please verify your email first.' });
+     }
     await AdminLog.create({ userEmail: email, ip: req.ip });
     const token = jwt.sign({ sub: user.id, email }, JWT_SECRET, { expiresIn: '1h' });
     
