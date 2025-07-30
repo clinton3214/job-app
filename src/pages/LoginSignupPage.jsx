@@ -10,6 +10,7 @@ import logoImg from '../assets/logo.png'; // adjust the path as needed
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 export default function LoginSignupPage() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [isSignup, setIsSignup] = useState(true);
   const [searchParams] = useSearchParams();
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -68,25 +69,60 @@ export default function LoginSignupPage() {
 
   return (
     <div className="position-relative d-flex min-vh-100 flex-column bg-light overflow-hidden" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
-      <div className="container-fluid d-flex flex-column flex-grow-1">
-        <header className="d-flex flex-wrap align-items-center justify-content-between border-bottom px-3 px-md-5 py-3">
+      <div
+  className="container-fluid d-flex flex-column flex-grow-1"
+  style={{ paddingTop: '100px' }} // matches header height
+>
+<header
+  className="d-flex flex-wrap align-items-center justify-content-between border-bottom px-3 px-md-5 py-3 bg-light"
+  style={{
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+  }}
+>
+  <div className="d-flex align-items-center gap-3">
+    <img
+      src={logoImg}
+      alt="Startnet Nexus Logo"
+      style={{ height: '90px', width: 'auto', objectFit: 'contain' }}
+    />
+  </div>
 
-        <div className="d-flex align-items-center gap-3">      
-        <img src={logoImg} alt="Startnet Nexus Logo" style={{ height: '90px', width:'auto', objectFit: 'contain' }} />
-      </div>
+  {/* Mobile toggle button (only visible on small screens) */}
+  <button
+    className="d-md-none btn btn-outline-secondary"
+    onClick={() => setMenuOpen(!menuOpen)}
+    aria-label="Toggle menu"
+  >
+    ☰
+  </button>
 
-          <div className="d-flex flex-grow-1 justify-content-end gap-4">
-            <nav className="d-flex align-items-center gap-4">
-              <a className="text-dark fw-medium text-decoration-none" href="#">About</a>
-              <a className="text-dark fw-medium text-decoration-none" href="#">Contact</a>
-              <a className="text-dark fw-medium text-decoration-none" href="#">Help</a>
-            </nav>
-            <button className="btn rounded-pill bg-secondary text-dark fw-bold" onClick={() => setIsSignup(false)}>
-              Login
-            </button>
-          </div>
-        </header>
-
+  {/* Navigation (hidden on small screens unless toggled) */}
+  <div
+    className={`${
+      menuOpen ? 'd-flex' : 'd-none'
+    } flex-column flex-md-row align-items-center gap-4 mt-3 mt-md-0 d-md-flex`}
+  >
+    <nav className="d-flex flex-column flex-md-row align-items-center gap-4">
+      <a className="text-dark fw-medium text-decoration-none" href="#">
+        About
+      </a>
+      <a className="text-dark fw-medium text-decoration-none" href="#">
+        Contact
+      </a>
+      <a className="text-dark fw-medium text-decoration-none" href="#">
+        Help
+      </a>
+    </nav>
+    <button
+      className="btn rounded-pill bg-secondary text-dark fw-bold mt-2 mt-md-0"
+      onClick={() => setIsSignup(false)}
+    >
+      Login
+    </button>
+  </div>
+</header>
         <div className="px-3 px-md-5 d-flex flex-grow-1 justify-content-center py-5">
           <div className="w-100" style={{ maxWidth: '512px' }}>
             <h2 className="text-dark fw-bold fs-3 text-center py-3">{isSignup ? 'Create your account' : 'Login to your account'}</h2>
