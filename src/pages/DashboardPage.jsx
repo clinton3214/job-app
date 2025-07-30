@@ -250,6 +250,7 @@ export default function DashboardPage() {
                 backgroundImage: 'url("")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
+                marginBottom: '100px',
               }}
             ></div>
             <div>
@@ -288,7 +289,7 @@ export default function DashboardPage() {
       </Offcanvas>
 
       {/* Main Content */}
-      <main className="container py-4" style={{ paddingTop: '700px', marginTop: '0' }}>
+      <main className="container py-4" >
         <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
         <div className="row mb-5">
           <div className="col-md-6 mb-3">
