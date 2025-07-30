@@ -146,6 +146,7 @@ export default function DashboardPage() {
     left: 0,
     width: '100%',
     zIndex: 1030,
+    height: '80px',
   }}
 >
   <div className="d-flex align-items-center gap-3">
@@ -250,7 +251,7 @@ export default function DashboardPage() {
                 backgroundImage: 'url("")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                marginBottom: '100px',
+              
               }}
             ></div>
             <div>
@@ -287,6 +288,9 @@ export default function DashboardPage() {
           </div>
         </Offcanvas.Body>
       </Offcanvas>
+
+{/* Spacer div below header */}
+<div style={{ height: '80px' }}></div>
 
       {/* Main Content */}
       <main className="container py-4" >
