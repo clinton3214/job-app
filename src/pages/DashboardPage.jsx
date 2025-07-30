@@ -24,6 +24,8 @@ import {
   BsChatQuote,
 } from 'react-icons/bs';
 import { ArrowLeftRight } from 'lucide-react';
+import logoImg from '../assets/logo.png'; // Adjust the path as necessary
+
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
@@ -136,19 +138,36 @@ export default function DashboardPage() {
   return (
     <div className="min-vh-100 bg-light text-dark" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
       {/* Top Header */}
-      <header className="d-flex justify-content-between align-items-center border-bottom px-4 py-3">
-        <div className="d-flex align-items-center gap-3">
-          <Button variant="outline-secondary" onClick={handleShow}>
-            ☰
-          </Button>
-          <h2 className="fs-5 fw-bold m-0">startnetnexus</h2>
-        </div>
+      <header
+  className="d-flex justify-content-between align-items-center border-bottom px-4 py-3 bg-white shadow-sm"
+  style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 1030,
+  }}
+>
+  <div className="d-flex align-items-center gap-3">
+    <Button variant="outline-secondary" onClick={handleShow}>
+      ☰
+    </Button>
+    <img
+      src={logoImg}
+      alt="Startnet Nexus Logo"
+      style={{ height: '50px', objectFit: 'contain' }}
+    />
+  </div>
 
-        <Button variant="secondary" onClick={handleProfileToggle} className="d-flex align-items-center gap-2">
-          <BsPerson size={18} />
-          Profile
-        </Button>
-      </header>
+  <Button
+    variant="secondary"
+    onClick={handleProfileToggle}
+    className="d-flex align-items-center gap-2"
+  >
+    <BsPerson size={18} />
+    Profile
+  </Button>
+</header>
 
       {/* Profile Modal */}
       <Modal show={showProfile} onHide={handleProfileToggle} centered>
