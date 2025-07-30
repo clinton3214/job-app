@@ -74,22 +74,23 @@ export default function LoginSignupPage() {
   style={{ paddingTop: '100px' }} // matches header height
 >
 <header
-  className="d-flex flex-wrap align-items-center justify-content-between border-bottom px-3 px-md-5 py-3 bg-light"
+  className="d-flex flex-wrap align-items-center justify-content-between border-bottom px-3 px-md-5 py-2 bg-light"
   style={{
-    position: 'sticky',
+    position: 'fixed',
     top: 0,
+    width: '100%',
     zIndex: 1000,
+    height: '70px',
   }}
 >
   <div className="d-flex align-items-center gap-3">
     <img
       src={logoImg}
       alt="Startnet Nexus Logo"
-      style={{ height: '90px', width: 'auto', objectFit: 'contain' }}
+      style={{ height: '50px', width: 'auto', objectFit: 'contain' }}
     />
   </div>
 
-  {/* Mobile toggle button (only visible on small screens) */}
   <button
     className="d-md-none btn btn-outline-secondary"
     onClick={() => setMenuOpen(!menuOpen)}
@@ -98,7 +99,6 @@ export default function LoginSignupPage() {
     ☰
   </button>
 
-  {/* Navigation (hidden on small screens unless toggled) */}
   <div
     className={`${
       menuOpen ? 'd-flex' : 'd-none'
