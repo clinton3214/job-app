@@ -304,7 +304,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="col-md-6 mb-3">
-            <div className="bg-white rounded shadow-sm p-3">
+          <div className="rounded shadow-sm p-3" style={{ backgroundColor: '#283139', color: '#fff' }}>
               <h6 className="mb-1">Referral Bonus</h6>
               <h5>{loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}</h5>
             </div>
@@ -313,12 +313,7 @@ export default function DashboardPage() {
 
         
           <div className="row mb-5">
-            <div className="col-md-4 mb-3">
-              <div className="rounded shadow-sm p-3" style={{ backgroundColor: '#283139', color: '#fff' }}>
-                <h6 className="text-uppercase text-muted mb-1">Total Balance</h6>
-                <h5>₦12,000</h5> {/* Replace with your dynamic value */}
-              </div>
-            </div>
+            
             <div className="col-md-4 mb-3">
               <div className="rounded shadow-sm p-3" style={{ backgroundColor: '#283139', color: '#fff' }}>
                 <h6 className="text-uppercase text-muted mb-1">Total Deposit</h6>
