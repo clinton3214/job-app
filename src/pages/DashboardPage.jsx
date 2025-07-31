@@ -136,11 +136,12 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-vh-100 bg-light text-dark" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
+    <div style={{ backgroundColor: '#111518', minHeight: '100vh', color: '#fff', fontFamily: 'Inter, Noto Sans, sans-serif' }}>
       {/* Top Header */}
       <header
   className="d-flex justify-content-between align-items-center border-bottom px-4 py-3 bg-white shadow-sm"
   style={{
+    backgroundColor: '#1B2227',
     position: 'fixed',
     top: 0,
     left: 0,
@@ -237,8 +238,8 @@ export default function DashboardPage() {
       </Modal>
 
       {/* Sidebar Offcanvas */}
-      <Offcanvas show={showMenu} onHide={handleClose} placement="start">
-        <Offcanvas.Header closeButton>
+      <Offcanvas show={showMenu} onHide={handleClose} placement="start" style={{ backgroundColor: '#1B2227', color: '#fff' }}>
+      <Offcanvas.Header closeButton closeVariant="white">
           <Offcanvas.Title>Menu</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
@@ -297,7 +298,7 @@ export default function DashboardPage() {
         <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
         <div className="row mb-5">
           <div className="col-md-6 mb-3">
-            <div className="bg-white rounded shadow-sm p-3">
+          <div className="rounded shadow-sm p-3" style={{ backgroundColor: '#283139', color: '#fff' }}>
               <h6 className="mb-1">Normal Balance</h6>
               <h5>{loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}</h5>
             </div>
@@ -309,6 +310,29 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        
+          <div className="row mb-5">
+            <div className="col-md-4 mb-3">
+              <div className="rounded shadow-sm p-3" style={{ backgroundColor: '#283139', color: '#fff' }}>
+                <h6 className="text-uppercase text-muted mb-1">Total Balance</h6>
+                <h5>₦12,000</h5> {/* Replace with your dynamic value */}
+              </div>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="rounded shadow-sm p-3" style={{ backgroundColor: '#283139', color: '#fff' }}>
+                <h6 className="text-uppercase text-muted mb-1">Total Deposit</h6>
+                <h5>₦5,000</h5> {/* Replace with dynamic value */}
+              </div>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="rounded shadow-sm p-3" style={{ backgroundColor: '#283139', color: '#fff' }}>
+                <h6 className="text-uppercase text-muted mb-1">Total Withdrawal</h6>
+                <h5>₦2,000</h5> {/* Replace with dynamic value */}
+              </div>
+            </div>
+          </div>
+
         <h2 className="fw-bold h4 mb-3">Remote Work Opportunities</h2>
         {jobCards.map((job, idx) => {
           const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
