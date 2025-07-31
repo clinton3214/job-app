@@ -85,143 +85,171 @@ export default function DashboardPage() {
     };
     fetchUserData();
   }, []);
-
   return (
-    <div className="bg-light min-vh-100">
-      {/* Header Navbar */}
-      <Navbar bg="white" expand="lg" className="shadow-sm px-3 fixed-top">
-        <Navbar.Brand className="fw-bold text-primary">Pecan Finance</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-          <Nav>
-            <Nav.Link><SunFill /></Nav.Link>
-            <Nav.Link><ShieldLockFill /></Nav.Link>
-            <Nav.Link><BellFill /></Nav.Link>
-            <Nav.Link className="fw-bold">{user.name}</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
+    <>
+      {/* Header */}
+      <Navbar bg="light" expand="lg" className="border-bottom px-3 py-2 shadow-sm">
+        <Container fluid className="d-flex justify-content-between align-items-center">
+          <div className="d-flex align-items-center">
+            <img src="/logo192.png" alt="Pecan Finance logo" height="40" className="me-2" />
+            <h5 className="mb-0 fw-bold">PECAN FINANCE</h5>
+          </div>
+          <div className="d-flex align-items-center gap-3">
+            <SunFill />
+            <ShieldLockFill />
+            <BellFill />
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className="rounded-pill px-3"
+              onClick={handleProfileToggle}
+            >
+              Ez
+            </Button>
+          </div>
+        </Container>
       </Navbar>
 
-      <div style={{ paddingTop: '100px' }}>
-        <Container>
-          <Row className="g-4">
-            <Col md={6} lg={3}>
-              <Card className="text-center">
-                <Card.Body>
+      {/* Dashboard Summary Cards */}
+      <Container className="mt-4">
+        <Row className="g-4">
+          <Col xs={12} md={6} lg={3}>
+            <Card className="h-100 shadow-sm border-0">
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-between mb-2">
                   <h6>Total Profit</h6>
-                  <h4>
-                    {loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}
-                  </h4>
-                  <small className="text-success">+2.5% Last period</small>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6} lg={3}>
-              <Card className="text-center">
-                <Card.Body>
-                  <h6>Bonus</h6>
-                  <h4>
-                    {loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}
-                  </h4>
-                  <small className="text-muted">Rewards & Promotions</small>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6} lg={3}>
-              <Card className="text-center">
-                <Card.Body>
-                  <h6>Total Deposit</h6>
-                  <h4>₦0.00</h4>
-                  <small className="text-muted">All time</small>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={6} lg={3}>
-              <Card className="text-center">
-                <Card.Body>
-                  <h6>Total Withdrawal</h6>
-                  <h4>₦0.00</h4>
-                  <small className="text-muted">All time</small>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+                  <BsCurrencyDollar />
+                </div>
+                <h4 className="fw-bold">${balance || '0.00'}</h4>
+                <div className="text-success small d-flex align-items-center gap-1">
+                  <BsClock size={14} />
+                  <span>+2.5% Last period</span>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
 
-          <h5 className="mt-5">Available Jobs</h5>
-          <Row className="g-4 mt-1">
-            {jobCards.map((job, idx) => {
-              const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
-              return (
-                <Col md={6} lg={3} key={idx}>
-                  <Card onClick={() => navigate(path)} className="h-100 cursor-pointer">
-                    <Card.Img variant="top" src={job.image} height="160" style={{ objectFit: 'cover' }} />
-                    <Card.Body>
-                      <Card.Title>{job.title}</Card.Title>
-                      <Card.Text>{job.company}</Card.Text>
-                      <Button variant="outline-primary" size="sm">Apply</Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              );
-            })}
-          </Row>
-        </Container>
-      </div>
+          <Col xs={12} md={6} lg={3}>
+            <Card className="h-100 shadow-sm border-0">
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-between mb-2">
+                  <h6>Bonus</h6>
+                  <BsCreditCard />
+                </div>
+                <h4 className="fw-bold">${referralBonus || '0.00'}</h4>
+                <div className="text-muted small">Rewards & Promotions</div>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col xs={12} md={6} lg={3}>
+            <Card className="h-100 shadow-sm border-0">
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-between mb-2">
+                  <h6>Total Deposit</h6>
+                  <ArrowLeftRight />
+                </div>
+                <h4 className="fw-bold">$0.00</h4>
+                <div className="text-muted small">
+                  <BsClock size={14} /> All time
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col xs={12} md={6} lg={3}>
+            <Card className="h-100 shadow-sm border-0">
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-between mb-2">
+                  <h6>Total Withdrawal</h6>
+                  <BsBoxArrowRight />
+                </div>
+                <h4 className="fw-bold">$0.00</h4>
+                <div className="text-muted small">
+                  <BsClock size={14} /> All time
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+      {/* Available Jobs Section */}
+      <Container className="mt-5">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h5 className="fw-bold">Available Jobs</h5>
+          <div>
+            <Button variant="outline-secondary" size="sm" className="me-2">
+              <i className="bi bi-chevron-left"></i>
+            </Button>
+            <Button variant="outline-secondary" size="sm">
+              <i className="bi bi-chevron-right"></i>
+            </Button>
+          </div>
+        </div>
+
+        <Row className="g-3">
+          {jobCards.map((job, index) => (
+            <Col key={index} xs={12} sm={6} md={3}>
+              <Card className="h-100 shadow-sm border-0">
+                <Card.Img
+                  variant="top"
+                  src={job.image}
+                  style={{ height: '180px', objectFit: 'cover' }}
+                />
+                <Card.Body>
+                  <Card.Title>{job.title}</Card.Title>
+                  <Card.Text>{job.company}</Card.Text>
+                  <Button variant="primary" size="sm" className="mt-2">
+                    Apply
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
 
       {/* Bottom Navigation */}
-      <Navbar bg="white" fixed="bottom" className="border-top d-flex justify-content-around py-2">
-        <Nav.Link className="text-center" onClick={() => navigate('/')}>
-          <BsPerson size={20} />
+      <div className="position-fixed bottom-0 start-0 end-0 bg-white border-top shadow-sm d-flex justify-content-around py-2 z-3">
+        <div className="text-center">
+          <i className="bi bi-house"></i>
           <div className="small">Home</div>
-        </Nav.Link>
-        <Nav.Link className="text-center" onClick={() => navigate('/deposit/add-funds')}>
-          <BsPlus size={20} />
+        </div>
+        <div className="text-center">
+          <i className="bi bi-download"></i>
           <div className="small">Deposit</div>
-        </Nav.Link>
-        <Nav.Link className="text-center" onClick={() => navigate('/history')}>
-          <BsClock size={20} />
+        </div>
+        <div className="text-center">
+          <i className="bi bi-lightning-fill"></i>
+        </div>
+        <div className="text-center">
+          <i className="bi bi-clock-history"></i>
           <div className="small">History</div>
-        </Nav.Link>
-        <Nav.Link className="text-center" onClick={() => navigate('/profile')}>
-          <BsPerson size={20} />
+        </div>
+        <div className="text-center">
+          <i className="bi bi-person"></i>
           <div className="small">Profile</div>
-        </Nav.Link>
-      </Navbar>
-
-      {/* Offcanvas Sidebar */}
-      <Offcanvas show={showMenu} onHide={handleClose} placement="start">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>{user.name}</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <div className="list-group">
-            <button className="list-group-item list-group-item-action" onClick={() => navigate('/total-profit')}>
-              <BsCurrencyDollar size={20} /> Total Profit
-            </button>
-            <button className="list-group-item list-group-item-action" onClick={() => navigate('/history')}>
-              <BsClock size={20} /> Payment History
-            </button>
-            <button className="list-group-item list-group-item-action" onClick={() => navigate('/withdraw')}>
-              <ArrowLeftRight size={20} /> Withdrawal
-            </button>
-            <button className="list-group-item list-group-item-action" onClick={() => navigate('/referrals')}>
-              <BsPeople size={20} /> View Referrals
-            </button>
-            <button className="list-group-item list-group-item-action" onClick={() => navigate('/deposit/add-funds')}>
-              <BsPlus size={20} /> Add Funds
-            </button>
-            <button className="list-group-item list-group-item-action" onClick={() => navigate('/deposit/methods')}>
-              <BsCreditCard size={20} /> Payment Methods
-            </button>
-            <button className="list-group-item list-group-item-action" onClick={() => navigate('/interview')}>
-              <BsChatQuote size={20} /> Interview
-            </button>
-            <button className="list-group-item list-group-item-action text-danger" onClick={logout}>
-              <BsBoxArrowRight size={20} /> Logout
-            </button>
-          </div>
-        </Offcanvas.Body>
-      </Offcanvas>
-    </div>
+        </div>
+      </div>
+      {/* Profile Modal */}
+      <Modal show={showProfile} onHide={handleProfileToggle} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>User Profile</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p><strong>Name:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Role:</strong> {user.role}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleProfileToggle}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={logout}>
+            Logout
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
