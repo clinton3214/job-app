@@ -8,9 +8,6 @@ import {
   Row,
   Col,
   Card,
-  Navbar,
-  Nav,
-  Badge,
 } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -27,15 +24,59 @@ import {
   BsChatQuote,
 } from 'react-icons/bs';
 import { ArrowLeftRight } from 'lucide-react';
-import { SunFill, ShieldLockFill, BellFill } from 'react-bootstrap-icons';
+import logoImg from '../assets/logo.png'; // Adjust the path as necessary
+
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 const jobCards = [
-  { title: 'Advertising', company: 'Promote Products', image: 'https://via.placeholder.com/300x180?text=Ad' },
-  { title: 'Customer Support', company: 'Help Desk', image: 'https://via.placeholder.com/300x180?text=Support' },
-  { title: 'Logistics', company: 'Supply Chain', image: 'https://via.placeholder.com/300x180?text=Logistics' },
-  { title: 'Desk Offices', company: 'Administration', image: 'https://via.placeholder.com/300x180?text=Desk' },
+  {
+    title: 'Deck Officer',
+    company: 'Maritime Solutions Inc.',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAkKsR32m71bcrJEXBrKLWULgBJ1XFSq38MoGMCv-WeK9j5lKBmpDWwHIM2jtST0c6scl_PDlc-Flnt0sak5oYWnwY4cJ6M9RXg-KgpmB5D7cGGuDOIJdqnP5nkdWTehG96-ngz9XBNhjWrg-jJOW-j-y1DQQQVUKRKA3_mFZ3MqWmcG1HP09Z554E32KMYxwAyHVBbZKCNJGdfjkxzVLJc-2mPjfiEUkNLwn0RzZ1sJhNgNTLRWP6Om_2Ly_lEUrhlC-ASYwmb8pQ',
+  },
+  {
+    title: "Advertisers",
+    company: "Digital Marketing Co.",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuC4rlgSTu2bPSXWEKyNPdHZv_p3FvrHknekdXnPfX1xW_3eyjgBnc5hWvtaBdQLubeeCl_suJEtgC0Xvv9zvOy2C_iahrRiSNRhT79paHJe852d4uaFZPPjjO1P0k0T7XB9KaDNFhogpLtxmnBG6vpS_4nKmYG0AAq79RjkIH6HLlMQsKycvIHEjoD4_AkKZwx_fA-DuoUxe9wpAFm_Tb4G8Myo5q2Xaz4okjiKycJmwCjuZhO-CzmZyEuh_ztgO-Q2vkRVoYCylmc",
+  },
+  {
+    title: "Online Tutoring",
+    company: "EduConnect",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCtEaVxCGnR7PPQQM4D2rfk_ewhdxyb1tR06B4vSHNnmN8PM6YtifyTw0VWLT9wKAA-b6I-qhcxg5bQBwcpCiPgXIoCOo0CGGmo4MtsYhC5MoGRjo2iZkSbAPAgpvIo9wjDmdSgzFiaIoM8MsinbB1YTRMT38mdxa6olN1w02SuDTLJc7ebuKfP9SKjFSjEdALPg8qIYtJGXL_WpQMVPE4Yeow9rN4mj094596AI4KoTolACzQf1VnoyFUT6MiW-R9ad_D6eNRpiuA",
+  },
+  {
+    title: "Social Media Management",
+    company: "Social Media Agency",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD-mwPVTPHnO_YbKtvBVvbKgLxkQDVDLw46_nMQDg3ud5HWwJIgi77OQ4CwGNsR0dDsxpsKofqcNUgkMaWzBLHQkgOW3ECgcSMSSvMUtckGL8nsvUdCMDKsBR__O3hr4lLrqXayX1UmGhNLfYRRaOlDAdXiNiJZ0ioquPLZBwkBjfz6IT1viNKrrXly-sEhcZDYnEZo-d9a8gRH0bP3UjNHFFyjyHITU51onFMYizqqYnqn_PR-EAENEgKP3NmNjqWfLX7P4fD5kDA",
+  },
+  {
+    title: "Transcription Services",
+    company: "TranscribeIt",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDcQA0X258xN-lnXtEixX5VOT51lsFFPkz1i4zAJtxhO1rZnPrn74LLG8WYcqdl0S82xF3EFXgcy2e2DLK__BfuE8Q9hhtsTEHXFOu7G56rZDs13_9tiyxKLAig7Jx1SoYp6NMtIRulijZcusjDraxpl1bdTEg6RgZAf4lyF9bd9cGskqK8DK5-_ELF9S9Y_NcNeqLavoB_Jf0s4-gbQ4752gNJRqwCaGt_U7mJaEskpreBUA1YS_YAh0vzqhC33ylT-ypsWy2eipc",
+  },
+  {
+    title: "Online Survey Taker",
+    company: "SurveyCentral",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBfYcn2BlhgGRwCZZEUWkYWcUe9BVG_McwJFgx3-5rJ7FQxXeZV2IR_XMIM8Heeu1RZhhBnZ4V97OYcUOlV9cxMOov7T_QEzs92C-gLN63c8bw2RlqQMEpOLpYMt8Z1t5x0SByn2NhWxq58VxOk_DW29RM6qNL3DluUA7GKdeaHUUseSgv8ZVjIrCwmIjikyzq7ZzLgUJmG36Z4A2TD3tdH_Cnu_HvDer-3WKHpCqFMBzbKOm3tIanUgMHYfGwXuYoudXz0u78GZEs",
+  },
+  {
+    title: "Software Development",
+    company: "Tech Innovators",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCKcQ3VNCytGBkExQB3wBa9PeheDsutL2bIcfEt7ma7p9sQPrr9aEYMcSStdjdKqxvEENYsKePl2s4l0hZrfx4fgtFwQd6sjgYKFJqVSedCrFEo6c8JhtlSbNrzUxIhkbOaa4D63xWQ2UtVqO3JLrdDPa-R4rpB0BI3-9VoS7oYDeu9Kh9mGnpR-hnCW0kFzl1VuCI8jl1KD2nZHE9v9KuGuZt7E5GUFMk69zczj217CWLLIUwoAssqMRZph0DTTh2Tacgd1dwV0ko",
+  },
+  {
+    title: "E-commerce Selling",
+    company: "Online Retail Group",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAaEhVJm9HYgbLyWbSFF-RDJknjPn6lRkw_-h4GQqrNEAuizYTzUX0Q5tKh1mTbDrDG4naFF-VGq34MSedcMFNSQn2b-R-74lfdta5IRL9kclVKHsfBsPvYbTgSXi9osR8H3bYilUNhr0C20ulLyKRXzJGRd5e0RpY27NK20AX4D64nTEQ5NpJdecpR1nhllPPezmq0xhV3IlgpMvSCXgZZQIPvss6y62y1QV1FrAI3Hbr_dpVcqQ4hBi45ObXVHlvNx7clnxBlykA",
+  },
+  {
+    title: 'Remote Customer Service Representative',
+    company: 'Customer Care Solutions',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuA3s_vD_p6ViXHA5qVDorM2IASi80WqW53T4TMEpsG32Rs096kqBtNdxzrOwgS1FQntxODjQPHRPsvPsxJpQ_AiPp2JDHEAusQg6qkpa_U65iLwL6JZ3XkVtjNzSVlVwXFBehAjsXt0zSaRP0JtDDvZIJ56eCl5nLWPXl_KBPMy02Vjg71E7uAFrci18SU2JJz0tDkLACZRmD91VOYD9CYQliaa3jC7l4gOxZaGv3q30IvsP0UIDnjEYPf5UdkJ3YvsGHtKWsmbZLE',
+  },
 ];
 
 export default function DashboardPage() {
@@ -62,18 +103,25 @@ export default function DashboardPage() {
       try {
         const [meRes, profileRes] = await Promise.all([
           axios.get(`${API_BASE}/api/user/me`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           }),
           axios.get(`${API_BASE}/api/user/profile`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           }),
         ]);
+  
         setBalance(meRes.data.balance || 0);
         setReferralBonus(meRes.data.referralBonus || 0);
+  
+        // ✅ Update profile fields from backend
         setUser({
           name: profileRes.data.fullName || 'N/A',
           email: profileRes.data.email || 'N/A',
-          role: 'User',
+          role: 'User', // Optional: Add role if you support roles
         });
       } catch (err) {
         console.error('Failed to fetch user profile:', err);
@@ -83,173 +131,211 @@ export default function DashboardPage() {
         setLoading(false);
       }
     };
+  
     fetchUserData();
   }, []);
+
   return (
-    <>
-      {/* Header */}
-      <Navbar bg="light" expand="lg" className="border-bottom px-3 py-2 shadow-sm">
-        <Container fluid className="d-flex justify-content-between align-items-center">
-          <div className="d-flex align-items-center">
-            <img src="/logo192.png" alt="Pecan Finance logo" height="40" className="me-2" />
-            <h5 className="mb-0 fw-bold">PECAN FINANCE</h5>
-          </div>
-          <div className="d-flex align-items-center gap-3">
-            <SunFill />
-            <ShieldLockFill />
-            <BellFill />
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              className="rounded-pill px-3"
-              onClick={handleProfileToggle}
-            >
-              Ez
-            </Button>
-          </div>
-        </Container>
-      </Navbar>
+    <div className="min-vh-100 bg-light text-dark" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
+      {/* Top Header */}
+      <header
+  className="d-flex justify-content-between align-items-center border-bottom px-4 py-3 bg-white shadow-sm"
+  style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 1030,
+    height: '80px',
+  }}
+>
+  <div className="d-flex align-items-center gap-3">
+    <Button variant="outline-secondary" onClick={handleShow}>
+      ☰
+    </Button>
+    <img
+      src={logoImg}
+      alt="Startnet Nexus Logo"
+      style={{ height: '50px', objectFit: 'contain' }}
+    />
+  </div>
 
-      {/* Dashboard Summary Cards */}
-      <Container className="mt-4">
-        <Row className="g-4">
-          <Col xs={12} md={6} lg={3}>
-            <Card className="h-100 shadow-sm border-0">
-              <Card.Body>
-                <div className="d-flex align-items-center justify-content-between mb-2">
-                  <h6>Total Profit</h6>
-                  <BsCurrencyDollar />
-                </div>
-                <h4 className="fw-bold">${balance || '0.00'}</h4>
-                <div className="text-success small d-flex align-items-center gap-1">
-                  <BsClock size={14} />
-                  <span>+2.5% Last period</span>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
+  <Button
+    variant="secondary"
+    onClick={handleProfileToggle}
+    className="d-flex align-items-center gap-2"
+  >
+    <BsPerson size={18} />
+    Profile
+  </Button>
+</header>
 
-          <Col xs={12} md={6} lg={3}>
-            <Card className="h-100 shadow-sm border-0">
-              <Card.Body>
-                <div className="d-flex align-items-center justify-content-between mb-2">
-                  <h6>Bonus</h6>
-                  <BsCreditCard />
-                </div>
-                <h4 className="fw-bold">${referralBonus || '0.00'}</h4>
-                <div className="text-muted small">Rewards & Promotions</div>
-              </Card.Body>
-            </Card>
-          </Col>
-
-          <Col xs={12} md={6} lg={3}>
-            <Card className="h-100 shadow-sm border-0">
-              <Card.Body>
-                <div className="d-flex align-items-center justify-content-between mb-2">
-                  <h6>Total Deposit</h6>
-                  <ArrowLeftRight />
-                </div>
-                <h4 className="fw-bold">$0.00</h4>
-                <div className="text-muted small">
-                  <BsClock size={14} /> All time
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-
-          <Col xs={12} md={6} lg={3}>
-            <Card className="h-100 shadow-sm border-0">
-              <Card.Body>
-                <div className="d-flex align-items-center justify-content-between mb-2">
-                  <h6>Total Withdrawal</h6>
-                  <BsBoxArrowRight />
-                </div>
-                <h4 className="fw-bold">$0.00</h4>
-                <div className="text-muted small">
-                  <BsClock size={14} /> All time
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
-      {/* Available Jobs Section */}
-      <Container className="mt-5">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="fw-bold">Available Jobs</h5>
-          <div>
-            <Button variant="outline-secondary" size="sm" className="me-2">
-              <i className="bi bi-chevron-left"></i>
-            </Button>
-            <Button variant="outline-secondary" size="sm">
-              <i className="bi bi-chevron-right"></i>
-            </Button>
-          </div>
-        </div>
-
-        <Row className="g-3">
-          {jobCards.map((job, index) => (
-            <Col key={index} xs={12} sm={6} md={3}>
-              <Card className="h-100 shadow-sm border-0">
-                <Card.Img
-                  variant="top"
-                  src={job.image}
-                  style={{ height: '180px', objectFit: 'cover' }}
-                />
-                <Card.Body>
-                  <Card.Title>{job.title}</Card.Title>
-                  <Card.Text>{job.company}</Card.Text>
-                  <Button variant="primary" size="sm" className="mt-2">
-                    Apply
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Container>
-
-      {/* Bottom Navigation */}
-      <div className="position-fixed bottom-0 start-0 end-0 bg-white border-top shadow-sm d-flex justify-content-around py-2 z-3">
-        <div className="text-center">
-          <i className="bi bi-house"></i>
-          <div className="small">Home</div>
-        </div>
-        <div className="text-center">
-          <i className="bi bi-download"></i>
-          <div className="small">Deposit</div>
-        </div>
-        <div className="text-center">
-          <i className="bi bi-lightning-fill"></i>
-        </div>
-        <div className="text-center">
-          <i className="bi bi-clock-history"></i>
-          <div className="small">History</div>
-        </div>
-        <div className="text-center">
-          <i className="bi bi-person"></i>
-          <div className="small">Profile</div>
-        </div>
-      </div>
       {/* Profile Modal */}
       <Modal show={showProfile} onHide={handleProfileToggle} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>User Profile</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p><strong>Name:</strong> {user.name}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Role:</strong> {user.role}</p>
+        <Modal.Body className="p-0">
+          <Card className="border-0 p-4 text-center">
+            <div className="d-flex flex-column align-items-center gap-3">
+              <div
+                className="rounded-circle shadow"
+                style={{
+                  width: '128px',
+                  height: '128px',
+                  backgroundImage: `url("https://cdn-icons-png.flaticon.com/512/1077/1077114.png")`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              ></div>
+              <div>
+                <h5 className="fw-bold m-0">{user.name}</h5>
+                <p className="text-muted mb-1 small">{user.email || 'user@email.com'}</p>
+                <span className="badge bg-primary-subtle text-primary rounded-pill px-3 py-1">
+                  {user.role}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-4 d-grid gap-3">
+              <Button
+                variant="light"
+                onClick={() => {
+                  navigate('/profile');
+                  handleProfileToggle();
+                }}
+                className="d-flex align-items-center gap-3 text-start border rounded p-2"
+              >
+                <div className="bg-secondary bg-opacity-25 rounded d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
+                  <BsPerson size={20} />
+                </div>
+                <span className="flex-grow-1">View Profile</span>
+              </Button>
+              <Button
+                variant="light"
+                onClick={() => {
+                  navigate('/referrals');
+                  handleProfileToggle();
+                }}
+                className="d-flex align-items-center gap-3 text-start border rounded p-2"
+              >
+                <div className="bg-secondary bg-opacity-25 rounded d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
+                  <BsPeople size={20} />
+                </div>
+                <span className="flex-grow-1">View Referrals</span>
+              </Button>
+              <Button
+                variant="light"
+                onClick={logout}
+                className="d-flex align-items-center gap-3 text-start border rounded p-2"
+              >
+                <div className="bg-secondary bg-opacity-25 rounded d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
+                  <BsBoxArrowRight size={20} />
+                </div>
+                <span className="flex-grow-1">Logout</span>
+              </Button>
+            </div>
+          </Card>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleProfileToggle}>
-            Close
-          </Button>
-          <Button variant="danger" onClick={logout}>
-            Logout
-          </Button>
-        </Modal.Footer>
       </Modal>
-    </>
+
+      {/* Sidebar Offcanvas */}
+      <Offcanvas show={showMenu} onHide={handleClose} placement="start">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Menu</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <div className="d-flex gap-3 align-items-center mb-4">
+            <div
+              className="rounded-circle bg-secondary"
+              style={{
+                width: 40,
+                height: 40,
+                backgroundImage: 'url("")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              
+              }}
+            ></div>
+            <div>
+              <h6 className="mb-0">{user.name}</h6>
+              <small className="text-muted">{user.role}</small>
+            </div>
+          </div>
+          <div className="list-group">
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/total-profit')}>
+              <BsCurrencyDollar size={24} /> <span>Total Profit</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/history')}>
+              <BsClock size={24} /> <span>Payment History</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/withdraw')}>
+              <ArrowLeftRight size={24} /> <span>Withdrawal</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/referrals')}>
+              <BsPeople size={24} /> <span>View Referrals</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/add-funds')}>
+              <BsPlus size={24} /> <span>Add Funds</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/methods')}>
+              <BsCreditCard size={24} /> <span>Payment Methods</span>
+            </button>
+            <button
+              className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2"
+              onClick={() => navigate('/interview')}
+            >
+              < BsChatQuote  size={24} />
+              <span>Interview</span>
+            </button>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
+
+{/* Spacer div below header */}
+<div style={{ height: '80px' }}></div>
+
+      {/* Main Content */}
+      <main className="container py-4" >
+        <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
+        <div className="row mb-5">
+          <div className="col-md-6 mb-3">
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Normal Balance</h6>
+              <h5>{loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}</h5>
+            </div>
+          </div>
+          <div className="col-md-6 mb-3">
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Referral Bonus</h6>
+              <h5>{loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}</h5>
+            </div>
+          </div>
+        </div>
+        <h2 className="fw-bold h4 mb-3">Remote Work Opportunities</h2>
+        {jobCards.map((job, idx) => {
+          const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
+          return (
+            <div key={idx} className="card mb-4 border-0 shadow-sm" style={{ cursor: 'pointer' }} onClick={() => navigate(path)}>
+              <div className="row g-0">
+                <div className="col-md-8 p-4">
+                  <p className="text-muted small">Remote</p>
+                  <h5 className="fw-bold m-0">{job.title}</h5>
+                  <p className="text-muted mb-0">{job.company} - Remote</p>
+                </div>
+                <div className="col-md-4">
+                  <div
+                    className="h-100 rounded-end"
+                    style={{
+                      backgroundImage: `url(${job.image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </main>
+    </div>
   );
 }
+
