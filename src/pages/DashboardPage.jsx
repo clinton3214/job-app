@@ -266,9 +266,6 @@ export default function DashboardPage() {
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/history')}>
               <BsClock size={24} /> <span>Payment History</span>
             </button>
-            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/withdraw')}>
-              <ArrowLeftRight size={24} /> <span>Withdrawal</span>
-            </button>
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/referrals')}>
               <BsPeople size={24} /> <span>View Referrals</span>
             </button>

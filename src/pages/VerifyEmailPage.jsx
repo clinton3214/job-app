@@ -31,7 +31,7 @@ export default function VerifyEmailPage() {
         }
       })
       .catch(() => {
-        setStatus('✅ Verificated.');
+        setStatus('✅ Verified.');
       });
   }, [searchParams, navigate]);
 

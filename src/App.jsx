@@ -11,7 +11,6 @@ import PaymentMethodsPage  from './pages/PaymentMethodsPage';
 import NotAvailablePage from './pages/NotAvailablePage';
 import DepositSuccessPage  from './pages/DepositSuccessPage';
 import DepositCancelPage   from './pages/DepositCancelPage';
-import WithdrawPage        from './pages/WithdrawPage';
 import PaymentHistoryPage  from './pages/PaymentHistoryPage';
 import InterviewPage from './pages/InterviewPage';
 import ProfilePage         from './pages/ProfilePage';
@@ -43,7 +42,7 @@ export default function App() {
         <Route path="/deposit/cancel"    element={<DepositCancelPage />} />
 
         {/* Other user flows */}
-        <Route path="/withdraw"        element={<WithdrawPage />} />
+        
         <Route path="/history"         element={<PaymentHistoryPage />} />
         <Route path="/profile"         element={<ProfilePage />} />
         <Route path="/referrals"       element={<ReferralsPage />} />
