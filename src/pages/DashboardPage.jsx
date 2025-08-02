@@ -27,6 +27,7 @@ import {
 import { ArrowLeftRight } from 'lucide-react';
 import logoImg from '../assets/logo.png'; // Adjust the path as necessary
 import { BsSun, BsMoon } from 'react-icons/bs'; // for dark mode toggle icon
+import { Button } from 'react-bootstrap';
 
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
@@ -177,9 +178,21 @@ export default function DashboardPage() {
 
     {/* 🌙 Dark mode toggle button */}
     <Button
-      variant={darkMode ? 'outline-light' : 'outline-dark'}
       onClick={() => setDarkMode(!darkMode)}
-      className="d-flex align-items-center"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="border-0 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+      style={{
+        width: '38px',
+        height: '38px',
+        backgroundColor: darkMode ? '#f8f9fa' : '#212529',
+        color: darkMode ? '#212529' : '#f8f9fa',
+        boxShadow: isHovered
+          ? '0 4px 12px rgba(0, 0, 0, 0.25)'
+          : '0 2px 4px rgba(0, 0, 0, 0.15)',
+        transform: isHovered ? 'scale(1.08)' : 'scale(1)',
+        transition: 'all 0.25s ease',
+      }}
     >
       {darkMode ? <BsSun size={18} /> : <BsMoon size={18} />}
     </Button>
