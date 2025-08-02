@@ -296,13 +296,13 @@ export default function DashboardPage() {
           <div className="col-md-6 mb-3">
             <div className="bg-white rounded shadow-sm p-3">
               <h6 className="mb-1">Normal Balance</h6>
-              <h5>{loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}</h5>
+              <h5>{loading ? '$Loading…' : balance === 'Failed' ? 'Failed to load' : `$${balance.toLocaleString()}`}</h5>
             </div>
           </div>
           <div className="col-md-6 mb-3">
             <div className="bg-white rounded shadow-sm p-3">
               <h6 className="mb-1">Referral Bonus</h6>
-              <h5>{loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}</h5>
+              <h5>{loading ? '$Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `$${referralBonus.toLocaleString()}`}</h5>
             </div>
           </div>
         </div>
