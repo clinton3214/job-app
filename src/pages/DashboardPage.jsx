@@ -1,5 +1,6 @@
 // src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   Offcanvas,
   Button,
@@ -308,29 +309,38 @@ export default function DashboardPage() {
         </div>
         <h2 className="fw-bold h4 mb-3">Remote Work Opportunities</h2>
         {jobCards.map((job, idx) => {
-          const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
-          return (
-            <div key={idx} className="card mb-4 border-0 shadow-sm" style={{ cursor: 'pointer' }} onClick={() => navigate(path)}>
-              <div className="row g-0">
-                <div className="col-md-8 p-4">
-                  <p className="text-muted small">Remote</p>
-                  <h5 className="fw-bold m-0">{job.title}</h5>
-                  <p className="text-muted mb-0">{job.company} - Remote</p>
-                </div>
-                <div className="col-md-4">
-                  <div
-                    className="h-100 rounded-end"
-                    style={{
-                      backgroundImage: `url(${job.image})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+  const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
+  return (
+    <motion.div
+      key={idx}
+      className="card mb-4 border-0 shadow-sm"
+      style={{ cursor: 'pointer' }}
+      onClick={() => navigate(path)}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5, delay: idx * 0.1 }}
+    >
+      <div className="row g-0">
+        <div className="col-md-8 p-4">
+          <p className="text-muted small">Remote</p>
+          <h5 className="fw-bold m-0">{job.title}</h5>
+          <p className="text-muted mb-0">{job.company} - Remote</p>
+        </div>
+        <div className="col-md-4">
+          <div
+            className="h-100 rounded-end"
+            style={{
+              backgroundImage: `url(${job.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          ></div>
+        </div>
+      </div>
+    </motion.div>
+  );
+})}
       </main>
     </div>
   );

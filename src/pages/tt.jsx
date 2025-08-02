@@ -85,7 +85,7 @@ export default function DashboardPage() {
   const [balance, setBalance] = useState(null);
   const [referralBonus, setReferralBonus] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState({ name: 'Sophia Carter', role: 'Account Manager' });
+  const [user, setUser] = useState({ name: 'user', role: 'guest' });
 
   const navigate = useNavigate();
 
@@ -119,8 +119,8 @@ export default function DashboardPage() {
   
         // ✅ Update profile fields from backend
         setUser({
-          name: profileRes.data.fullName || 'N/A',
-          email: profileRes.data.email || 'N/A',
+          name: profileRes.data.fullName || 'user',
+          email: profileRes.data.email || 'user@email.com',
           role: 'User', // Optional: Add role if you support roles
         });
       } catch (err) {
@@ -266,9 +266,6 @@ export default function DashboardPage() {
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/history')}>
               <BsClock size={24} /> <span>Payment History</span>
             </button>
-            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/withdraw')}>
-              <ArrowLeftRight size={24} /> <span>Withdrawal</span>
-            </button>
             <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/referrals')}>
               <BsPeople size={24} /> <span>View Referrals</span>
             </button>
@@ -299,13 +296,13 @@ export default function DashboardPage() {
           <div className="col-md-6 mb-3">
             <div className="bg-white rounded shadow-sm p-3">
               <h6 className="mb-1">Normal Balance</h6>
-              <h5>{loading ? '₦Loading…' : balance === 'Failed' ? 'Failed to load' : `₦${balance.toLocaleString()}`}</h5>
+              <h5>{loading ? '$Loading…' : balance === 'Failed' ? 'Failed to load' : `$${balance.toLocaleString()}`}</h5>
             </div>
           </div>
           <div className="col-md-6 mb-3">
             <div className="bg-white rounded shadow-sm p-3">
               <h6 className="mb-1">Referral Bonus</h6>
-              <h5>{loading ? '₦Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `₦${referralBonus.toLocaleString()}`}</h5>
+              <h5>{loading ? '$Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `$${referralBonus.toLocaleString()}`}</h5>
             </div>
           </div>
         </div>
@@ -338,6 +335,7 @@ export default function DashboardPage() {
     </div>
   );
 }
+
 
 
 
