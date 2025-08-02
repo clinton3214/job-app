@@ -105,9 +105,9 @@ export default function LoginSignupPage() {
     } flex-column flex-md-row align-items-center gap-4 mt-3 mt-md-0 d-md-flex`}
   >
     <nav className="d-flex flex-column flex-md-row align-items-center gap-4">
-      <a className="text-dark fw-medium text-decoration-none" href="#">
-        About
-      </a>
+    <Link className="text-dark fw-medium text-decoration-none" to="/about">
+      About
+    </Link>
       <a className="text-dark fw-medium text-decoration-none" href="#">
         Contact
       </a>
