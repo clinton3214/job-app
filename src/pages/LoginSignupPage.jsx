@@ -108,12 +108,12 @@ export default function LoginSignupPage() {
     <Link className="text-dark fw-medium text-decoration-none" to="/about">
       About
     </Link>
-      <a className="text-dark fw-medium text-decoration-none" href="#">
-        Contact
-      </a>
-      <a className="text-dark fw-medium text-decoration-none" href="#">
-        Help
-      </a>
+    <Link className="text-dark fw-medium text-decoration-none" to="/contact">
+      Contact
+    </Link>
+      <Link className="text-dark fw-medium text-decoration-none" to="/help">
+      Help
+    </Link>
     </nav>
     <button
       className="btn rounded-pill bg-secondary text-dark fw-bold mt-2 mt-md-0"

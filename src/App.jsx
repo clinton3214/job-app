@@ -18,6 +18,8 @@ import ReferralsPage       from './pages/ReferralsPage';
 import TotalProfitPage     from './pages/TotalProfitPage';
 import JobDetailPage       from './pages/JobDetailPage';
 import AboutPage from './pages/AboutPage';
+import HelpPage from './pages/HelpPage';
+import ContactPage from './pages/ContactPage';
 import AdminInboxPage from './pages/AdminInboxPage';
 import VerifyEmailPage from './pages/VerifyEmailPage';
 import NotFoundPage        from './pages/NotFoundPage';
@@ -50,6 +52,8 @@ export default function App() {
         <Route path="/interview" element={<InterviewPage />} />
         <Route path="/verify-email"   element={<VerifyEmailPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/help" element={<HelpPage />} />
+        <Route path="/contact" element={<ContactPage />} />
 
         {/* Admin and analytics */}
        
