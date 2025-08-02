@@ -44,11 +44,11 @@ export default function TotalProfitPage() {
     <div className="container mt-5 text-black">
       <h2>Total Profit Summary</h2>
       <div className="card p-4 bg-light mt-3 shadow-sm">
-        <p><strong>Total Deposits:</strong> ₦{(profitData.totalDeposits || 0).toFixed(2)}</p>
-        <p><strong>Total Withdrawals:</strong> ₦{(profitData.totalWithdrawals || 0).toFixed(2)}</p>
-        <p><strong>Total Referral Bonuses:</strong> ₦{(profitData.totalReferrals || 0).toFixed(2)}</p>
+        <p><strong>Total Deposits:</strong> ${(profitData.totalDeposits || 0).toFixed(2)}</p>
+        <p><strong>Total Withdrawals:</strong> ${(profitData.totalWithdrawals || 0).toFixed(2)}</p>
+        <p><strong>Total Referral Bonuses:</strong> ${(profitData.totalReferrals || 0).toFixed(2)}</p>
         <hr />
-        <p><strong>Net Profit:</strong> ₦{(profitData.netProfit || 0).toFixed(2)}</p>
+        <p><strong>Net Profit:</strong> ${(profitData.netProfit || 0).toFixed(2)}</p>
       </div>
     </div>
   );
