@@ -1,14 +1,19 @@
 // src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   Offcanvas,
   Button,
   Modal,
+  Container,
+  Row,
+  Col,
   Card,
 } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { motion } from 'framer-motion';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../index.css';
 import {
   BsCurrencyDollar,
   BsClock,
@@ -18,11 +23,10 @@ import {
   BsPerson,
   BsBoxArrowRight,
   BsChatQuote,
-  BsSun,
-  BsMoon,
 } from 'react-icons/bs';
-import logoImg from '../assets/logo.png';
-import '../index.css';
+import { ArrowLeftRight } from 'lucide-react';
+import logoImg from '../assets/logo.png'; // Adjust the path as necessary
+
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
@@ -83,12 +87,13 @@ export default function DashboardPage() {
   const [referralBonus, setReferralBonus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({ name: 'user', role: 'guest' });
-  const [darkMode, setDarkMode] = useState(false);
+
   const navigate = useNavigate();
 
   const handleClose = () => setShowMenu(false);
   const handleShow = () => setShowMenu(true);
   const handleProfileToggle = () => setShowProfile(!showProfile);
+
   const logout = () => {
     localStorage.removeItem('token');
     navigate('/');
@@ -99,110 +104,245 @@ export default function DashboardPage() {
       try {
         const [meRes, profileRes] = await Promise.all([
           axios.get(`${API_BASE}/api/user/me`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           }),
           axios.get(`${API_BASE}/api/user/profile`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           }),
         ]);
+  
         setBalance(meRes.data.balance || 0);
         setReferralBonus(meRes.data.referralBonus || 0);
+  
+        // ✅ Update profile fields from backend
         setUser({
           name: profileRes.data.fullName || 'user',
           email: profileRes.data.email || 'user@email.com',
-          role: 'User',
+          role: 'User', // Optional: Add role if you support roles
         });
       } catch (err) {
+        console.error('Failed to fetch user profile:', err);
         setBalance('Failed');
         setReferralBonus('Failed');
       } finally {
         setLoading(false);
       }
     };
+  
     fetchUserData();
   }, []);
 
   return (
-    <div className={`min-vh-100 ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`} style={{ fontFamily: 'Inter, sans-serif' }}>
-      {/* Header */}
+    <div className="min-vh-100 bg-light text-dark" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
+      {/* Top Header */}
       <header
-        className={`d-flex justify-content-between align-items-center border-bottom px-4 py-3 shadow-sm ${darkMode ? 'bg-secondary' : 'bg-white'}`}
-        style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 1030, height: '80px' }}
-      >
-        <div className="d-flex align-items-center gap-3">
-          <Button variant={darkMode ? 'light' : 'outline-secondary'} onClick={handleShow}>☰</Button>
-          <img src={logoImg} alt="Logo" style={{ height: '50px', objectFit: 'contain' }} />
-        </div>
-        <div className="d-flex align-items-center gap-2">
-          <Button variant={darkMode ? 'light' : 'secondary'} onClick={handleProfileToggle}>
-            <BsPerson size={18} /> Profile
-          </Button>
-          <Button variant={darkMode ? 'outline-light' : 'outline-dark'} onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? <BsSun size={18} /> : <BsMoon size={18} />}
-          </Button>
-        </div>
-      </header>
+  className="d-flex justify-content-between align-items-center border-bottom px-4 py-3 bg-white shadow-sm"
+  style={{
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    zIndex: 1030,
+    height: '80px',
+  }}
+>
+  <div className="d-flex align-items-center gap-3">
+    <Button variant="outline-secondary" onClick={handleShow}>
+      ☰
+    </Button>
+    <img
+      src={logoImg}
+      alt="Startnet Nexus Logo"
+      style={{ height: '50px', objectFit: 'contain' }}
+    />
+  </div>
 
-      {/* Spacer */}
-      <div style={{ height: '80px' }}></div>
+  <Button
+    variant="secondary"
+    onClick={handleProfileToggle}
+    className="d-flex align-items-center gap-2"
+  >
+    <BsPerson size={18} />
+    Profile
+  </Button>
+</header>
+
+      {/* Profile Modal */}
+      <Modal show={showProfile} onHide={handleProfileToggle} centered>
+        <Modal.Body className="p-0">
+          <Card className="border-0 p-4 text-center">
+            <div className="d-flex flex-column align-items-center gap-3">
+              <div
+                className="rounded-circle shadow"
+                style={{
+                  width: '128px',
+                  height: '128px',
+                  backgroundImage: `url("https://cdn-icons-png.flaticon.com/512/1077/1077114.png")`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              ></div>
+              <div>
+                <h5 className="fw-bold m-0">{user.name}</h5>
+                <p className="text-muted mb-1 small">{user.email || 'user@email.com'}</p>
+                <span className="badge bg-primary-subtle text-primary rounded-pill px-3 py-1">
+                  {user.role}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-4 d-grid gap-3">
+              <Button
+                variant="light"
+                onClick={() => {
+                  navigate('/profile');
+                  handleProfileToggle();
+                }}
+                className="d-flex align-items-center gap-3 text-start border rounded p-2"
+              >
+                <div className="bg-secondary bg-opacity-25 rounded d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
+                  <BsPerson size={20} />
+                </div>
+                <span className="flex-grow-1">View Profile</span>
+              </Button>
+              <Button
+                variant="light"
+                onClick={() => {
+                  navigate('/referrals');
+                  handleProfileToggle();
+                }}
+                className="d-flex align-items-center gap-3 text-start border rounded p-2"
+              >
+                <div className="bg-secondary bg-opacity-25 rounded d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
+                  <BsPeople size={20} />
+                </div>
+                <span className="flex-grow-1">View Referrals</span>
+              </Button>
+              <Button
+                variant="light"
+                onClick={logout}
+                className="d-flex align-items-center gap-3 text-start border rounded p-2"
+              >
+                <div className="bg-secondary bg-opacity-25 rounded d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
+                  <BsBoxArrowRight size={20} />
+                </div>
+                <span className="flex-grow-1">Logout</span>
+              </Button>
+            </div>
+          </Card>
+        </Modal.Body>
+      </Modal>
+
+      {/* Sidebar Offcanvas */}
+      <Offcanvas show={showMenu} onHide={handleClose} placement="start">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Menu</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <div className="d-flex gap-3 align-items-center mb-4">
+            <div
+              className="rounded-circle bg-secondary"
+              style={{
+                width: 40,
+                height: 40,
+                backgroundImage: 'url("")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              
+              }}
+            ></div>
+            <div>
+              <h6 className="mb-0">{user.name}</h6>
+              <small className="text-muted">{user.role}</small>
+            </div>
+          </div>
+          <div className="list-group">
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/total-profit')}>
+              <BsCurrencyDollar size={24} /> <span>Total Profit</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/history')}>
+              <BsClock size={24} /> <span>Payment History</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/referrals')}>
+              <BsPeople size={24} /> <span>View Referrals</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/add-funds')}>
+              <BsPlus size={24} /> <span>Add Funds</span>
+            </button>
+            <button className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2" onClick={() => navigate('/deposit/methods')}>
+              <BsCreditCard size={24} /> <span>Payment Methods</span>
+            </button>
+            <button
+              className="list-group-item list-group-item-action d-flex align-items-center gap-3 mb-2"
+              onClick={() => navigate('/interview')}
+            >
+              < BsChatQuote  size={24} />
+              <span>Interview</span>
+            </button>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
+
+{/* Spacer div below header */}
+<div style={{ height: '80px' }}></div>
 
       {/* Main Content */}
-      <main className="container py-4">
+      <main className="container py-4" >
         <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
-
         <div className="row mb-5">
           <div className="col-md-6 mb-3">
-            <div className={`rounded shadow-sm p-3 ${darkMode ? 'bg-secondary text-light' : 'bg-white text-dark'}`}>
-              <h6>Normal Balance</h6>
-              <h5>{loading ? 'Loading…' : balance === 'Failed' ? 'Failed to load' : `$${balance.toLocaleString()}`}</h5>
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Normal Balance</h6>
+              <h5>{loading ? '$Loading…' : balance === 'Failed' ? 'Failed to load' : `$${balance.toLocaleString()}`}</h5>
             </div>
           </div>
           <div className="col-md-6 mb-3">
-            <div className={`rounded shadow-sm p-3 ${darkMode ? 'bg-secondary text-light' : 'bg-white text-dark'}`}>
-              <h6>Referral Bonus</h6>
-              <h5>{loading ? 'Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `$${referralBonus.toLocaleString()}`}</h5>
+            <div className="bg-white rounded shadow-sm p-3">
+              <h6 className="mb-1">Referral Bonus</h6>
+              <h5>{loading ? '$Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `$${referralBonus.toLocaleString()}`}</h5>
             </div>
           </div>
         </div>
-
         <h2 className="fw-bold h4 mb-3">Remote Work Opportunities</h2>
-
         {jobCards.map((job, idx) => {
-          const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
-          return (
-            <motion.div
-              key={idx}
-              className={`card mb-4 border-0 shadow-sm ${darkMode ? 'bg-secondary text-light' : ''}`}
-              style={{ cursor: 'pointer' }}
-              onClick={() => navigate(path)}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-            >
-              <div className="row g-0">
-                <div className="col-md-8 p-4">
-                  <p className="text-muted small">Remote</p>
-                  <h5 className="fw-bold m-0">{job.title}</h5>
-                  <p className="text-muted mb-0">{job.company} - Remote</p>
-                </div>
-                <div className="col-md-4">
-                  <div
-                    className="h-100 rounded-end"
-                    style={{
-                      backgroundImage: `url(${job.image})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  ></div>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
+  const path = `/jobs/${job.title.toLowerCase().replace(/\s+/g, '-')}`;
+  return (
+    <motion.div
+      key={idx}
+      className="card mb-4 border-0 shadow-sm"
+      style={{ cursor: 'pointer' }}
+      onClick={() => navigate(path)}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.5, delay: idx * 0.1 }}
+    >
+      <div className="row g-0">
+        <div className="col-md-8 p-4">
+          <p className="text-muted small">Remote</p>
+          <h5 className="fw-bold m-0">{job.title}</h5>
+          <p className="text-muted mb-0">{job.company} - Remote</p>
+        </div>
+        <div className="col-md-4">
+          <div
+            className="h-100 rounded-end"
+            style={{
+              backgroundImage: `url(${job.image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          ></div>
+        </div>
+      </div>
+    </motion.div>
+  );
+})}
       </main>
-
-      {/* Profile Modal and Offcanvas here... (use same code as before and optionally style with darkMode condition) */}
     </div>
   );
 }
+
