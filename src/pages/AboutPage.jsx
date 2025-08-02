@@ -29,15 +29,17 @@ Whether you're a student, graduate, unemployed, or simply looking for an additio
 <p>
 💡 What Makes Us Different?
 
-Inclusive Opportunity: No matter your skill level or experience, there's space for you here.
+<p>Inclusive Opportunity: No matter your skill level or experience, there's space for you here.</p>
 
-Work & Learn: As you work with us, you grow. We encourage learning and skill development on the job.
+<p>Work & Learn: As you work with us, you grow. We encourage learning and skill development on the job.</p>
 
-Remote Flexibility: Work from anywhere, at your pace.
+<p>Remote Flexibility: Work from anywhere, at your pace.</p>
 
-Performance-Based Rewards: Your effort is recognized and rewarded — fairly and consistently.
+<p>Performance-Based Rewards: Your effort is recognized and rewarded — fairly and consistently.</p>
 
-Community & Support: You’ll be part of a like-minded community that supports each other’s progress.</p>
+<p>Community & Support: You’ll be part of a like-minded community that supports each other’s progress.</p>
+
+</p>
 
 <p>
 📱 Empowerment Through Technology
