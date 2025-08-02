@@ -128,7 +128,7 @@ export default function InterviewPage() {
 
       {/* Main Content */}
       <Container className="flex-grow-1 py-4">
-        <h3 className="fw-bold mb-4">chatting {user?.name || '...'}</h3>
+        <h3 className="fw-bold mb-4">chat {user?.name || '...'}</h3>
 
         {/* Messages */}
         {messages.map((msg, idx) => (
