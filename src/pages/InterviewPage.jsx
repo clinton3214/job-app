@@ -117,20 +117,7 @@ export default function InterviewPage() {
           <h2 className="h5 fw-bold m-0">startnetnexus</h2>
         </div>
         <div className="d-flex flex-column flex-md-row align-items-center gap-3 w-100 justify-content-between justify-content-md-end">
-          <nav className="d-flex gap-3">
-            <a className="text-dark text-decoration-none fw-medium" href="#">
-              Dashboard
-            </a>
-            <a className="text-dark text-decoration-none fw-medium" href="#">
-              Candidates
-            </a>
-            <a className="text-dark text-decoration-none fw-medium" href="#">
-              Jobs
-            </a>
-            <a className="text-dark text-decoration-none fw-medium" href="#">
-              Interview
-            </a>
-          </nav>
+          
           <Button variant="light" className="rounded-circle p-2">
             <Bell size={20} className="text-dark" />
           </Button>
