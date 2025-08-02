@@ -58,7 +58,7 @@ export default function ReferralsPage() {
             </button>
           </div>
           <p className="mt-2 text-muted">
-            Share this code with friends. You earn ₦1,000 each time they sign up using it.
+            Share this code with friends. You earn $20 each time they sign up using it.
           </p>
         </div>
       </div>
@@ -68,7 +68,9 @@ export default function ReferralsPage() {
         <div className="card-body d-flex justify-content-between align-items-center">
           <div>
             <h5>Total Bonus Earned</h5>
-            <p className="h4">{data.totalBonus}</p>
+            <p className="h4">
+              {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(data.totalBonus)}
+            </p>
           </div>
         </div>
       </div>
@@ -93,7 +95,9 @@ export default function ReferralsPage() {
                   <tr key={idx}>
                     <td>{ref.email}</td>
                     <td>{new Date(ref.date).toLocaleDateString()}</td>
-                    <td>{ref.bonus}</td>
+                    <td>
+                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(ref.bonus)}
+                      </td>
                   </tr>
                 ))
               ) : (
