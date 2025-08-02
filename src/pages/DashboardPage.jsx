@@ -187,9 +187,14 @@ export default function DashboardPage() {
 </header>
 
       {/* Profile Modal */}
-      <Modal show={showProfile} onHide={handleProfileToggle} centered>
-        <Modal.Body className="p-0">
-          <Card className="border-0 p-4 text-center">
+      <Modal
+  show={showProfile}
+  onHide={handleProfileToggle}
+  centered
+  contentClassName={darkMode ? 'bg-dark text-light' : 'bg-white text-dark'}
+>
+  <Modal.Body className="p-0">
+    <Card className={`border-0 p-4 text-center ${darkMode ? 'bg-dark text-light' : 'bg-white text-dark'}`}>
             <div className="d-flex flex-column align-items-center gap-3">
               <div
                 className="rounded-circle shadow"
@@ -253,8 +258,13 @@ export default function DashboardPage() {
       </Modal>
 
       {/* Sidebar Offcanvas */}
-      <Offcanvas show={showMenu} onHide={handleClose} placement="start">
-        <Offcanvas.Header closeButton>
+      <Offcanvas
+  show={showMenu}
+  onHide={handleClose}
+  placement="start"
+  className={darkMode ? 'bg-dark text-light' : 'bg-white text-dark'}
+>
+  <Offcanvas.Header closeButton closeVariant={darkMode ? 'white' : undefined}>
           <Offcanvas.Title>Menu</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
