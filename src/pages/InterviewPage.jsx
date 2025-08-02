@@ -100,30 +100,31 @@ export default function InterviewPage() {
       style={{ fontFamily: "Inter, 'Noto Sans', sans-serif" }}
     >
       {/* Header */}
-      <header className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 border-bottom px-4 py-3 bg-white">
-        <div className="d-flex align-items-center gap-2 text-dark">
-          
-          <img
+      <header className="d-flex justify-content-between align-items-center border-bottom px-4 py-3 bg-white flex-wrap gap-3">
+  {/* Left: Logo */}
+  <div className="d-flex align-items-center gap-2 text-dark">
+    <img
       src={logoImg}
       alt="Startnet Nexus Logo"
       style={{ height: '50px', objectFit: 'contain' }}
     />
-        </div>
-        <div className="d-flex flex-column flex-md-row align-items-center gap-3 w-100 justify-content-between justify-content-md-end">
-          
-          <Button variant="light" className="rounded-circle p-2">
-            <Bell size={20} className="text-dark" />
-          </Button>
-          <div
-            className="rounded-circle bg-cover bg-center"
-            style={{
-              width: '40px',
-              height: '40px',
-              backgroundImage: `url(https://lh3.googleusercontent.com/aida-public/AB6AXuAXgLob3EsILUMd_LNcPzNv4f1MvK8_K453U1VscPCPcQBEGQZU8EzO9NXWLyQ6pER3nO9jGqOWhzaCrTjBtiVCDnxItD1_jx8cfMSGbUhP37VSwj7klrz4Gr0ZkPkVAEj_NbdvEfgjjd2UmnrmKbau9Ga3xU6fhgEwUfazD8DFUsEpaNS6vcI9QAJkR5sMS8qgAOPCfiN_sW10i2tMTUGU_h2xedC4Ymr88YYmRbZAZg6cd9IBdQHpG5UT-AQ2zWUtsNNMu0kv08A)`,
-            }}
-          ></div>
-        </div>
-      </header>
+  </div>
+
+  {/* Right: Notifications + Avatar */}
+  <div className="d-flex align-items-center gap-3">
+    <Button variant="light" className="rounded-circle p-2">
+      <Bell size={20} className="text-dark" />
+    </Button>
+    <div
+      className="rounded-circle bg-cover bg-center"
+      style={{
+        width: '40px',
+        height: '40px',
+        backgroundImage: `url(https://lh3.googleusercontent.com/aida-public/AB6AXuAXgLob3EsILUMd_LNcPzNv4f1MvK8_K453U1VscPCPcQBEGQZU8EzO9NXWLyQ6pER3nO9jGqOWhzaCrTjBtiVCDnxItD1_jx8cfMSGbUhP37VSwj7klrz4Gr0ZkPkVAEj_NbdvEfgjjd2UmnrmKbau9Ga3xU6fhgEwUfazD8DFUsEpaNS6vcI9QAJkR5sMS8qgAOPCfiN_sW10i2tMTUGU_h2xedC4Ymr88YYmRbZAZg6cd9IBdQHpG5UT-AQ2zWUtsNNMu0kv08A)`,
+      }}
+    ></div>
+  </div>
+</header>
 
       {/* Main Content */}
       <Container className="flex-grow-1 py-4">

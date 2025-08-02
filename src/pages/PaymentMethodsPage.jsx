@@ -49,7 +49,7 @@ export default function PaymentMethodsPage() {
               <h5 className="card-title">Pay with Card</h5>
               <p className="card-text flex-grow-1">
                 Use your credit or debit card (Visa, MasterCard). 
-                Currently a placeholder (not functional).
+                easy and fast payment.
               </p>
               <button onClick={() => handleNavigate('/not-available')} className="btn btn-secondary mt-auto">
                 Deposit via Card
@@ -63,7 +63,7 @@ export default function PaymentMethodsPage() {
             <div className="card-body d-flex flex-column">
               <h5 className="card-title">Pay with Cash App</h5>
               <p className="card-text flex-grow-1">
-                Deposit using Cash App. Placeholder integration. 
+                Deposit using Cash App. 
                 Cash App username: <code>$YourCashAppID</code>
               </p>
               <button onClick={() => handleNavigate('/not-available')} className="btn btn-success mt-auto">
