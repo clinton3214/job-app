@@ -123,7 +123,7 @@ export default function DepositPage() {
               </select>
             </div>
 
-            <button type="submit" className="btn btn-dark w-100 py-3" disabled={loading}>
+            <button type="submit" className="btn btn-dark w-100 py-3 rounded-4" disabled={loading}>
               {loading ? 'Processing…' : 'Deposit'}
             </button>
           </form>
