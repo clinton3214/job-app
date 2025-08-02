@@ -85,7 +85,7 @@ export default function DashboardPage() {
   const [balance, setBalance] = useState(null);
   const [referralBonus, setReferralBonus] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState({ name: 'Sophia Carter', role: 'Account Manager' });
+  const [user, setUser] = useState({ name: 'user', role: 'guest' });
 
   const navigate = useNavigate();
 
@@ -119,8 +119,8 @@ export default function DashboardPage() {
   
         // ✅ Update profile fields from backend
         setUser({
-          name: profileRes.data.fullName || 'N/A',
-          email: profileRes.data.email || 'N/A',
+          name: profileRes.data.fullName || 'user',
+          email: profileRes.data.email || 'user@email.com',
           role: 'User', // Optional: Add role if you support roles
         });
       } catch (err) {
