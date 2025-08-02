@@ -58,7 +58,7 @@ export default function InterviewPage() {
       userEmail: user.email,
     };
     socket.emit('send_message', systemMessage);
-    setMessages((prev) => [...prev, systemMessage]);
+    
   }
   }, [user, chatType]);
 
