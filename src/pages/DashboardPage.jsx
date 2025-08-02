@@ -337,13 +337,17 @@ export default function DashboardPage() {
         <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
         <div className="row mb-5">
           <div className="col-md-6 mb-3">
-          <div className={`rounded shadow-sm p-3 ${darkMode ? 'bg-secondary text-light' : 'bg-white text-dark'}`}>
+          <div className={`shadow-sm p-3 ${darkMode ? 'bg-secondary text-light' : 'bg-white text-dark'}`}
+          style={{ borderRadius: '1rem' }}
+          >
               <h6 className="mb-1">Normal Balance</h6>
               <h5>{loading ? '$Loading…' : balance === 'Failed' ? 'Failed to load' : `$${balance.toLocaleString()}`}</h5>
             </div>
           </div>
           <div className="col-md-6 mb-3">
-          <div className={`rounded shadow-sm p-3 ${darkMode ? 'bg-secondary text-light' : 'bg-white text-dark'}`}>
+          <div className={`shadow-sm p-3 ${darkMode ? 'bg-secondary text-light' : 'bg-white text-dark'}`}
+          style={{ borderRadius: '1rem' }}
+          >
               <h6 className="mb-1">Referral Bonus</h6>
               <h5>{loading ? '$Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `$${referralBonus.toLocaleString()}`}</h5>
             </div>
@@ -356,7 +360,9 @@ export default function DashboardPage() {
     <motion.div
       key={idx}
       className={`card mb-4 border-0 shadow-sm ${darkMode ? 'bg-secondary text-light' : ''}`}
-      style={{ cursor: 'pointer' }}
+      style={{ cursor: 'pointer',
+        borderRadius: '1rem',
+       }}
       onClick={() => navigate(path)}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -373,6 +379,8 @@ export default function DashboardPage() {
           <div
             className="h-100 rounded-end"
             style={{
+              borderTopRightRadius: '1rem',
+              borderBottomRightRadius: '1rem',
               backgroundImage: `url(${job.image})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
