@@ -26,6 +26,7 @@ import {
 } from 'react-icons/bs';
 import { ArrowLeftRight } from 'lucide-react';
 import logoImg from '../assets/logo.png'; // Adjust the path as necessary
+import { BsSun, BsMoon } from 'react-icons/bs'; // for dark mode toggle icon
 
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
@@ -83,6 +84,7 @@ const jobCards = [
 export default function DashboardPage() {
   const [showMenu, setShowMenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const [balance, setBalance] = useState(null);
   const [referralBonus, setReferralBonus] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -137,10 +139,10 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-vh-100 bg-light text-dark" style={{ fontFamily: 'Inter, Noto Sans, sans-serif' }}>
+    <div className={`min-vh-100 ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`} style={{ fontFamily: 'Inter, sans-serif' }}>
       {/* Top Header */}
       <header
-  className="d-flex justify-content-between align-items-center border-bottom px-4 py-3 bg-white shadow-sm"
+  className={`d-flex justify-content-between align-items-center border-bottom px-4 py-3 shadow-sm ${darkMode ? 'bg-dark text-light' : 'bg-white text-dark'}`}
   style={{
     position: 'fixed',
     top: 0,
@@ -150,8 +152,9 @@ export default function DashboardPage() {
     height: '80px',
   }}
 >
+  {/* Left side (menu + logo) */}
   <div className="d-flex align-items-center gap-3">
-    <Button variant="outline-secondary" onClick={handleShow}>
+    <Button variant={darkMode ? 'outline-light' : 'outline-secondary'} onClick={handleShow}>
       ☰
     </Button>
     <img
@@ -161,14 +164,26 @@ export default function DashboardPage() {
     />
   </div>
 
-  <Button
-    variant="secondary"
-    onClick={handleProfileToggle}
-    className="d-flex align-items-center gap-2"
-  >
-    <BsPerson size={18} />
-    Profile
-  </Button>
+  {/* Right side (Profile + Dark Mode toggle) */}
+  <div className="d-flex align-items-center gap-3">
+    <Button
+      variant={darkMode ? 'outline-light' : 'secondary'}
+      onClick={handleProfileToggle}
+      className="d-flex align-items-center gap-2"
+    >
+      <BsPerson size={18} />
+      Profile
+    </Button>
+
+    {/* 🌙 Dark mode toggle button */}
+    <Button
+      variant={darkMode ? 'outline-light' : 'outline-dark'}
+      onClick={() => setDarkMode(!darkMode)}
+      className="d-flex align-items-center"
+    >
+      {darkMode ? <BsSun size={18} /> : <BsMoon size={18} />}
+    </Button>
+  </div>
 </header>
 
       {/* Profile Modal */}
@@ -295,13 +310,13 @@ export default function DashboardPage() {
         <h1 className="fw-bold display-6 mb-4">Dashboard</h1>
         <div className="row mb-5">
           <div className="col-md-6 mb-3">
-            <div className="bg-white rounded shadow-sm p-3">
+          <div className={`rounded shadow-sm p-3 ${darkMode ? 'bg-secondary text-light' : 'bg-white text-dark'}`}>
               <h6 className="mb-1">Normal Balance</h6>
               <h5>{loading ? '$Loading…' : balance === 'Failed' ? 'Failed to load' : `$${balance.toLocaleString()}`}</h5>
             </div>
           </div>
           <div className="col-md-6 mb-3">
-            <div className="bg-white rounded shadow-sm p-3">
+          <div className={`rounded shadow-sm p-3 ${darkMode ? 'bg-secondary text-light' : 'bg-white text-dark'}`}>
               <h6 className="mb-1">Referral Bonus</h6>
               <h5>{loading ? '$Loading…' : referralBonus === 'Failed' ? 'Failed to load' : `$${referralBonus.toLocaleString()}`}</h5>
             </div>
@@ -313,7 +328,7 @@ export default function DashboardPage() {
   return (
     <motion.div
       key={idx}
-      className="card mb-4 border-0 shadow-sm"
+      className={`card mb-4 border-0 shadow-sm ${darkMode ? 'bg-secondary text-light' : ''}`}
       style={{ cursor: 'pointer' }}
       onClick={() => navigate(path)}
       initial={{ opacity: 0, y: 40 }}
