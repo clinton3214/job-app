@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Form, Button, InputGroup } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 import { Bell, Image as ImageIcon } from 'react-bootstrap-icons';
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -18,6 +19,9 @@ export default function InterviewPage() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [user, setUser] = useState(null);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const chatType = queryParams.get('type'); // will be 'customer-service' if triggered from support
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -40,6 +44,23 @@ export default function InterviewPage() {
         console.error('❌ Failed to load user:', err);
       });
   }, []);
+
+//to know if its customer service 
+  useEffect(() => {
+  if (user && chatType === 'customer-service') {
+    const systemMessage = {
+      sender: 'system',
+      content: `[System] ${user.name} is requesting Customer Service.`,
+      senderEmail: user.email,
+      receiverEmail: 'startnetnexus@gmail.com',
+      userId: user.id,
+      userName: user.name,
+      userEmail: user.email,
+    };
+    socket.emit('send_message', systemMessage);
+    setMessages((prev) => [...prev, systemMessage]);
+  }
+  }, [user, chatType]);
 
   // Handle incoming messages
   useEffect(() => {
