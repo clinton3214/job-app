@@ -85,6 +85,7 @@ export default function DashboardPage() {
   const [showMenu, setShowMenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [balance, setBalance] = useState(null);
   const [referralBonus, setReferralBonus] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -166,29 +167,39 @@ export default function DashboardPage() {
 
   {/* Right side (Profile + Dark Mode toggle) */}
   <div className="d-flex align-items-center gap-3">
-    <Button
-      variant={darkMode ? 'outline-light' : 'secondary'}
+  <Button
       onClick={handleProfileToggle}
-      className="d-flex align-items-center gap-2"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="border-0 rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+      style={{
+        width: '38px',
+        height: '38px',
+        backgroundColor: darkMode ? '#f8f9fa' : '#212529',
+        color: darkMode ? '#212529' : '#f8f9fa',
+        boxShadow: isHovered
+          ? '0 4px 12px rgba(0, 0, 0, 0.25)'
+          : '0 2px 4px rgba(0, 0, 0, 0.15)',
+        transform: isHovered ? 'scale(1.08)' : 'scale(1)',
+        transition: 'all 0.25s ease',
+      }}
     >
       <BsPerson size={18} />
-      Profile
     </Button>
-
     {/* 🌙 Dark mode toggle button */}
     <Button
-  onClick={() => setDarkMode(!darkMode)}
-  className={`border-0 shadow-sm rounded-circle d-flex align-items-center justify-content-center ${
-    darkMode ? 'bg-light text-dark' : 'bg-dark text-light'
-  }`}
-  style={{
-    width: '38px',
-    height: '38px',
-    transition: 'all 0.3s ease',
-  }}
->
-  {darkMode ? <BsSun size={18} /> : <BsMoon size={18} />}
-</Button>
+      onClick={() => setDarkMode(!darkMode)}
+      className={`border-0 shadow-sm rounded-circle d-flex align-items-center justify-content-center ${
+        darkMode ? 'bg-light text-dark' : 'bg-dark text-light'
+      }`}
+      style={{
+        width: '38px',
+        height: '38px',
+        transition: 'all 0.3s ease',
+      }}
+    >
+      {darkMode ? <BsSun size={18} /> : <BsMoon size={18} />}
+    </Button>
   </div>
 </header>
 
