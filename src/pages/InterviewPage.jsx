@@ -153,6 +153,7 @@ export default function InterviewPage() {
                 }`}
                 style={{
                   borderColor: msg.sender === 'user' ? '#ffffff' : '#6c757d', // white or Bootstrap's secondary
+                  borderRadius: '18px',
                 }}
               >
                 {msg.content}
