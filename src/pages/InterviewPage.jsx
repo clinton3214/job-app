@@ -180,9 +180,14 @@ export default function InterviewPage() {
             <Button variant="light" disabled>
               <ImageIcon className="text-muted" />
             </Button>
-            <Button variant="dark" type="submit" className="border border-3 border-white">
-              Send
-            </Button>
+            <Button
+            variant="dark"
+            type="submit"
+            className="border border-3 border-white"
+            style={{ borderRadius: '12px' }} // You can adjust the px value
+          >
+            Send
+          </Button>
           </InputGroup>
         </Form>
       </Container>
