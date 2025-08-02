@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { Bell, Image as ImageIcon } from 'react-bootstrap-icons';
 import io from 'socket.io-client';
 import axios from 'axios';
+import logoImg from '../assets/logo.png'; // Adjust the path as necessary
 
 // Initialize socket connection
 const socket = io(import.meta.env.VITE_BACKEND_URL, {
@@ -114,7 +115,11 @@ export default function InterviewPage() {
               />
             </svg>
           </div>
-          <h2 className="h5 fw-bold m-0">startnetnexus</h2>
+          <img
+      src={logoImg}
+      alt="Startnet Nexus Logo"
+      style={{ height: '50px', objectFit: 'contain' }}
+    />
         </div>
         <div className="d-flex flex-column flex-md-row align-items-center gap-3 w-100 justify-content-between justify-content-md-end">
           
