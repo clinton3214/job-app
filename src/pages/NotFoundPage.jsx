@@ -60,7 +60,7 @@ export default function NotFoundPage() {
       <h2 style={styles.subHeading}>Looks like you're lost</h2>
       <p style={styles.text}>The page you are looking for doesn't exist.</p>
 
-      <Link to={`${baseUrl}`} style={styles.button}>
+      <Link to="/" style={styles.button}>
         Go back to Login
       </Link>
     </div>
