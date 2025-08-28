@@ -12,7 +12,7 @@ export const transporter = nodemailer.createTransport({
 
 export async function sendEmail({ to, subject, html }) {
   await transporter.sendMail({
-    from: `"Job App" <${process.env.EMAIL_FROM}>`,
+    from: `"startnetnexus" <${process.env.EMAIL_FROM}>`,
     to,
     subject,
     html,
