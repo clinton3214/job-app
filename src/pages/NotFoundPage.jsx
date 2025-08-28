@@ -42,7 +42,7 @@ export default function NotFoundPage() {
       backgroundColor: '#39ac31',
       color: '#fff',
       border: 'none',
-      borderRadius: '5px',
+      borderRadius: '50px',
       textDecoration: 'none',
       fontWeight: 'bold',
       display: 'inline-block'
