@@ -29,20 +29,20 @@ export default function NotAvailablePage() {
       />
       <h1
         className="text-danger"
-        style={{ marginTop: 0, marginBottom: 0 }} // no space above/below heading
+        style={{ marginTop: 0, marginBottom: 4 }} // tiny gap under heading
       >
         Feature currently Not Available
       </h1>
-      <p className="lead" style={{ marginTop: 0 }}>
+      <p className="lead" style={{ marginTop: 4, marginBottom: 4 }}>
         This is a technical issue we are working on it right now. Please contact customer service to complete the transaction with your chosen method.
       </p>
-      <p className="card-text flex-grow-1" style={{ marginTop: 0 }}>
+      <p className="card-text flex-grow-1" style={{ marginTop: 0, marginBottom: 6 }}>
         Need help? Connect with a support agent via live chat.
       </p>
       <button
         onClick={() => navigate('/interview?type=customer-service')}
-        className="btn btn-warning mt-3"
-        style={{ borderRadius: '9999px' }} // very rounded
+        className="btn btn-warning"
+        style={{ borderRadius: '45px', marginTop: 6 }} // much rounder and closer to text
       >
         Start Chat
       </button>
