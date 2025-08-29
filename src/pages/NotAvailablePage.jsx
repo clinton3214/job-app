@@ -42,7 +42,7 @@ export default function NotAvailablePage() {
       <button
         onClick={() => navigate('/interview?type=customer-service')}
         className="btn btn-warning"
-        style={{ borderRadius: '45px', marginTop: 6 }} // much rounder and closer to text
+        style={{ borderRadius: '45px', marginTop: 4 }} // much rounder and closer to text
       >
         Start Chat
       </button>
