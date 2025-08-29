@@ -11,7 +11,7 @@ export default function NotAvailablePage() {
         src={errorImg}
         alt="Error"
         className="img-fluid mb-0"
-        style={{ maxWidth: 320, marginBottom: 0, display: 'block' }}
+        style={{ maxWidth: 320, marginBottom: -5, display: 'block' }}
       />
       <h1 className="text-danger" style={{ marginTop: 0 }}>
         Feature currently Not Available
@@ -25,7 +25,7 @@ export default function NotAvailablePage() {
       <button
         onClick={() => navigate('/interview?type=customer-service')}
         className="btn btn-warning mt-3"
-        style={{ borderRadius: '55px' }}
+        style={{ borderRadius: '48px' }}
       >
         Start Chat
       </button>
