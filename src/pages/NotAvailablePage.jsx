@@ -36,7 +36,7 @@ export default function NotAvailablePage() {
       <p className="lead" style={{ marginTop: 4, marginBottom: 4 }}>
         This is a technical issue we are working on it right now. Please contact customer service to complete the transaction with your chosen method.
       </p>
-      <p className="card-text flex-grow-1" style={{ marginTop: 0, marginBottom: 6 }}>
+      <p className="card-text flex-grow-1" style={{ marginTop: 0, marginBottom: '3px' }}>
         Need help? Connect with a support agent via live chat.
       </p>
       <button
