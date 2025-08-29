@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import logoImg from "../assets/logo.png";
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
@@ -97,31 +98,10 @@ export default function ProfilePage() {
       {/* Header */}
       <header className="d-flex align-items-center justify-content-between border-bottom px-3 px-md-5 py-3">
         <div className="d-flex align-items-center gap-2 text-dark">
-          <div style={{ width: "24px", height: "24px" }}>
-            <svg
-              viewBox="0 0 48 48"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              width="100%"
-              height="100%"
-            >
-              <g clipPath="url(#clip0_6_319)">
-                <path
-                  d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z"
-                  fill="currentColor"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_6_319">
-                  <rect width="48" height="48" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-          </div>
-          <h2 className="fw-bold mb-0">Acme Co</h2>
+          <img src={logoImg} alt="Logo" style={{ height: 32, width: "auto" }} />
         </div>
         <div className="d-flex align-items-center gap-3">
-          <a href="#" className="text-dark fw-medium small">
+          <a href="/dashboard" className="text-dark fw-medium small">
             Dashboard
           </a>
           <div
@@ -130,7 +110,7 @@ export default function ProfilePage() {
               width: "40px",
               height: "40px",
               backgroundImage:
-                "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGdclb9XkVXzZ5GAcveMoUXUGT4nSSbT5nQ2FVPm0fcXM8WzQJt2DsUCvdRk_I4tiIRVOfCq3uzRjCsv9FrLljZ6U_26W7XrAfqsd21I2QGdCoZxo5atklYVSHNOzWhwg5-TJFfBQJTbBBZkGOq3OKZV2SGd3IQbT9kL-JWsxL3ngvLcX6JBmblBUGSPZRWmXyN2eFRPZ0U7fBBedMMonBTpmxb-aI3YxvbKGDK_dKXK6jo9yjs2plZl837SXr9sH9tehpPAtpmEzT')",
+                "url('https://cdn-icons-png.flaticon.com/512/1077/1077114.png')",
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -157,6 +137,7 @@ export default function ProfilePage() {
               value={form.fullName || ""}
               onChange={handleChange}
               disabled={!editing}
+              style={{ color: editing ? "#000" : undefined }}
             />
           </div>
           <div className="px-3 py-2">
@@ -168,6 +149,7 @@ export default function ProfilePage() {
               value={form.email || ""}
               onChange={handleChange}
               disabled={!editing}
+              style={{ color: editing ? "#000" : undefined }}
             />
           </div>
           <div className="px-3 py-2">
@@ -179,6 +161,7 @@ export default function ProfilePage() {
               value={form.address || ""}
               onChange={handleChange}
               disabled={!editing}
+              style={{ color: editing ? "#000" : undefined }}
             />
           </div>
           <div className="px-3 py-2">
@@ -190,6 +173,7 @@ export default function ProfilePage() {
               value={form.state || ""}
               onChange={handleChange}
               disabled={!editing}
+              style={{ color: editing ? "#000" : undefined }}
             />
           </div>
           <div className="px-3 py-2">
@@ -201,6 +185,7 @@ export default function ProfilePage() {
               value={form.zip || ""}
               onChange={handleChange}
               disabled={!editing}
+              style={{ color: editing ? "#000" : undefined }}
             />
           </div>
           <div className="px-3 py-2">
@@ -212,6 +197,7 @@ export default function ProfilePage() {
               value={form.homePhone || ""}
               onChange={handleChange}
               disabled={!editing}
+              style={{ color: editing ? "#000" : undefined }}
             />
           </div>
           <div className="px-3 py-2">
@@ -223,6 +209,7 @@ export default function ProfilePage() {
               value={form.cellPhone || ""}
               onChange={handleChange}
               disabled={!editing}
+              style={{ color: editing ? "#000" : undefined }}
             />
           </div>
           <div className="px-3 py-2">
@@ -233,6 +220,7 @@ export default function ProfilePage() {
               name="balance"
               value={form.balance || ""}
               disabled
+              style={{ color: editing ? "#000" : undefined }}
             />
           </div>
           <div className="px-3 py-2">
@@ -245,6 +233,7 @@ export default function ProfilePage() {
               name="referralBonus"
               value={form.referralBonus || ""}
               disabled
+              style={{ color: editing ? "#000" : undefined }}
             />
           </div>
 
