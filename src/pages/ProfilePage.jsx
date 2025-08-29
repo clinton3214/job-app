@@ -1,5 +1,6 @@
 // ProfilePage.jsx
 import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logoImg from "../assets/logo.png";
@@ -101,9 +102,9 @@ export default function ProfilePage() {
           <img src={logoImg} alt="Logo" style={{ height: 32, width: "auto" }} />
         </div>
         <div className="d-flex align-items-center gap-3">
-          <a href="/dashboard" className="text-dark fw-medium small">
+          <Link to="/dashboard" className="text-dark fw-medium small">
             Dashboard
-          </a>
+          </Link>
           <div
             className="rounded-circle"
             style={{
