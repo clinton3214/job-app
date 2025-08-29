@@ -1,5 +1,5 @@
 // ProfilePage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -9,6 +9,8 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({});
+  const containerRef = useRef(null);
+  const [editBtnTextColor, setEditBtnTextColor] = useState("#000");
 
   useEffect(() => {
     async function fetchProfile() {
@@ -24,6 +26,38 @@ export default function ProfilePage() {
       }
     }
     fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    // determine background color luminance and set text color accordingly
+    function getRgbValues(rgbString) {
+      const m = rgbString.match(/\d+/g);
+      if (!m) return null;
+      return m.slice(0, 3).map((v) => parseInt(v, 10));
+    }
+
+    function luminance([r, g, b]) {
+      // convert to linearized sRGB
+      const srgb = [r, g, b].map((v) => {
+        const s = v / 255;
+        return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+    }
+
+    const el = containerRef.current || document.body;
+    const bg = window.getComputedStyle(el).backgroundColor;
+    const rgb = getRgbValues(bg);
+
+    if (rgb) {
+      const lum = luminance(rgb);
+      // light background => dark text, dark background => light text
+      setEditBtnTextColor(lum > 0.5 ? "#000" : "#fff");
+    } else {
+      // fallback: check class names (bg-white -> light)
+      const isLight = el.classList?.contains?.("bg-white");
+      setEditBtnTextColor(isLight ? "#000" : "#fff");
+    }
   }, []);
 
   const handleChange = (e) => {
@@ -56,6 +90,7 @@ export default function ProfilePage() {
 
   return (
     <div
+      ref={containerRef}
       className="d-flex flex-column min-vh-100 bg-white"
       style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}
     >
@@ -233,6 +268,7 @@ export default function ProfilePage() {
               <button
                 onClick={() => setEditing(true)}
                 className="btn btn-primary"
+                style={{ color: editBtnTextColor }}
               >
                 Edit Profile
               </button>
