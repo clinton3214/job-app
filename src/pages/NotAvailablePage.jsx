@@ -10,19 +10,22 @@ export default function NotAvailablePage() {
       <img
         src={errorImg}
         alt="Error"
-        className="img-fluid mb-4"
-        style={{ maxWidth: 320 }}
+        className="img-fluid mb-0"
+        style={{ maxWidth: 320, marginBottom: 0, display: 'block' }}
       />
-      <h1 className="text-danger">Feature currently Not Available</h1>
-      <p className="lead">
+      <h1 className="text-danger" style={{ marginTop: 0 }}>
+        Feature currently Not Available
+      </h1>
+      <p className="lead" style={{ marginTop: 0 }}>
         This is a technical issue we are working on it right now. Please contact customer service to complete the transaction with your chosen method.
       </p>
-      <p className="card-text flex-grow-1">
+      <p className="card-text flex-grow-1" style={{ marginTop: 0 }}>
         Need help? Connect with a support agent via live chat.
       </p>
       <button
         onClick={() => navigate('/interview?type=customer-service')}
         className="btn btn-warning mt-3"
+        style={{ borderRadius: '55px' }}
       >
         Start Chat
       </button>
